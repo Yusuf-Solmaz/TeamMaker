@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.yusuf.component.LoadingLottie
+import com.yusuf.feature.R
 
 @Composable
 fun AddPlayerScreen(navController: NavController){
@@ -17,7 +19,9 @@ fun AddPlayerScreen(navController: NavController){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Text(text = "Add Player Screen")
+
+        LoadingLottie(resId = R.raw.football_team_anim)
+
         Button(onClick = {
             navController.navigate("home")
         }) {
