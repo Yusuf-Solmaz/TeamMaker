@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "TeamMaker"
 include(":app")
- 
+include(":data")
