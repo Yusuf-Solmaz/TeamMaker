@@ -1,6 +1,6 @@
 [versions]
 agp = "8.6.0-beta01"
-kotlin = "1.9.0"
+kotlin = "1.9.23"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -10,6 +10,32 @@ activityCompose = "1.9.1"
 composeBom = "2024.04.01"
 appcompat = "1.7.0"
 material = "1.12.0"
+
+#Lottie
+lottieCompose = "6.3.0"
+
+#Coil
+coilCompose = "2.5.0"
+
+#Hilt
+hiltAndroidCompiler = "2.49"
+hiltAndroid = "2.49"
+hiltAndroidGradlePlugin = "2.49"
+hiltNavigationCompose = "1.2.0"
+ksp = "1.9.23-1.0.20"
+
+#Retrofit & Okhttp
+okhttp = "5.0.0-alpha.2"
+retrofit = "2.11.0"
+gson = "2.10.1"
+retrofit-converter = "2.11.0"
+okhttp-logging-interceptor= "4.12.0"
+
+#Datastore
+datastorePreferences = "1.0.0"
+
+#ViewModel Compose Lifecycle
+lifecycleViewmodelCompose = "2.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -28,9 +54,23 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+retrofit-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit-converter" }
+okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp-logging-interceptor" }
+androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-
+hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
