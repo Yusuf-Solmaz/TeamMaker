@@ -23,9 +23,10 @@ fun AddPlayerScreen(navController: NavController){
         LoadingLottie(resId = R.raw.football_team_anim)
 
         Button(onClick = {
-            navController.navigate("home")
+            navController.navigate("choose_sport")
         }) {
-            Text(text = "Go to Home Page")
+            Text(text = "Go to Choose Sport Page")
         }
     }
 }
+
