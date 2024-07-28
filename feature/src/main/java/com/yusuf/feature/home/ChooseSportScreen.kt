@@ -35,6 +35,7 @@ fun ChooseSportScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun ChooseSportScreenPreview(){
-    ChooseSportScreen(navController = rememberNavController())
+fun ChooseSportScreenPreview() {
+    val navController = rememberNavController()
+    ChooseSportScreen(navController)
 }

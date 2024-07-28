@@ -5,20 +5,28 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yusuf.feature.add_player.AddPlayerScreen
-import com.yusuf.feature.home.HomeScreen
+import com.yusuf.feature.home.ChooseSportScreen
+import com.yusuf.feature.options.OptionsScreen
 
 @Composable
 fun TeamMakerNavigation(){
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "home"){
-        composable("home"){
-            HomeScreen(navController)
+    NavHost(navController = navController, startDestination = "choose_sport"){
+
+        composable("choose_sport"){
+            ChooseSportScreen(navController)
         }
+        composable("options"){
+            OptionsScreen(navController)
+        }
+
         composable("add_player"){
             AddPlayerScreen(navController)
         }
+
+
     }
 
 }
