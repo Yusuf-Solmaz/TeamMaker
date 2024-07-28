@@ -1,4 +1,4 @@
-package com.yusuf.feature.playerlist
+package com.yusuf.feature.player_list
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
