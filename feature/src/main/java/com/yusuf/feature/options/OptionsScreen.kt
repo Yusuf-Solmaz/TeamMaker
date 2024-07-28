@@ -21,10 +21,10 @@ fun OptionsScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ElevatedButton(onClick = { /*TODO*/ }) {
-            Text(text = "Volleyball")
+            Text(text = "Players")
         }
         ElevatedButton(onClick = { /*TODO*/ }) {
-            Text(text = "Football")
+            Text(text = "Create a Match")
 
         }
 
