@@ -12,8 +12,11 @@ import androidx.navigation.compose.rememberNavController
 import com.yusuf.component.LoadingLottie
 import com.yusuf.feature.R
 import com.yusuf.feature.add_player.AddPlayerScreen
+import com.yusuf.feature.auth.forgot_password.ForgotPasswordScreen
 import com.yusuf.feature.create_match.CreateMatchScreen
 import com.yusuf.feature.home.ChooseSportScreen
+import com.yusuf.feature.auth.login.LoginScreen
+import com.yusuf.feature.auth.register.RegisterScreen
 import com.yusuf.feature.onboarding.OnBoardingScreen
 import com.yusuf.feature.options.OptionsScreen
 import com.yusuf.feature.player_list.PlayerListScreen
@@ -43,27 +46,34 @@ fun TeamMakerNavigation(mainViewModel: MainViewModel) {
             LoadingLottie(resId = R.raw.loading_anim)
         }
     }
-
-    else{
+    else {
         NavHost(navController = navController, startDestination = mainViewModel.startDestination) {
 
-            composable("onboarding_screen") {
+            composable(NavigationGraph.ONBOARDING_SCREEN.route) {
                 OnBoardingScreen(mainViewModel, navController)
             }
-
-            composable("choose_sport") {
+            composable(NavigationGraph.LOGIN.route) {
+                LoginScreen(navController)
+            }
+            composable(NavigationGraph.REGISTER.route) {
+                RegisterScreen(navController)
+            }
+            composable(NavigationGraph.FORGOT_PASSWORD.route) {
+                ForgotPasswordScreen(navController)
+            }
+            composable(NavigationGraph.CHOOSE_SPORT.route) {
                 ChooseSportScreen(navController)
             }
-            composable("options") {
+            composable(NavigationGraph.OPTIONS.route) {
                 OptionsScreen(navController)
             }
-            composable("players_list") {
+            composable(NavigationGraph.PLAYERS_LIST.route) {
                 PlayerListScreen(navController)
             }
-            composable("create_match") {
+            composable(NavigationGraph.CREATE_MATCH.route) {
                 CreateMatchScreen(navController)
             }
-            composable("add_player") {
+            composable(NavigationGraph.ADD_PLAYER.route) {
                 AddPlayerScreen(navController)
             }
         }
