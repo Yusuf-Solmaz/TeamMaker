@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.yusuf.component.NextBackButton
 import com.yusuf.component.PageIndicator
+import com.yusuf.navigation.NavigationGraph
 import com.yusuf.navigation.main_viewmodel.MainViewModel
 import getOnboardingPages
 import kotlinx.coroutines.launch
@@ -74,8 +75,8 @@ fun OnBoardingScreen(mainViewModel: MainViewModel, navController: NavController)
                         onGetStartedClick = {
                             scope.launch {
                                 mainViewModel.saveAppEntry()
-                                navController.navigate("choose_sport") {
-                                    popUpTo("onboarding_screen") { inclusive = true }
+                                navController.navigate(NavigationGraph.LOGIN.route) {
+                                    popUpTo(NavigationGraph.ONBOARDING_SCREEN.route) { inclusive = true }
                                 }
                             }
                         }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yusuf.navigation.NavigationGraph
 import com.yusuf.navigation.main_datastore.MainDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -33,9 +34,9 @@ class MainViewModel @Inject constructor(
 
             myPreferencesDataStore.readAppEntry.collect { loadOnBoardingScreen ->
                 startDestination = if (loadOnBoardingScreen) {
-                    "onboarding_screen"
+                    NavigationGraph.ONBOARDING_SCREEN.route
                 } else {
-                    "choose_sport"
+                    NavigationGraph.LOGIN.route
                 }
                 isLoading = false
             }
