@@ -1,4 +1,4 @@
-package com.yusuf.component.weather
+package com.yusuf.feature.create_match.weather
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,20 +17,28 @@ class WeatherViewModel @Inject constructor(
     private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase
 ) : ViewModel() {
 
-    private val _currentWeatherState = MutableStateFlow<RootResult<CurrentWeatherModel>>(RootResult.Loading)
-    val currentWeatherState : StateFlow<RootResult<CurrentWeatherModel>> = _currentWeatherState
+    private val _currentWeatherUIState = MutableStateFlow(WeatherUIState())
+    val currentWeatherUIState : StateFlow<WeatherUIState> = _currentWeatherUIState
 
     fun getCurrentWeather(lat:Double,lon:Double){
+        _currentWeatherUIState.value = _currentWeatherUIState.value.copy(isLoading = true)
+
         getCurrentWeatherUseCase(lat,lon).onEach { resource ->
             when(resource){
                 is RootResult.Error -> {
-                    _currentWeatherState.value = RootResult.Error(resource.message)
+                    _currentWeatherUIState.value = _currentWeatherUIState.value.copy(
+                        error = resource.message,
+                        isLoading = false
+                        )
                 }
                 is RootResult.Loading -> {
-                    _currentWeatherState.value = RootResult.Loading
+                    _currentWeatherUIState.value = _currentWeatherUIState.value.copy(isLoading = true)
                 }
                 is RootResult.Success -> {
-                    _currentWeatherState.value = RootResult.Success(resource.data)
+                    _currentWeatherUIState.value = _currentWeatherUIState.value.copy(
+                        currentWeather = resource.data,
+                        isLoading = false
+                    )
                 }
             }
         }.launchIn(viewModelScope)
