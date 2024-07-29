@@ -43,8 +43,6 @@ fun RegisterScreen(
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
     val context = LocalContext.current
 
 
@@ -53,7 +51,6 @@ fun RegisterScreen(
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
-
 
     LaunchedEffect(uiState.user) {
         uiState.user?.let {

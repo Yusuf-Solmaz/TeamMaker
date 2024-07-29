@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val authRepository: AuthRepository
@@ -34,13 +33,11 @@ class RegisterViewModel @Inject constructor(
                                 )
                             }
                         }
-
                         is RootResult.Error -> {
                             _uiState.value =
                                 _uiState.value.copy(error = result.message, isLoading = false)
                         }
-
-                        RootResult.Loading -> {
+                        is RootResult.Loading -> {
                             _uiState.value = _uiState.value.copy(isLoading = true)
                         }
                     }

@@ -1,5 +1,4 @@
 package com.yusuf.feature.auth.register.state
-
 import com.google.firebase.auth.FirebaseUser
 
 data class RegisterUIState(
