@@ -5,5 +5,5 @@ import androidx.navigation.NavController
 
 @Composable
 fun PlayerListScreen(navController: NavController){
-    TODO("Not yet implemented")
+
 }

@@ -33,8 +33,8 @@ fun OptionsScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        OptionsCard(navController, "Players", R.drawable.football, "football_options")
-        OptionsCard(navController, "Create a Match", R.drawable.volleyball, "create_match")
+        OptionsCard(navController, "Players", R.drawable.players, "players_list")
+        OptionsCard(navController, "Create a Match", R.drawable.createamatch, "create_match")
     }
 }
 
