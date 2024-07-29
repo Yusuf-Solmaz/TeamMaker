@@ -4,11 +4,9 @@ package com.yusuf.feature.auth.login.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.repository.firebase.auth.AuthRepository
-import com.yusuf.domain.repository.firebase.player.PlayerRepository
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.auth.login.state.IsLoggedInState
 import com.yusuf.feature.auth.login.state.LoginUiState
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

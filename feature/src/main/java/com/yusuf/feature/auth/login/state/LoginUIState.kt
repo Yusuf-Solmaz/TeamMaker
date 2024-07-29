@@ -1,5 +1,4 @@
 package com.yusuf.feature.auth.login.state
-
 import com.google.firebase.auth.FirebaseUser
 
 data class LoginUiState(
