@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
-import com.yusuf.component.weather.WeatherComponent
+import com.yusuf.feature.create_match.weather.Weather
 import com.yusuf.feature.R
 
 import java.util.Calendar
@@ -61,7 +59,7 @@ fun CreateMatchScreen(navController: NavController) {
     ) {
         TimePicker()
         Spacer(modifier = Modifier.height(2.dp))
-        WeatherComponent()
+        Weather()
     }
 
 }

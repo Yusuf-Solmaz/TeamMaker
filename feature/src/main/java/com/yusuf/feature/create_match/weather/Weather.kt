@@ -1,4 +1,4 @@
-package com.yusuf.component.weather
+package com.yusuf.feature.create_match.weather
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -14,13 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.util.RootResult
+import com.yusuf.feature.R
 
 @Composable
-fun WeatherComponent(
+fun Weather(
     viewModel: WeatherViewModel = hiltViewModel()
 ) {
-    val currentWeatherState by viewModel.currentWeatherState.collectAsState()
+    val currentWeatherState by viewModel.currentWeatherUIState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -28,23 +30,19 @@ fun WeatherComponent(
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        when (currentWeatherState) {
-            is RootResult.Loading -> {
-                Log.d("WeatherComponent", "Loading weather data...")
-                CircularProgressIndicator()
+        when {
+            currentWeatherState.isLoading -> {
+                LoadingLottie(R.raw.loading_anim)
             }
-            is RootResult.Success -> {
-                val weather = (currentWeatherState as RootResult.Success).data
-                Log.d("WeatherComponent", "Weather data loaded: ${weather?.mainModel?.temp}°C")
+            currentWeatherState.currentWeather != null -> {
+                val weather = currentWeatherState.currentWeather
                 Text(text = "Current Weather: ${weather?.mainModel?.temp}°C")
                 Text(text = "Min Temp: ${weather?.mainModel?.tempMin}°C")
                 Text(text = "Max Temp: ${weather?.mainModel?.tempMax}°C")
                 Text(text = "Weather: ${weather?.weatherModel?.firstOrNull()?.main}")
-
             }
-            is RootResult.Error -> {
-                val errorMessage = (currentWeatherState as RootResult.Error).message
-                Log.e("WeatherComponent", "Error loading weather data: $errorMessage")
+            currentWeatherState.error != null -> {
+                val errorMessage = currentWeatherState.error
                 Text(text = "Error: $errorMessage")
             }
         }
