@@ -1,6 +1,4 @@
 import java.util.Properties
-import java.io.File
-import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.android.library)
@@ -17,17 +15,20 @@ android {
     defaultConfig {
         minSdk = 24
 
+        val secretsPropertiesFile = project.rootProject.file("secrets.properties")
+        val properties = Properties()
+        properties.load(secretsPropertiesFile.inputStream())
+
+        val apiKey = properties.getProperty("API_KEY") ?: ""
+
+        buildConfigField(
+            type = "String",
+            name = "API_KEY",
+            value = apiKey
+        )
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-
-        val properties = Properties()
-        val localPropertiesFile = File("local.properties")
-        if (localPropertiesFile.exists()) {
-            FileInputStream(localPropertiesFile).use { input ->
-                properties.load(input)
-            }
-        }
-        buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY")}\"")
     }
 
     buildTypes {

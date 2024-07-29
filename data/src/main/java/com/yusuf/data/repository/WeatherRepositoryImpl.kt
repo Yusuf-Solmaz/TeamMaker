@@ -21,7 +21,7 @@ class WeatherRepositoryImpl @Inject constructor(
     override fun getCurrentWeather(
         lat: Double,
         lon: Double
-    ): Flow<RootResult<CurrentWeatherModel>> = flow{
+    ): Flow<RootResult<CurrentWeatherModel>> = flow {
         emit(RootResult.Loading)
         val currentWeatherResponseDto = weatherApiService.getCurrentWeather(lat, lon)
         val currentWeatherModel = currentWeatherResponseDto.toCurrentWeatherModel()
