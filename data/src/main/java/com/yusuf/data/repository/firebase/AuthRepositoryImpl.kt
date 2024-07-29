@@ -12,6 +12,7 @@ import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.repository.firebase.player.PlayerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
@@ -41,7 +42,9 @@ class AuthRepositoryImpl @Inject constructor(
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             val user = result.user
             user?.let {
-                val userDoc = firestore.collection("players").document(user.uid)
+
+                val userDoc = firestore.collection("users").document(user.uid)
+
                 val playerData = PlayerDataDto(
                     profilePhotoUrl = "",
                     firstName = "",
@@ -49,7 +52,8 @@ class AuthRepositoryImpl @Inject constructor(
                     position = "",
                     skillRating = 0
                 )
-                userDoc.set(playerData).await()
+
+                userDoc.collection("players").add(playerData).await()
             }
             emit(RootResult.Success(user))
         } catch (e: Exception) {
@@ -91,18 +95,42 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-
     override fun getAllPlayers(): Flow<RootResult<List<PlayerData>>> = flow {
         emit(RootResult.Loading)
         try {
-            val querySnapshot = firestore.collection("players").get().await()
-            val playerList = querySnapshot.documents.mapNotNull { document ->
-                val playerDataDto = document.toObject(PlayerDataDto::class.java)
-                playerDataDto?.toPlayerData()
+
+            val userIdResult = getCurrentUserId().first()
+
+            if (userIdResult is RootResult.Success) {
+                val userId = userIdResult.data
+                if (userId != null) {
+
+                    val querySnapshot = firestore.collection("users").document(userId).collection("players").get().await()
+                    val playerList = querySnapshot.documents.mapNotNull { document ->
+                        val playerDataDto = document.toObject(PlayerDataDto::class.java)
+                        playerDataDto?.toPlayerData()
+                    }
+                    emit(RootResult.Success(playerList))
+                } else {
+                    emit(RootResult.Error("User ID is null"))
+                }
+            } else {
+                emit(RootResult.Error("Failed to get user ID"))
             }
-            emit(RootResult.Success(playerList))
         } catch (e: Exception) {
             emit(RootResult.Error(e.message ?: "Something went wrong"))
         }
     }.flowOn(Dispatchers.IO)
+
+    override fun getCurrentUserId(): Flow<RootResult<String?>> = flow {
+        emit(RootResult.Loading)
+        try {
+            val currentUser = firebaseAuth.currentUser
+            val userId = currentUser?.uid
+            emit(RootResult.Success(userId))
+        } catch (e: Exception) {
+            emit(RootResult.Error(e.message ?: "Something went wrong"))
+        }
+    }.flowOn(Dispatchers.IO)
+
 }
