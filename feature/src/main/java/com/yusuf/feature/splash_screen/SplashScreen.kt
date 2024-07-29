@@ -1,6 +1,5 @@
 package com.yusuf.feature.splash_screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,7 +32,7 @@ fun SplashScreen() {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        Text(text = "Fast Buy", style = TextStyle(
+        Text(text = "Team Maker", style = TextStyle(
             color = Blue,
             fontSize = 50.sp,
             fontFamily = FontFamily(Font(R.font.splash_title_font)),
