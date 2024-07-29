@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.yusuf.component.weather.WeatherComponent
 import com.yusuf.feature.R
 
 import java.util.Calendar
@@ -51,7 +52,17 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CreateMatchScreen(navController: NavController) {
-    TimePicker()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        TimePicker()
+        Spacer(modifier = Modifier.height(2.dp))
+        WeatherComponent()
+    }
 
 }
 
@@ -67,10 +78,10 @@ fun TimePicker() {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
+            .width(300.dp)
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         IconButton(onClick = {
             showAdvancedExample = true
