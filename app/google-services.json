@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "174044505536",
+    "project_id": "teammaker-a3739",
+    "storage_bucket": "teammaker-a3739.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174044505536:android:ee031aa56be75f62c25425",
+        "android_client_info": {
+          "package_name": "com.yusuf.teammaker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCczgDxGS0nbH6uTwBXRwoN98ydCsPSGwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
