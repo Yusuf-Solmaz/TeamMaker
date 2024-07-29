@@ -5,9 +5,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yusuf.feature.add_player.AddPlayerScreen
+import com.yusuf.feature.create_match.CreateMatchScreen
 import com.yusuf.feature.home.ChooseSportScreen
 import com.yusuf.feature.options.OptionsScreen
-import com.yusuf.feature.playerlist.PlayerListScreen
+import com.yusuf.feature.player_list.PlayerListScreen
 
 @Composable
 fun TeamMakerNavigation() {
@@ -24,6 +25,9 @@ fun TeamMakerNavigation() {
         }
         composable("players_list") {
             PlayerListScreen(navController)
+        }
+        composable("create_match") {
+            CreateMatchScreen(navController)
         }
 
         composable("add_player") {

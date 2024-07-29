@@ -8,7 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.yusuf.component.LoadingLottie
 import com.yusuf.feature.R
 
@@ -30,3 +32,8 @@ fun AddPlayerScreen(navController: NavController){
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun AddPlayerScreenPreview() {
+    AddPlayerScreen(navController = rememberNavController())
+}
