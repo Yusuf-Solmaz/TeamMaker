@@ -37,6 +37,7 @@ class MainViewModel @Inject constructor(
                 } else {
                     "choose_sport"
                 }
+                delay(2500)
                 isLoading = false
             }
         }
