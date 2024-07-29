@@ -38,6 +38,7 @@ class MainViewModel @Inject constructor(
                 } else {
                     NavigationGraph.LOGIN.route
                 }
+                delay(2500)
                 isLoading = false
             }
         }
