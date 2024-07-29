@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <resources>
+        <string name="onboarding_title_1">Register Players and Create Teams</string>
+        <string name="onboarding_description_1">Enter our app to register your players and create the most balanced teams. Creating ideal teams for soccer, volleyball, and basketball is now very easy.</string>
+        <string name="onboarding_title_2">Ensure Team Balance</string>
+        <string name="onboarding_description_2">Input your player\'s skills and create balanced teams. Create your ideal teams for the most fair and balanced game experience.</string>
+        <string name="onboarding_title_3">Location and Weather Information</string>
+        <string name="onboarding_description_3">Use the map to set a location and instantly get weather information. Consider weather conditions while planning your match.</string>
+        <string name="get_started">Get Started</string>
+        <string name="next">Next</string>
+    </resources>
