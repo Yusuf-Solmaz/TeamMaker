@@ -66,6 +66,16 @@ fun LoginScreen(
         }
     }
 
+    LaunchedEffect(loggingState.transaction) {
+        if (loggingState.transaction) {
+            navController.navigate(NavigationGraph.CHOOSE_SPORT.route) {
+                popUpTo(NavigationGraph.CHOOSE_SPORT.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
 
     if (uiState.isLoading || loggingState.isLoading) {
         Column(
