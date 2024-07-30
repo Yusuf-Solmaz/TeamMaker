@@ -43,6 +43,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.yusuf.feature.create_match.weather.Weather
 import com.yusuf.feature.R
+import com.yusuf.feature.create_match.location.LocationScreen
 
 import java.util.Calendar
 import java.util.Locale
@@ -53,11 +54,13 @@ fun CreateMatchScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         TimePicker()
+        Spacer(modifier = Modifier.height(2.dp))
+        LocationScreen()
         Spacer(modifier = Modifier.height(2.dp))
         Weather()
     }

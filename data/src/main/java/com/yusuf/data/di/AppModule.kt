@@ -1,5 +1,6 @@
 package com.yusuf.data.di
 
+import android.app.Application
 import android.content.Context
 import com.yusuf.data.repository.LocationRepositoryImpl
 import com.yusuf.domain.repository.LocationRepository
@@ -13,6 +14,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
 
     @Provides
     @Singleton
