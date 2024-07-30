@@ -1,13 +1,15 @@
 package com.yusuf.feature.home.viewmodel
 
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.model.firebase.CompetitionData
+import com.yusuf.domain.use_cases.firebase_use_cases.image.ImageUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.AddCompetitionUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.DeleteCompetitionUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.GetAllCompetitionsUseCase
-import com.yusuf.domain.util.RootResult
+import com.yusuf.domain.util.RootResult.*
 import com.yusuf.feature.home.state.AddDeleteState
 import com.yusuf.feature.home.state.GetAllState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +22,8 @@ import javax.inject.Inject
 class CompetitionViewModel @Inject constructor(
     private val addCompetitionUseCase: AddCompetitionUseCase,
     private val deleteCompetitionUseCase: DeleteCompetitionUseCase,
-    private val getAllCompetitionsUseCase: GetAllCompetitionsUseCase
+    private val getAllCompetitionsUseCase: GetAllCompetitionsUseCase,
+    private val uploadImageUseCase: ImageUseCase
 ) : ViewModel() {
 
     private val _addDeleteState = MutableStateFlow(AddDeleteState())
@@ -29,16 +32,16 @@ class CompetitionViewModel @Inject constructor(
     private val _getAllState = MutableStateFlow(GetAllState())
     val getAllState: StateFlow<GetAllState> = _getAllState
 
-    fun addCompetition(competitionData: CompetitionData) {
-        _addDeleteState.value = AddDeleteState(isLoading = true, result = RootResult.Loading)
+   private fun addCompetition(competitionData: CompetitionData) {
+        _addDeleteState.value = AddDeleteState(isLoading = true, result = Loading)
         viewModelScope.launch {
             addCompetitionUseCase(competitionData).collect { result ->
                 _addDeleteState.value = AddDeleteState(
-                    isLoading = result is RootResult.Loading,
+                    isLoading = result is Loading,
                     result = result,
-                    error = if (result is RootResult.Error) result.message else null
+                    error = if (result is Error) result.message else null
                 )
-                if (result is RootResult.Success) {
+                if (result is Success) {
                     getAllCompetitions()
                 }
             }
@@ -46,15 +49,15 @@ class CompetitionViewModel @Inject constructor(
     }
 
     fun deleteCompetition(competitionData: CompetitionData) {
-        _addDeleteState.value = AddDeleteState(isLoading = true, result = RootResult.Loading)
+        _addDeleteState.value = AddDeleteState(isLoading = true, result = Loading)
         viewModelScope.launch {
             deleteCompetitionUseCase(competitionData).collect { result ->
                 _addDeleteState.value = AddDeleteState(
-                    isLoading = result is RootResult.Loading,
+                    isLoading = result is Loading,
                     result = result,
-                    error = if (result is RootResult.Error) result.message else null
+                    error = if (result is Error) result.message else null
                 )
-                if (result is RootResult.Success) {
+                if (result is Success) {
                     getAllCompetitions()
                 }
             }
@@ -62,16 +65,33 @@ class CompetitionViewModel @Inject constructor(
     }
 
     fun getAllCompetitions() {
-        _getAllState.value = GetAllState(isLoading = true, result = RootResult.Loading)
+        _getAllState.value = GetAllState(isLoading = true, result = Loading)
         viewModelScope.launch {
             getAllCompetitionsUseCase().collect { result ->
                 _getAllState.value = GetAllState(
-                    isLoading = result is RootResult.Loading,
-                    competitions = if (result is RootResult.Success) result.data ?: emptyList() else emptyList(),
+                    isLoading = result is Loading,
+                    competitions = if (result is Success) result.data ?: emptyList() else emptyList(),
                     result = result,
-                    error = if (result is RootResult.Error) result.message else null
+                    error = if (result is Error) result.message else null
                 )
             }
         }
     }
+
+    fun uploadImageAndAddCompetition(uri: Uri, competitionName: String) {
+        viewModelScope.launch {
+            val result = uploadImageUseCase(uri)
+            if (result.isSuccess) {
+                val imageUrl = result.getOrNull()
+                val competition = CompetitionData(
+                    competitionName = competitionName,
+                    competitionImageUrl = imageUrl ?: ""
+                )
+                addCompetition(competition)
+            } else {
+                // Handle the error if needed
+            }
+        }
+    }
 }
+
