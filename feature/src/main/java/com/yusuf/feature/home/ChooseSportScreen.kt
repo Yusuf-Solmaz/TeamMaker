@@ -41,26 +41,20 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.yusuf.domain.model.firebase.CompetitionData
 import com.yusuf.domain.util.RootResult
-import com.yusuf.feature.create_match.weather.WeatherViewModel
-import com.yusuf.feature.home.viewmodel.AddCompetitionViewModel
-import com.yusuf.feature.home.viewmodel.DeleteCompetitionViewModel
-import com.yusuf.feature.home.viewmodel.GetAllCompetitionsViewModel
+import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ChooseSportScreen(
     navController: NavController,
-    getAllCompetitionsViewModel: GetAllCompetitionsViewModel = hiltViewModel(),
-    addCompetitionViewModel: AddCompetitionViewModel = hiltViewModel(),
-    deleteCompetitionViewModel: DeleteCompetitionViewModel = hiltViewModel()
+    competitionViewModel: CompetitionViewModel = hiltViewModel()
 ) {
-    val deleteUiState by deleteCompetitionViewModel.uiState.collectAsState()
-    val addUiState by addCompetitionViewModel.uiState.collectAsState()
-    val allUiState by getAllCompetitionsViewModel.uiState.collectAsState()
+    val addDeleteState by competitionViewModel.addDeleteState.collectAsState()
+    val getAllState by competitionViewModel.getAllState.collectAsState()
     val openDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        getAllCompetitionsViewModel.getAllCompetitions()
+        competitionViewModel.getAllCompetitions()
     }
 
     Scaffold(
@@ -79,12 +73,12 @@ fun ChooseSportScreen(
                 AddCompetitionDialog(
                     onDismiss = { openDialog.value = false },
                     onSave = { competition ->
-                        addCompetitionViewModel.addCompetition(competition)
+                        competitionViewModel.addCompetition(competition)
                     }
                 )
             }
 
-            when (val state = allUiState.getAllCompetitionsResult) {
+            when (val state = getAllState.result) {
                 is RootResult.Loading -> CircularProgressIndicator()
                 is RootResult.Success -> {
                     val competitions = state.data ?: emptyList()
@@ -94,7 +88,7 @@ fun ChooseSportScreen(
                                 competition = competition,
                                 onDelete = {
                                     Log.d("ChooseSportScreen", "Delete button clicked for competition: ${competition.competitionId}")
-                                    deleteCompetitionViewModel.deleteCompetition(competition)
+                                    competitionViewModel.deleteCompetition(competition)
                                 }
                             )
                         }
@@ -106,24 +100,13 @@ fun ChooseSportScreen(
                 else -> {}
             }
 
-            when (val addState = addUiState.addCompetitionResult) {
+            when (val addState = addDeleteState.result) {
                 is RootResult.Loading -> CircularProgressIndicator()
                 is RootResult.Success -> {
-                    getAllCompetitionsViewModel.getAllCompetitions()
+                    // Optional: Show a success message or take any other action
                 }
                 is RootResult.Error -> {
                     Text(text = addState.message ?: "An error occurred")
-                }
-                else -> {}
-            }
-
-            when (val deleteState = deleteUiState.deleteCompetitionResult) {
-                is RootResult.Loading -> CircularProgressIndicator()
-                is RootResult.Success -> {
-                    getAllCompetitionsViewModel.getAllCompetitions()
-                }
-                is RootResult.Error -> {
-                    Text(text = deleteState.message ?: "An error occurred")
                 }
                 else -> {}
             }
