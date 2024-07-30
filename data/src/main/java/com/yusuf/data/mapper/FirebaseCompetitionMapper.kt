@@ -5,16 +5,16 @@ import com.yusuf.domain.model.firebase.CompetitionData
 
 fun CompetitionDataDto.toCompetitionData(): CompetitionData {
     return CompetitionData(
+        competitionId = competitionId,
         competitionName = competitionName,
-        competitionDescription = competitionDescription,
         competitionImageUrl = competitionImageUrl
     )
 }
 
 fun CompetitionData.toCompetitionDataDto(): CompetitionDataDto {
     return CompetitionDataDto(
-        competitionName = competitionName,
-        competitionDescription = competitionDescription,
-        competitionImageUrl = competitionImageUrl
-    )
-}
+            competitionId = competitionId,
+            competitionName = competitionName,
+            competitionImageUrl = competitionImageUrl
+        )
+    }
