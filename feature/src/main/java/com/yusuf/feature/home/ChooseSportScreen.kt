@@ -106,7 +106,7 @@ fun ChooseSportScreen(
                 }
 
                 is RootResult.Error -> {
-                    Text(text = state.message ?: "An error occurred")
+                    Text(text = state.message)
                 }
 
                 else -> {}
@@ -119,7 +119,7 @@ fun ChooseSportScreen(
                 }
 
                 is RootResult.Error -> {
-                    Text(text = addState.message ?: "An error occurred")
+                    Text(text = addState.message)
                 }
 
                 else -> {}
