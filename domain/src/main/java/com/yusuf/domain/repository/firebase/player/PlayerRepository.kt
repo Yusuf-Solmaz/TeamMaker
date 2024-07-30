@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface PlayerRepository {
     fun getAllPlayers(): Flow<RootResult<List<PlayerData>>>
     fun getCurrentUserId(): Flow<RootResult<String?>>
+    fun addPlayer(playerData: PlayerData): Flow<RootResult<Boolean>>
 }
