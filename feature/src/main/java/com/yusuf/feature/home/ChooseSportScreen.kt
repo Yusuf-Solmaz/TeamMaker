@@ -1,8 +1,10 @@
 package com.yusuf.feature.home
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +20,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,9 +40,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.firebase.CompetitionData
 import com.yusuf.domain.util.RootResult
+import com.yusuf.feature.R
 import com.yusuf.feature.home.viewmodel.CompetitionViewModel
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -79,35 +83,45 @@ fun ChooseSportScreen(
             }
 
             when (val state = getAllState.result) {
-                is RootResult.Loading -> CircularProgressIndicator()
+                is RootResult.Loading -> LoadingLottie(R.raw.loading_anim)
                 is RootResult.Success -> {
                     val competitions = state.data ?: emptyList()
                     LazyColumn {
                         items(competitions) { competition ->
                             CompetitionCard(
                                 competition = competition,
+                                onClick = {
+                                    navController.navigate("options")
+                                },
                                 onDelete = {
-                                    Log.d("ChooseSportScreen", "Delete button clicked for competition: ${competition.competitionId}")
+                                    Log.d(
+                                        "ChooseSportScreen",
+                                        "Delete button clicked for competition: ${competition.competitionId}"
+                                    )
                                     competitionViewModel.deleteCompetition(competition)
                                 }
                             )
                         }
                     }
                 }
+
                 is RootResult.Error -> {
                     Text(text = state.message ?: "An error occurred")
                 }
+
                 else -> {}
             }
 
             when (val addState = addDeleteState.result) {
-                is RootResult.Loading -> CircularProgressIndicator()
+                is RootResult.Loading -> LoadingLottie(R.raw.loading_anim)
                 is RootResult.Success -> {
-                    // Optional: Show a success message or take any other action
+                    Log.d(TAG, "ChooseSportScreen: ${addState.data}")
                 }
+
                 is RootResult.Error -> {
                     Text(text = addState.message ?: "An error occurred")
                 }
+
                 else -> {}
             }
         }
@@ -162,12 +176,14 @@ fun AddCompetitionDialog(
 @Composable
 fun CompetitionCard(
     competition: CompetitionData,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clickable { (onClick) }
     ) {
         Row(
             modifier = Modifier
