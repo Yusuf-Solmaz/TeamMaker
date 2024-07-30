@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.yusuf.data.repository.LocationRepositoryImpl
 import com.yusuf.domain.repository.LocationRepository
-import com.yusuf.domain.use_cases.GetLocationUseCase
+import com.yusuf.domain.use_cases.location.GetLocationUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

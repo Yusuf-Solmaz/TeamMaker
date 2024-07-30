@@ -62,20 +62,16 @@ fun LocationScreen(
 
     LaunchedEffect(Unit) {
         if (!permissionRequested) {
-            when {
-                ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                        ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED -> {
-                    viewModel.fetchLocation()
-                }
-                else -> {
-                    locationPermissionLauncher.launch(
-                        arrayOf(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                        )
+            if (viewModel.checkPermissions()) {
+                viewModel.fetchLocation()
+            } else  {
+                locationPermissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
                     )
-                    permissionRequested = true
-                }
+                )
+                permissionRequested = true
             }
         }
     }
@@ -112,18 +108,8 @@ fun LocationScreen(
                 Text("Error: ${uiState.error}")
             }
             uiState.location != null -> {
-                val geocoder = Geocoder(context, Locale.getDefault())
-                var locationName by remember { mutableStateOf("Unknown city") }
-
-                LaunchedEffect(uiState.location) {
-                    locationName = withContext(Dispatchers.IO) {
-                        val addresses = geocoder.getFromLocation(uiState.location!!.latitude, uiState.location!!.longitude, 1)
-                        addresses?.firstOrNull()?.locality ?: "Unknown city"
-                    }
-                }
-
                 Text("Latitude: ${uiState.location!!.latitude}, Longitude: ${uiState.location!!.longitude}")
-                Text(locationName)
+                Text(uiState.locationName ?: "Unknown city")
             }
             else -> {
                 Text("No location data available")
