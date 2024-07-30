@@ -2,7 +2,7 @@ package com.yusuf.feature.auth.register.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yusuf.domain.repository.firebase.auth.AuthRepository
+import com.yusuf.domain.use_cases.firebase_use_cases.auth.RegisterUseCase
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.auth.register.state.RegisterUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val registerUseCase: RegisterUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RegisterUIState())
@@ -22,7 +22,7 @@ class RegisterViewModel @Inject constructor(
     fun signUp(email: String, password: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            authRepository.signUpWithEmailAndPassword(email, password)
+            registerUseCase(email, password)
                 .collect { result ->
                     when (result) {
                         is RootResult.Success -> {
