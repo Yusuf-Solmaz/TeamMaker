@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-
+    // Project modules
     implementation(project(":domain"))
     implementation(project(":data"))
 
@@ -60,20 +60,25 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-
+    // Compose lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    // Lottie Animation
     implementation(libs.lottie.compose)
 
+    // Coil
     implementation(libs.coil.compose)
 
+    // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    // Firebase
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
 
+    // Datastore
     implementation(libs.androidx.datastore.preferences)
 }

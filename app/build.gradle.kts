@@ -54,7 +54,7 @@ android {
 }
 
 dependencies {
-
+    // Project modules
     implementation(project(":feature"))
 
     implementation(libs.androidx.core.ktx)
@@ -76,6 +76,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Hilt DI and Navigation
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
@@ -84,8 +85,12 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter)
 
+    // Firebase
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+
+    // Location Service
+    implementation(libs.play.services.location)
 
 }
