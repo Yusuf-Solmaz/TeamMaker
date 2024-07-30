@@ -34,27 +34,7 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             val user = result.user
-            user?.let {
 
-                val userDoc = firestore.collection("users").document(user.uid)
-
-                val playerData = PlayerDataDto(
-                    profilePhotoUrl = "",
-                    firstName = "",
-                    lastName = "",
-                    position = "",
-                    skillRating = 0
-                )
-
-                val competitionData = CompetitionDataDto(
-                    competitionName = "",
-                    competitionDescription = "",
-                    competitionImageUrl = ""
-                )
-
-                userDoc.collection("players").add(playerData).await()
-                userDoc.collection("competitions").add(competitionData).await()
-            }
             emit(RootResult.Success(user))
         } catch (e: Exception) {
             emit(RootResult.Error(e.message ?: "Something went wrong"))
