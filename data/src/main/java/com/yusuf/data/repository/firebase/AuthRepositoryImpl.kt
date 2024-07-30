@@ -3,6 +3,7 @@ package com.yusuf.data.repository.firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.yusuf.data.remote.dto.firebase_dto.CompetitionDataDto
 import com.yusuf.domain.repository.firebase.auth.AuthRepository
 import com.yusuf.domain.util.RootResult
 import com.yusuf.data.remote.dto.firebase_dto.PlayerDataDto
@@ -17,8 +18,6 @@ class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
 ) : AuthRepository{
-
-    private val auth = FirebaseAuth.getInstance()
 
     override suspend fun signInWithEmailAndPassword(email: String, password: String): Flow<RootResult<FirebaseUser>> = flow {
         emit(RootResult.Loading)
@@ -47,7 +46,14 @@ class AuthRepositoryImpl @Inject constructor(
                     skillRating = 0
                 )
 
+                val competitionData = CompetitionDataDto(
+                    competitionName = "",
+                    competitionDescription = "",
+                    competitionImageUrl = ""
+                )
+
                 userDoc.collection("players").add(playerData).await()
+                userDoc.collection("competitions").add(competitionData).await()
             }
             emit(RootResult.Success(user))
         } catch (e: Exception) {
@@ -82,7 +88,7 @@ class AuthRepositoryImpl @Inject constructor(
     override fun sendPasswordResetEmail(email: String): Flow<RootResult<Boolean>> = flow {
         emit(RootResult.Loading)
         try {
-            auth.sendPasswordResetEmail(email).await()
+            firebaseAuth.sendPasswordResetEmail(email).await()
             emit(RootResult.Success(true))
         } catch (e: Exception) {
             emit(RootResult.Error(e.message ?: "Something went wrong"))

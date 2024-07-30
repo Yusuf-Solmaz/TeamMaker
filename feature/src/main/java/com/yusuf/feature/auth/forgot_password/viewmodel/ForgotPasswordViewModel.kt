@@ -2,7 +2,7 @@ package com.yusuf.feature.auth.forgot_password.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yusuf.domain.repository.firebase.auth.AuthRepository
+import com.yusuf.domain.use_cases.firebase_use_cases.auth.ResetPasswordUseCase
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.auth.forgot_password.state.ForgotPasswordState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ForgotPasswordViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val resetPasswordUseCase: ResetPasswordUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ForgotPasswordState())
@@ -22,7 +22,7 @@ class ForgotPasswordViewModel @Inject constructor(
     fun sendPasswordResetEmail(email: String) {
         _uiState.value = _uiState.value.copy(isLoading = true)
         viewModelScope.launch {
-            authRepository.sendPasswordResetEmail(email).collect{
+            resetPasswordUseCase(email).collect{
                     result ->
                 when(result){
                     is RootResult.Loading -> {
