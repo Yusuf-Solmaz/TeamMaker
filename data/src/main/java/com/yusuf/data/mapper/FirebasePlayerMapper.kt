@@ -12,3 +12,13 @@ fun PlayerDataDto.toPlayerData(): PlayerData {
         skillRating = skillRating
     )
 }
+
+fun PlayerData.toPlayerDataDto(): PlayerDataDto {
+    return PlayerDataDto(
+        profilePhotoUrl = profilePhotoUrl,
+        firstName = firstName,
+        lastName = lastName,
+        position = position,
+        skillRating = skillRating
+    )
+}
