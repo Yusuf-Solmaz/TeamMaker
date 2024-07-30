@@ -3,7 +3,7 @@ package com.yusuf.component
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,19 +17,21 @@ fun DividerTextComponent() {
     Row(modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically) {
 
-        Divider(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f),
-            color = Color.Black,
-            thickness = 1.dp)
+        HorizontalDivider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            thickness = 1.dp, color = Color.Black
+        )
 
-        Text(modifier = Modifier.padding(8.dp),text = "or",fontSize = 14.sp, color = Color.LightGray,)
+        Text(modifier = Modifier.padding(8.dp),text = "or",fontSize = 14.sp, color = Color.LightGray)
 
-        Divider(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f),
-            color = Color.Black,
-            thickness = 1.dp)
+        HorizontalDivider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            thickness = 1.dp, color = Color.Black
+        )
 
 
 
