@@ -2,6 +2,7 @@ package com.yusuf.feature.create_match.location
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.yusuf.component.LoadingLottie
 import com.yusuf.feature.R
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @Composable
 fun LocationScreen(
@@ -76,7 +78,11 @@ fun LocationScreen(
                 Text("Error: ${uiState.error}")
             }
             uiState.location != null -> {
+                val geocoder = Geocoder(context, Locale.getDefault())
+                val addresses = geocoder.getFromLocation(uiState.location!!.latitude, uiState.location!!.longitude, 1)
+                val cityName = addresses?.firstOrNull()?.locality ?: "Unknown city"
                 Text("Latitude: ${uiState.location!!.latitude}, Longitude: ${uiState.location!!.longitude}")
+                Text("City: $cityName")
             }
             else -> {
                 Text("No location data available")
