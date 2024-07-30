@@ -56,7 +56,7 @@ fun Weather(
         locationState.location?.let { location ->
             try {
                 Log.d("WeatherComponent", "Fetching weather data for location: ${location.latitude}, ${location.longitude}")
-                viewModel.getCurrentWeather(lat = location.latitude, lon = location.latitude)
+                viewModel.getCurrentWeather(lat = location.latitude, lon = location.longitude)
             } catch (e: Exception) {
                 Log.e("WeatherComponent", "Error fetching weather data", e)
             }
