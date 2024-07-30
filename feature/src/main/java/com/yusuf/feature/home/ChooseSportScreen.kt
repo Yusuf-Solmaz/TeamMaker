@@ -1,7 +1,6 @@
 package com.yusuf.feature.home
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -64,7 +63,7 @@ fun ChooseSportScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { openDialog.value = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Add/Delete Competition")
+                Icon(Icons.Default.Add, contentDescription = "Add Competition")
             }
         }
     ) {
@@ -115,7 +114,7 @@ fun ChooseSportScreen(
             when (val addState = addDeleteState.result) {
                 is RootResult.Loading -> LoadingLottie(R.raw.loading_anim)
                 is RootResult.Success -> {
-                    Log.d(TAG, "ChooseSportScreen: ${addState.data}")
+                    Log.d("ChooseSportScreen", "Competition added successfully: ${addState.data}")
                 }
 
                 is RootResult.Error -> {
@@ -176,14 +175,14 @@ fun AddCompetitionDialog(
 @Composable
 fun CompetitionCard(
     competition: CompetitionData,
-    onDelete: () -> Unit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDelete: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { (onClick) }
+            .clickable { onClick() }
     ) {
         Row(
             modifier = Modifier
