@@ -53,7 +53,7 @@ android {
 }
 
 dependencies {
-
+    // Project modules
     implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
@@ -66,13 +66,16 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // Retrofit and OkHttp
     implementation (libs.retrofit)
     implementation (libs.okhttp)
     implementation (libs.retrofit.converter)
     implementation(libs.okhttp.logging.interceptor)
 
+    // Gson
     implementation (libs.gson)
 
+    // Hilt DI and Navigation
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
