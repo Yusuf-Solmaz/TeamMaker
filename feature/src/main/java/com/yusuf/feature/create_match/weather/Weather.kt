@@ -17,12 +17,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.R
+import com.yusuf.feature.create_match.location.LocationViewModel
 
 @Composable
 fun Weather(
-    viewModel: WeatherViewModel = hiltViewModel()
+    viewModel: WeatherViewModel = hiltViewModel(),
+    locationViewModel: LocationViewModel = hiltViewModel()
 ) {
     val currentWeatherState by viewModel.currentWeatherUIState.collectAsState()
+    val locationState by locationViewModel.locationUIState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -49,12 +52,14 @@ fun Weather(
     }
 
     // Trigger fetching weather data
-    LaunchedEffect(Unit) {
-        try {
-            Log.d("WeatherComponent", "Fetching weather data...")
-            viewModel.getCurrentWeather(lat = 36.92143205499421, lon = 30.803234126259916)
-        } catch (e: Exception) {
-            Log.e("WeatherComponent", "Error fetching weather data", e)
+    LaunchedEffect(locationState.location) {
+        locationState.location?.let { location ->
+            try {
+                Log.d("WeatherComponent", "Fetching weather data for location: ${location.latitude}, ${location.longitude}")
+                viewModel.getCurrentWeather(lat = location.latitude, lon = location.latitude)
+            } catch (e: Exception) {
+                Log.e("WeatherComponent", "Error fetching weather data", e)
+            }
         }
     }
 }
