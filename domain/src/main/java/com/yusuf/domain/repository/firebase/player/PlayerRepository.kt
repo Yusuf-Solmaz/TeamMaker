@@ -10,5 +10,6 @@ interface PlayerRepository {
     fun getCurrentUserId(): Flow<RootResult<String?>>
     suspend fun addPlayer(playerData: PlayerData): Flow<RootResult<Boolean>>
     suspend fun addCompetition(competitionData: CompetitionData): Flow<RootResult<Boolean>>
+    suspend fun deleteCompetition(competitionId: String): Flow <RootResult<Boolean>>
     suspend fun getAllCompetitions(): Flow<RootResult<List<CompetitionData>>>
 }

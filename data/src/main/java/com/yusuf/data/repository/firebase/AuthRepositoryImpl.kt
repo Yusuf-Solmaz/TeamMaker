@@ -47,8 +47,8 @@ class AuthRepositoryImpl @Inject constructor(
                 )
 
                 val competitionData = CompetitionDataDto(
+                   competitionId = "",
                     competitionName = "",
-                    competitionDescription = "",
                     competitionImageUrl = ""
                 )
 
