@@ -4,8 +4,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.yusuf.data.repository.firebase.AuthRepositoryImpl
+import com.yusuf.data.repository.firebase.ImageRepositoryImpl
 import com.yusuf.data.repository.firebase.PlayerRepositoryImpl
 import com.yusuf.domain.repository.firebase.auth.AuthRepository
+import com.yusuf.domain.repository.firebase.image.ImageRepository
 import com.yusuf.domain.repository.firebase.player.PlayerRepository
 
 import dagger.Module
@@ -55,4 +57,14 @@ object FirebaseModule {
     ): PlayerRepository {
         return PlayerRepositoryImpl(firebaseAuth, firestore)
     }
+
+
+    @Provides
+    @Singleton
+    fun provideImageRepository(
+        storage: FirebaseStorage
+    ): ImageRepository {
+        return ImageRepositoryImpl(storage)
+    }
+
 }
