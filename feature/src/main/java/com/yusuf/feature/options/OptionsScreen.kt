@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.yusuf.feature.R
+import com.yusuf.navigation.NavigationGraph
 
 @Composable
 fun OptionsScreen(navController: NavController) {
@@ -33,8 +34,8 @@ fun OptionsScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        OptionsCard(navController, "Players", R.drawable.players, "players_list")
-        OptionsCard(navController, "Create a Match", R.drawable.createamatch, "create_match")
+        OptionsCard(navController, "Players", R.drawable.players, NavigationGraph.ADD_PLAYER.route)
+        OptionsCard(navController, "Create a Match", R.drawable.createamatch, NavigationGraph.CREATE_MATCH.route)
     }
 }
 

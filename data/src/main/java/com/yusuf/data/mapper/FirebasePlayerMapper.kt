@@ -5,6 +5,7 @@ import com.yusuf.domain.model.firebase.PlayerData
 
 fun PlayerDataDto.toPlayerData(): PlayerData {
     return PlayerData(
+        id = id,
         profilePhotoUrl = profilePhotoUrl,
         firstName = firstName,
         lastName = lastName,
@@ -15,6 +16,7 @@ fun PlayerDataDto.toPlayerData(): PlayerData {
 
 fun PlayerData.toPlayerDataDto(): PlayerDataDto {
     return PlayerDataDto(
+        id = id,
         profilePhotoUrl = profilePhotoUrl,
         firstName = firstName,
         lastName = lastName,
