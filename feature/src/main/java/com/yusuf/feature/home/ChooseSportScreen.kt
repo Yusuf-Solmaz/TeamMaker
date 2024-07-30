@@ -88,66 +88,69 @@ fun ChooseSportScreen(
                     }
                 }
             )
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            if (openDialog.value) {
-                AddCompetitionDialog(
-                    onDismiss = { openDialog.value = false },
-                    onSave = { competition ->
-                        competitionViewModel.addCompetition(competition)
-                    }
-                )
-            }
+        },
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                if (openDialog.value) {
+                    AddCompetitionDialog(
+                        onDismiss = { openDialog.value = false },
+                        onSave = { competition ->
+                            competitionViewModel.addCompetition(competition)
+                        }
+                    )
+                }
 
-            when (val state = getAllState.result) {
-                is RootResult.Loading -> LoadingLottie(R.raw.loading_anim)
-                is RootResult.Success -> {
-                    val competitions = state.data ?: emptyList()
-                    LazyColumn {
-                        items(competitions) { competition ->
-                            CompetitionCard(
-                                competition = competition,
-                                onClick = {
-                                    navController.navigate("options")
-                                },
-                                onDelete = {
-                                    Log.d(
-                                        "ChooseSportScreen",
-                                        "Delete button clicked for competition: ${competition.competitionId}"
-                                    )
-                                    competitionViewModel.deleteCompetition(competition)
-                                }
-                            )
+                when (val state = getAllState.result) {
+                    is RootResult.Loading -> LoadingLottie(R.raw.loading_anim)
+                    is RootResult.Success -> {
+                        val competitions = state.data ?: emptyList()
+                        LazyColumn(
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
+                            items(competitions) { competition ->
+                                CompetitionCard(
+                                    competition = competition,
+                                    onClick = {
+                                        navController.navigate("options")
+                                    },
+                                    onDelete = {
+                                        Log.d(
+                                            "ChooseSportScreen",
+                                            "Delete button clicked for competition: ${competition.competitionId}"
+                                        )
+                                        competitionViewModel.deleteCompetition(competition)
+                                    }
+                                )
+                            }
                         }
                     }
+
+                    is RootResult.Error -> {
+                        Text(text = state.message)
+                    }
+
+                    else -> {}
                 }
 
-                is RootResult.Error -> {
-                    Text(text = state.message)
+                when (val addState = addDeleteState.result) {
+                    is RootResult.Loading -> LoadingLottie(R.raw.loading_anim)
+                    is RootResult.Success -> {
+                        Log.d("ChooseSportScreen", "Competition added successfully: ${addState.data}")
+                    }
+
+                    is RootResult.Error -> {
+                        Text(text = addState.message)
+                    }
+
+                    else -> {}
                 }
-
-                else -> {}
-            }
-
-            when (val addState = addDeleteState.result) {
-                is RootResult.Loading -> LoadingLottie(R.raw.loading_anim)
-                is RootResult.Success -> {
-                    Log.d("ChooseSportScreen", "Competition added successfully: ${addState.data}")
-                }
-
-                is RootResult.Error -> {
-                    Text(text = addState.message)
-                }
-
-                else -> {}
             }
         }
-    }
+    )
 }
 
 @Composable
