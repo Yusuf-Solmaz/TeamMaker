@@ -84,17 +84,17 @@ fun TeamMakerNavigation(
                 onTitleChange("Options")
             }
             composable(NavigationGraph.PLAYER_LIST.route) {
-                PlayerListScreen(navController)
+                PlayerListScreen()
                 onTitleChange("Player List")
             }
             composable(NavigationGraph.CREATE_MATCH.route) {
                 CreateMatchScreen(navController)
                 onTitleChange("Create Match")
             }
-            composable(NavigationGraph.ADD_PLAYER.route) {
-                PlayerListScreen(navController)
-                onTitleChange("Add Player")
-            }
+//            composable(NavigationGraph.ADD_PLAYER.route) {
+//                PlayerListScreen(navController)
+//                onTitleChange("Add Player")
+//            }
         }
     }
 }
