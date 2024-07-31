@@ -1,5 +1,6 @@
 package com.yusuf.domain.repository.firebase.player
 
+import android.net.Uri
 import com.yusuf.domain.model.firebase.CompetitionData
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.util.RootResult
@@ -13,5 +14,6 @@ interface PlayerRepository {
     suspend fun getAllCompetitions(): Flow<RootResult<List<CompetitionData>>>
     fun getCurrentUserId(): Flow<RootResult<String?>>
     suspend fun deletePlayerById(playerId: String): Flow<RootResult<Boolean>>
-    suspend fun updatePlayerById(playerId: String, updatedPlayerData: PlayerData) : Flow<RootResult<Boolean>>
+    suspend fun updatePlayerById(playerId: String, updatedPlayerData: PlayerData,imageUri:Uri?) : Flow<RootResult<Boolean>>
+    suspend fun uploadImage(uri: Uri): Flow<RootResult<String>>
 }
