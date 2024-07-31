@@ -30,7 +30,7 @@ class PlayerListViewModel @Inject constructor(
 
     private val _playerListUIState = MutableStateFlow(PlayerUiState())
     val playerListUIState: StateFlow<PlayerUiState> = _playerListUIState
-    
+
     fun getAllPlayers(){
         _playerListUIState.value = _playerListUIState.value.copy(isLoading = true)
         viewModelScope.launch {
