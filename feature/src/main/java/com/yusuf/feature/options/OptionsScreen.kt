@@ -34,7 +34,7 @@ fun OptionsScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        OptionsCard(navController, "Players", R.drawable.players, NavigationGraph.ADD_PLAYER.route)
+        OptionsCard(navController, "Players", R.drawable.players, NavigationGraph.PLAYER_LIST.route)
         OptionsCard(navController, "Create a Match", R.drawable.createamatch, NavigationGraph.CREATE_MATCH.route)
     }
 }
