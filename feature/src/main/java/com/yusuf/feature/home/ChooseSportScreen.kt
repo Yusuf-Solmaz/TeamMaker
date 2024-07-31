@@ -2,6 +2,7 @@ package com.yusuf.feature.home
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -43,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -67,6 +69,7 @@ fun ChooseSportScreen(
     val getAllState by competitionViewModel.getAllState.collectAsState()
     val openDialog = remember { mutableStateOf(false) }
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
+    val getContext = LocalContext.current
 
     LaunchedEffect(Unit) {
         competitionViewModel.getAllCompetitions()
@@ -113,7 +116,9 @@ fun ChooseSportScreen(
                         onDismiss = { openDialog.value = false },
                         onSave = { competitionName ->
                             selectedImageUri.value?.let { uri ->
-                                competitionViewModel.uploadImageAndAddCompetition(uri, competitionName)
+                                val context = getContext
+                                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                                competitionViewModel.uploadImageAndAddCompetition(bitmap, competitionName)
                             }
                         },
                         onImagePick = {
@@ -170,6 +175,7 @@ fun ChooseSportScreen(
         }
     )
 }
+
 @Composable
 fun AddCompetitionDialog(
     onDismiss: () -> Unit,
