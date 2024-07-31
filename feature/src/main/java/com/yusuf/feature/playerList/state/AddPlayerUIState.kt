@@ -1,4 +1,4 @@
-package com.yusuf.feature.add_player.state
+package com.yusuf.feature.playerList.state
 
 data class AddPlayerUIState(
     val isLoading: Boolean = false,

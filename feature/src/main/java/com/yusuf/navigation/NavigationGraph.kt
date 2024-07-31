@@ -5,7 +5,7 @@ enum class NavigationGraph(val route: String) {
         ONBOARDING_SCREEN("onboarding_screen"),
         CHOOSE_SPORT("choose_sport"),
         OPTIONS("options"),
-        PLAYERS_LIST("players_list"),
+        PLAYER_LIST("player_list"),
         CREATE_MATCH("create_match"),
         ADD_PLAYER("add_player"),
         LOGIN("login"),

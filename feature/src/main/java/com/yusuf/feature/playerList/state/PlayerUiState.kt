@@ -1,4 +1,4 @@
-package com.yusuf.feature.add_player.state
+package com.yusuf.feature.playerList.state
 
 import com.yusuf.domain.model.firebase.PlayerData
 

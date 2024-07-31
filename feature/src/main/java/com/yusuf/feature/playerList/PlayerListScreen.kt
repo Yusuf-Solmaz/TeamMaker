@@ -1,4 +1,4 @@
-package com.yusuf.feature.add_player
+package com.yusuf.feature.playerList
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
@@ -20,13 +20,13 @@ import com.yusuf.component.LoadingLottie
 import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
-import com.yusuf.feature.add_player.viewmodel.AddPlayerViewModel
+import com.yusuf.feature.playerList.viewmodel.PlayerListViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddPlayerScreen(
     navController: NavController,
-    viewModel: AddPlayerViewModel = hiltViewModel()
+    viewModel: PlayerListViewModel = hiltViewModel()
 ) {
     val addPlayerUiState by viewModel.playerUiState.collectAsState()
     val playerListUiState by viewModel.playerListUIState.collectAsState()

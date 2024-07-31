@@ -1,4 +1,4 @@
-package com.yusuf.feature.add_player.viewmodel
+package com.yusuf.feature.playerList.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,8 +8,8 @@ import com.yusuf.domain.use_cases.firebase_use_cases.user.AddPlayerUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.DeletePlayerByIdUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.GetAllPlayersUseCase
 import com.yusuf.domain.util.RootResult
-import com.yusuf.feature.add_player.state.AddPlayerUIState
-import com.yusuf.feature.add_player.state.PlayerUiState
+import com.yusuf.feature.playerList.state.AddPlayerUIState
+import com.yusuf.feature.playerList.state.PlayerUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddPlayerViewModel @Inject constructor(
+class PlayerListViewModel @Inject constructor(
     private val addPlayerUseCase: AddPlayerUseCase,
     private val deletePlayerByIdUseCase: DeletePlayerByIdUseCase,
     private val getAllPlayersUseCase: GetAllPlayersUseCase

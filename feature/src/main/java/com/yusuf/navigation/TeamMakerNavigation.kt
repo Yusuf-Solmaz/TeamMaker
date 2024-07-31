@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yusuf.component.LoadingLottie
 import com.yusuf.feature.R
-import com.yusuf.feature.add_player.AddPlayerScreen
+import com.yusuf.feature.playerList.AddPlayerScreen
 import com.yusuf.feature.auth.forgot_password.ForgotPasswordScreen
 import com.yusuf.feature.create_match.CreateMatchScreen
 import com.yusuf.feature.home.ChooseSportScreen
@@ -67,7 +67,7 @@ fun TeamMakerNavigation(mainViewModel: MainViewModel) {
             composable(NavigationGraph.OPTIONS.route) {
                 OptionsScreen(navController)
             }
-            composable(NavigationGraph.PLAYERS_LIST.route) {
+            composable(NavigationGraph.PLAYER_LIST.route) {
                 PlayerListScreen(navController)
             }
             composable(NavigationGraph.CREATE_MATCH.route) {
