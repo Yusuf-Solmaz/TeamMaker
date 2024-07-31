@@ -35,6 +35,7 @@ fun PlayerListScreen(
     viewModel: PlayerListViewModel = hiltViewModel()
 ) {
     val playerListUiState by viewModel.playerListUIState.collectAsState()
+
     var showAddPlayerDialog by remember { mutableStateOf(false) }
     var showUpdatePlayerDialog by remember { mutableStateOf(false) }
     var playerDataToUpdate by remember { mutableStateOf<PlayerData?>(null) }
@@ -73,42 +74,43 @@ fun PlayerListScreen(
                             Text(text = "Error: ${playerListUiState.error}")
                         }
                     }
-                    playerListUiState.playerList.isNullOrEmpty() -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "You don't have any players yet.",
-                                modifier = Modifier.padding(bottom = 10.dp),
-                                fontFamily = FontFamily(
-                                    Font(R.font.onboarding_title1, FontWeight.Normal)
-                                ),
-                                style = TextStyle(
-                                    fontSize = 20.sp
+                    playerListUiState.playerList != null -> {
+                        if (playerListUiState.playerList?.isEmpty() == true) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "You don't have any players yet.",
+                                    modifier = Modifier.padding(bottom = 10.dp),
+                                    fontFamily = FontFamily(
+                                        Font(R.font.onboarding_title1, FontWeight.Normal)
+                                    ),
+                                    style = TextStyle(
+                                        fontSize = 20.sp
+                                    )
                                 )
-                            )
-                            Text(
-                                text = "Start adding now.",
-                                fontFamily = FontFamily(
-                                    Font(R.font.onboarding_title1, FontWeight.Normal)
-                                ),
-                                style = TextStyle(
-                                    fontSize = 20.sp
+                                Text(
+                                    text = "Start adding now.",
+                                    fontFamily = FontFamily(
+                                        Font(R.font.onboarding_title1, FontWeight.Normal)
+                                    ),
+                                    style = TextStyle(
+                                        fontSize = 20.sp
+                                    )
                                 )
-                            )
+                            }
                         }
-                    }
-                    else -> {
+
                         LazyColumn(
                             modifier = Modifier
                                 .weight(1f)
                         ) {
-                            items(playerListUiState.playerList!!) { player ->
+                            items(playerListUiState.playerList!!.size) { index ->
                                 PlayerListItem(
-                                    playerData = player,
+                                    playerData = playerListUiState.playerList!![index],
                                     onDelete = { id ->
                                         viewModel.deletePlayerById(id)
                                     },
@@ -126,19 +128,17 @@ fun PlayerListScreen(
             if (showAddPlayerDialog) {
                 AddPlayerDialog(
                     onDismiss = { showAddPlayerDialog = false },
-                    onAddPlayer = { profilePhotoUri, firstName, lastName, position, skillRating ->
-                        profilePhotoUri?.toString()?.let { it1 ->
-                            PlayerData(
-                                profilePhotoUrl = it1,
-                                firstName = firstName,
-                                lastName = lastName,
-                                position = position,
-                                skillRating = skillRating
-                            )
-                        }?.let { it2 ->
+                    onAddPlayer = { profilePhotoUrl, firstName, lastName, position, skillRating ->
+                        if (profilePhotoUrl != null) {
                             viewModel.addPlayer(
-                                it2,
-                                profilePhotoUri
+                                PlayerData(
+                                    profilePhotoUrl = profilePhotoUrl.toString(),
+                                    firstName = firstName,
+                                    lastName = lastName,
+                                    position = position,
+                                    skillRating = skillRating
+                                ),
+                                profilePhotoUrl
                             )
                         }
                         showAddPlayerDialog = false
@@ -152,11 +152,7 @@ fun PlayerListScreen(
                     onDismiss = { showUpdatePlayerDialog = false },
                     onUpdatePlayer = { updatedPlayerData, imageUri ->
                         if (imageUri != null) {
-                            viewModel.updatePlayerById(
-                                updatedPlayerData.id,
-                                updatedPlayerData,
-                                imageUri
-                            )
+                            viewModel.updatePlayerById(updatedPlayerData.id, updatedPlayerData, imageUri)
                         }
                         showUpdatePlayerDialog = false
                     }
@@ -178,13 +174,12 @@ fun PlayerListItem(
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // Resim URL'sinden resim gösterimi
             playerData.profilePhotoUrl?.let { url ->
                 Image(
                     painter = rememberImagePainter(url),
                     contentDescription = "Profile Photo",
                     modifier = Modifier
-                        .size(100.dp)  // İstediğiniz boyut
+                        .size(100.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.surface)
                         .padding(8.dp),
@@ -307,7 +302,6 @@ fun UpdatePlayerDialog(
                 Button(onClick = { launcher.launch("image/*") }) {
                     Text("Select Profile Photo")
                 }
-                // Image preview and other input fields...
                 TextField(
                     value = firstName,
                     onValueChange = { firstName = it },
