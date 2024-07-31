@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +46,7 @@ import androidx.navigation.NavController
 import com.yusuf.feature.create_match.weather.Weather
 import com.yusuf.feature.R
 import com.yusuf.feature.create_match.location.LocationScreen
+import com.yusuf.navigation.NavigationGraph
 
 
 import java.util.Calendar
@@ -58,7 +60,7 @@ fun CreateMatchScreen(navController: NavController) {
             .fillMaxSize()
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         TimePicker()
         Spacer(modifier = Modifier.height(2.dp))
@@ -66,9 +68,20 @@ fun CreateMatchScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(2.dp))
         Weather()
         Spacer(modifier = Modifier.height(2.dp))
+        Button(
+            onClick = {
+                navController.navigate(NavigationGraph.TEAM_LIST.route)
+            },
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .width(200.dp)
+        ) {
+            Text("Continue")
+        }
         SelectPlayerScreen()
-    }
+        Spacer(modifier = Modifier.height(2.dp))
 
+    }
 }
 
 

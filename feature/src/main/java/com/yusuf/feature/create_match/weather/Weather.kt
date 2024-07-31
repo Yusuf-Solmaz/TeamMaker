@@ -30,7 +30,6 @@ fun Weather(
 
     Column(
         modifier = Modifier
-
             .padding(2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
