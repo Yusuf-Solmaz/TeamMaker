@@ -69,7 +69,7 @@ class PlayerRepositoryImpl @Inject constructor(
                 uploadImage(imageUri).collect { result ->
                     when (result) {
                         is RootResult.Loading -> {
-                            // Yükleniyor
+
                         }
                         is RootResult.Success -> {
                             val imageUrl = result.data
