@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.yusuf.component.LoadingLottie
 import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
@@ -25,10 +24,8 @@ import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PlayerListScreen(
-    navController: NavController,
     viewModel: PlayerListViewModel = hiltViewModel()
 ) {
-    val addPlayerUiState by viewModel.playerUiState.collectAsState()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
 
     var showAddPlayerDialog by remember { mutableStateOf(false) }
@@ -45,11 +42,10 @@ fun PlayerListScreen(
                 Text(text = "Add Player")
             }
         },
-        content = { padding ->
+        content = {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(padding)
                 ) {
                     when {
                         playerListUiState.isLoading -> {
@@ -75,8 +71,7 @@ fun PlayerListScreen(
                             if (playerListUiState.playerList?.isEmpty() == true){
                                 Column(
                                     modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(padding),
+                                        .fillMaxSize(),
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {

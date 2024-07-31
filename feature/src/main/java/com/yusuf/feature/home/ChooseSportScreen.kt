@@ -1,6 +1,9 @@
 package com.yusuf.feature.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
@@ -57,6 +60,7 @@ import com.yusuf.feature.auth.login.viewmodel.LoginViewModel
 import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -68,8 +72,14 @@ fun ChooseSportScreen(
     val addDeleteState by competitionViewModel.addDeleteState.collectAsState()
     val getAllState by competitionViewModel.getAllState.collectAsState()
     val openDialog = remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
     val getContext = LocalContext.current
+
+    BackHandler {
+        (context as? Activity)?.finish()
+    }
 
     LaunchedEffect(Unit) {
         competitionViewModel.getAllCompetitions()
@@ -88,28 +98,10 @@ fun ChooseSportScreen(
                 Icon(Icons.Default.Add, contentDescription = "Add Competition")
             }
         },
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Choose Sport") },
-                actions = {
-                    IconButton(onClick = {
-                        loginViewModel.signOut()
-                        navController.navigate("login") {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                        }
-                    }) {
-                        Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Logout")
-                    }
-                }
-            )
-        },
-        content = { paddingValues ->
+        content = {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
             ) {
                 if (openDialog.value) {
                     AddCompetitionDialog(
