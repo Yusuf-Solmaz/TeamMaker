@@ -1,7 +1,9 @@
 package com.yusuf.feature.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -48,6 +51,7 @@ import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.R
 import com.yusuf.feature.auth.login.viewmodel.LoginViewModel
 import com.yusuf.feature.home.viewmodel.CompetitionViewModel
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +65,11 @@ fun ChooseSportScreen(
     val addDeleteState by competitionViewModel.addDeleteState.collectAsState()
     val getAllState by competitionViewModel.getAllState.collectAsState()
     val openDialog = remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    BackHandler {
+        (context as? Activity)?.finish()
+    }
 
     LaunchedEffect(Unit) {
         competitionViewModel.getAllCompetitions()
@@ -72,28 +81,10 @@ fun ChooseSportScreen(
                 Icon(Icons.Default.Add, contentDescription = "Add Competition")
             }
         },
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Choose Sport") },
-                actions = {
-                    IconButton(onClick = {
-                        loginViewModel.signOut()
-                        navController.navigate("login") {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                        }
-                    }) {
-                        Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Logout")
-                    }
-                }
-            )
-        },
-        content = { paddingValues ->
+        content = {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
             ) {
                 if (openDialog.value) {
                     AddCompetitionDialog(
