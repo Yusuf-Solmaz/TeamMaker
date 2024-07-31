@@ -3,6 +3,7 @@ package com.yusuf.feature.create_match.weather
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -29,7 +30,7 @@ fun Weather(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+
             .padding(2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
