@@ -7,6 +7,7 @@ import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.use_cases.firebase_use_cases.user.AddPlayerUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.DeletePlayerByIdUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.GetAllPlayersUseCase
+import com.yusuf.domain.use_cases.firebase_use_cases.user.UpdatePlayerByIdUseCase
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.player_list.state.AddPlayerUIState
 import com.yusuf.feature.player_list.state.PlayerUiState
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class PlayerListViewModel @Inject constructor(
     private val addPlayerUseCase: AddPlayerUseCase,
     private val deletePlayerByIdUseCase: DeletePlayerByIdUseCase,
+    private val updatePlayerByIdUseCase: UpdatePlayerByIdUseCase,
     private val getAllPlayersUseCase: GetAllPlayersUseCase
 ) : ViewModel(){
 
@@ -28,8 +30,7 @@ class PlayerListViewModel @Inject constructor(
 
     private val _playerListUIState = MutableStateFlow(PlayerUiState())
     val playerListUIState: StateFlow<PlayerUiState> = _playerListUIState
-
-
+    
     fun getAllPlayers(){
         _playerListUIState.value = _playerListUIState.value.copy(isLoading = true)
         viewModelScope.launch {
@@ -77,6 +78,29 @@ class PlayerListViewModel @Inject constructor(
         }
     }
 
+    fun updatePlayerById(playerId: String, updatedPlayerData: PlayerData){
+        _playerUiState.value = _playerUiState.value.copy(isLoading = true)
+        viewModelScope.launch {
+            updatePlayerByIdUseCase(playerId, updatedPlayerData).collect{
+                result->
+                when(result){
+                    is RootResult.Loading -> {
+                        Log.d("AddPlayerViewModel", "Loading")
+                        _playerUiState.value = _playerUiState.value.copy(isLoading = true,error = null,transaction = false)
+                    }
+                    is RootResult.Error -> {
+                        Log.d("AddPlayerViewModel", "Error: ${result.message}")
+                        _playerUiState.value = _playerUiState.value.copy(error = result.message, isLoading = false,transaction = false)
+                    }
+                    is RootResult.Success -> {
+                        Log.d("AddPlayerViewModel", "Success")
+                        _playerUiState.value = _playerUiState.value.copy(transaction = true, isLoading = false, error = null)
+                        getAllPlayers()
+                    }
+                }
+            }
+        }
+    }
 
     fun addPlayer(playerData: PlayerData){
         _playerUiState.value = _playerUiState.value.copy(isLoading = true)
@@ -101,5 +125,4 @@ class PlayerListViewModel @Inject constructor(
             }
         }
     }
-
 }
