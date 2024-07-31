@@ -32,12 +32,12 @@ fun PlayerListScreen(
     val playerListUiState by viewModel.playerListUIState.collectAsState()
 
     var showAddPlayerDialog by remember { mutableStateOf(false) }
+    var showUpdatePlayerDialog by remember { mutableStateOf(false) }
+    var playerDataToUpdate by remember { mutableStateOf<PlayerData?>(null) }
 
     LaunchedEffect(true) {
         viewModel.getAllPlayers()
     }
-
-
 
     Scaffold(
         floatingActionButton = {
@@ -107,9 +107,16 @@ fun PlayerListScreen(
                                     .weight(1f)
                             ) {
                                 items(playerListUiState.playerList!!.size) { index ->
-                                    PlayerListItem(playerData = playerListUiState.playerList!![index], onDelete = { id ->
+                                    PlayerListItem(
+                                        playerData = playerListUiState.playerList!![index],
+                                        onDelete = { id ->
                                         viewModel.deletePlayerById(id)
-                                    })
+                                        },
+                                        onUpdatePlayer = { playerData ->
+                                            playerDataToUpdate = playerData
+                                            showUpdatePlayerDialog = true
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -133,11 +140,22 @@ fun PlayerListScreen(
                     }
                 )
             }
+
+            if (showUpdatePlayerDialog && playerDataToUpdate != null) {
+                UpdatePlayerDialog(
+                    playerData = playerDataToUpdate!!,
+                    onDismiss = { showUpdatePlayerDialog = false },
+                    onUpdatePlayer = { updatedPlayerData ->
+                        viewModel.updatePlayerById(updatedPlayerData.id, updatedPlayerData)
+                        showUpdatePlayerDialog = false
+                    }
+                )
+            }
         }
     )
 }
 @Composable
-fun PlayerListItem(playerData: PlayerData, onDelete: (String) -> Unit) {
+fun PlayerListItem(playerData: PlayerData, onDelete: (String) -> Unit, onUpdatePlayer: (PlayerData) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -149,8 +167,14 @@ fun PlayerListItem(playerData: PlayerData, onDelete: (String) -> Unit) {
             Text(text = "Position: ${playerData.position}")
             Text(text = "Skill Rating: ${playerData.skillRating}")
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { onDelete(playerData.id) }) {
+            Row {
+                Button(onClick = { onDelete(playerData.id) }) {
                 Text(text = "Delete")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { onUpdatePlayer(playerData) }) {
+                    Text(text = "Edit")
+                }
             }
         }
     }
@@ -228,6 +252,98 @@ fun AddPlayerDialog(
                 }
             ) {
                 Text("Add")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+@Composable
+fun UpdatePlayerDialog(
+    playerData: PlayerData,
+    onDismiss: () -> Unit,
+    onUpdatePlayer: (PlayerData) -> Unit
+){
+    var profilePhotoUrl by remember { mutableStateOf(playerData.profilePhotoUrl) }
+    var firstName by remember { mutableStateOf(playerData.firstName) }
+    var lastName by remember { mutableStateOf(playerData.lastName) }
+    var position by remember { mutableStateOf(playerData.position) }
+    var skillRating by remember { mutableStateOf(playerData.skillRating) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Edit Player") },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                TextFieldComponent(
+                    stateValue = profilePhotoUrl,
+                    label = "Profile Photo",
+                    onValueChange = { profilePhotoUrl = it },
+                    painterResource = painterResource(id = R.drawable.ic_photo)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldComponent(
+                    stateValue = firstName,
+                    label = "First Name",
+                    onValueChange = { firstName = it },
+                    painterResource = painterResource(id = R.drawable.ic_person)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldComponent(
+                    stateValue = lastName,
+                    label = "Last Name",
+                    onValueChange = { lastName = it },
+                    painterResource = painterResource(id = R.drawable.ic_person)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldComponent(
+                    stateValue = position,
+                    label = "Position",
+                    onValueChange = { position = it },
+                    painterResource = painterResource(id = R.drawable.ic_position)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Skill Rating: $skillRating", fontSize = 16.sp)
+                Spacer(modifier = Modifier.height(4.dp))
+                Slider(
+                    value = skillRating.toFloat(),
+                    onValueChange = { skillRating = it.toInt() },
+                    valueRange = 0f..10f,
+                    steps = 10,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    if (profilePhotoUrl.isNotBlank() &&
+                        firstName.isNotBlank() &&
+                        lastName.isNotBlank() &&
+                        position.isNotBlank()
+                    ) {
+                        onUpdatePlayer(
+                            PlayerData(
+                                id = playerData.id,
+                                profilePhotoUrl = profilePhotoUrl,
+                                firstName = firstName,
+                                lastName = lastName,
+                                position = position,
+                                skillRating = skillRating
+                            )
+                        )
+                    }
+                }
+            ){
+                Text("Edit")
             }
         },
         dismissButton = {
