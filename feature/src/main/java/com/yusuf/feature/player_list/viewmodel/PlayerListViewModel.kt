@@ -38,13 +38,27 @@ class PlayerListViewModel @Inject constructor(
             getAllPlayersUseCase().collect { result ->
                 when (result) {
                     is RootResult.Loading -> {
-                        _playerListUIState.value = _playerListUIState.value.copy(isLoading = true, error = null, playerList = emptyList())
+                        _playerListUIState.value = _playerListUIState.value.copy(
+                            isLoading = true,
+                            error = null,
+                            playerList = emptyList()
+                        )
                     }
+
                     is RootResult.Error -> {
-                        _playerListUIState.value = _playerListUIState.value.copy(error = result.message, isLoading = false, playerList = emptyList())
+                        _playerListUIState.value = _playerListUIState.value.copy(
+                            error = result.message,
+                            isLoading = false,
+                            playerList = emptyList()
+                        )
                     }
+
                     is RootResult.Success -> {
-                        _playerListUIState.value = _playerListUIState.value.copy(playerList = result.data, isLoading = false, error = null)
+                        _playerListUIState.value = _playerListUIState.value.copy(
+                            playerList = result.data,
+                            isLoading = false,
+                            error = null
+                        )
                     }
                 }
             }
@@ -57,13 +71,27 @@ class PlayerListViewModel @Inject constructor(
             deletePlayerByIdUseCase(playerId).collect { result ->
                 when (result) {
                     is RootResult.Loading -> {
-                        _playerUiState.value = _playerUiState.value.copy(isLoading = true, error = null, transaction = false)
+                        _playerUiState.value = _playerUiState.value.copy(
+                            isLoading = true,
+                            error = null,
+                            transaction = false
+                        )
                     }
+
                     is RootResult.Error -> {
-                        _playerUiState.value = _playerUiState.value.copy(error = result.message, isLoading = false, transaction = false)
+                        _playerUiState.value = _playerUiState.value.copy(
+                            error = result.message,
+                            isLoading = false,
+                            transaction = false
+                        )
                     }
+
                     is RootResult.Success -> {
-                        _playerUiState.value = _playerUiState.value.copy(transaction = true, isLoading = false, error = null)
+                        _playerUiState.value = _playerUiState.value.copy(
+                            transaction = true,
+                            isLoading = false,
+                            error = null
+                        )
                         getAllPlayers()
                     }
                 }
@@ -77,13 +105,27 @@ class PlayerListViewModel @Inject constructor(
             updatePlayerByIdUseCase(playerId, updatedPlayerData, imageUri).collect { result ->
                 when (result) {
                     is RootResult.Loading -> {
-                        _playerUiState.value = _playerUiState.value.copy(isLoading = true, error = null, transaction = false)
+                        _playerUiState.value = _playerUiState.value.copy(
+                            isLoading = true,
+                            error = null,
+                            transaction = false
+                        )
                     }
+
                     is RootResult.Error -> {
-                        _playerUiState.value = _playerUiState.value.copy(error = result.message, isLoading = false, transaction = false)
+                        _playerUiState.value = _playerUiState.value.copy(
+                            error = result.message,
+                            isLoading = false,
+                            transaction = false
+                        )
                     }
+
                     is RootResult.Success -> {
-                        _playerUiState.value = _playerUiState.value.copy(transaction = true, isLoading = false, error = null)
+                        _playerUiState.value = _playerUiState.value.copy(
+                            transaction = true,
+                            isLoading = false,
+                            error = null
+                        )
                         getAllPlayers()
                     }
                 }
@@ -91,19 +133,18 @@ class PlayerListViewModel @Inject constructor(
         }
     }
 
-    fun addPlayer(playerData: PlayerData, imageUri: Uri?) {
-        _playerUiState.value = _playerUiState.value.copy(isLoading = true)
+    fun addPlayer(playerData: PlayerData, imageUri: Uri) {
         viewModelScope.launch {
-            addPlayerUseCase.invoke(playerData, imageUri).collect { result ->
+            addPlayerUseCase(playerData, imageUri).collect { result ->
                 when (result) {
                     is RootResult.Loading -> {
-                        _playerUiState.value = _playerUiState.value.copy(isLoading = true, error = null, transaction = false)
+                        _playerListUIState.value = _playerListUIState.value.copy(isLoading = true)
                     }
                     is RootResult.Error -> {
-                        _playerUiState.value = _playerUiState.value.copy(error = result.message, isLoading = false, transaction = false)
+                        _playerListUIState.value = _playerListUIState.value.copy(error = result.message, isLoading = false)
                     }
                     is RootResult.Success -> {
-                        _playerUiState.value = _playerUiState.value.copy(transaction = true, isLoading = false, error = null)
+                        _playerListUIState.value = _playerListUIState.value.copy(isLoading = false)
                         getAllPlayers()
                     }
                 }
