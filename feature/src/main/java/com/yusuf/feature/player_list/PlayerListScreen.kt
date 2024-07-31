@@ -1,13 +1,21 @@
 package com.yusuf.feature.player_list
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -15,8 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberImagePainter
 import com.yusuf.component.LoadingLottie
-import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
@@ -27,7 +35,6 @@ fun PlayerListScreen(
     viewModel: PlayerListViewModel = hiltViewModel()
 ) {
     val playerListUiState by viewModel.playerListUIState.collectAsState()
-
     var showAddPlayerDialog by remember { mutableStateOf(false) }
     var showUpdatePlayerDialog by remember { mutableStateOf(false) }
     var playerDataToUpdate by remember { mutableStateOf<PlayerData?>(null) }
@@ -43,94 +50,97 @@ fun PlayerListScreen(
             }
         },
         content = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    when {
-                        playerListUiState.isLoading -> {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                LoadingLottie(R.raw.loading_anim)
-                            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                when {
+                    playerListUiState.isLoading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            LoadingLottie(R.raw.loading_anim)
                         }
-                        playerListUiState.error != null -> {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(text = "Error: ${playerListUiState.error}")
-                            }
+                    }
+                    playerListUiState.error != null -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "Error: ${playerListUiState.error}")
                         }
-                        playerListUiState.playerList != null -> {
-
-                            if (playerListUiState.playerList?.isEmpty() == true){
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        text = "You don't have any players yet.",
-                                        modifier = Modifier.padding(bottom = 10.dp),
-                                        fontFamily = FontFamily(
-                                            Font(R.font.onboarding_title1, FontWeight.Normal)
-                                        ),
-                                        style = TextStyle(
-                                            fontSize = 20.sp
-                                        )
-                                    )
-                                    Text(
-                                        text = "Start adding now.",
-                                        fontFamily = FontFamily(
-                                            Font(R.font.onboarding_title1, FontWeight.Normal)
-                                        ),
-                                        style = TextStyle(
-                                            fontSize = 20.sp
-                                        )
-                                    )
-                                }
-                            }
-
-                            LazyColumn(
-                                modifier = Modifier
-                                    .weight(1f)
-                            ) {
-                                items(playerListUiState.playerList!!.size) { index ->
-                                    PlayerListItem(
-                                        playerData = playerListUiState.playerList!![index],
-                                        onDelete = { id ->
+                    }
+                    playerListUiState.playerList.isNullOrEmpty() -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "You don't have any players yet.",
+                                modifier = Modifier.padding(bottom = 10.dp),
+                                fontFamily = FontFamily(
+                                    Font(R.font.onboarding_title1, FontWeight.Normal)
+                                ),
+                                style = TextStyle(
+                                    fontSize = 20.sp
+                                )
+                            )
+                            Text(
+                                text = "Start adding now.",
+                                fontFamily = FontFamily(
+                                    Font(R.font.onboarding_title1, FontWeight.Normal)
+                                ),
+                                style = TextStyle(
+                                    fontSize = 20.sp
+                                )
+                            )
+                        }
+                    }
+                    else -> {
+                        LazyColumn(
+                            modifier = Modifier
+                                .weight(1f)
+                        ) {
+                            items(playerListUiState.playerList!!) { player ->
+                                PlayerListItem(
+                                    playerData = player,
+                                    onDelete = { id ->
                                         viewModel.deletePlayerById(id)
-                                        },
-                                        onUpdatePlayer = { playerData ->
-                                            playerDataToUpdate = playerData
-                                            showUpdatePlayerDialog = true
-                                        }
-                                    )
-                                }
+                                    },
+                                    onUpdatePlayer = { playerData ->
+                                        playerDataToUpdate = playerData
+                                        showUpdatePlayerDialog = true
+                                    }
+                                )
                             }
                         }
                     }
                 }
+            }
 
             if (showAddPlayerDialog) {
                 AddPlayerDialog(
                     onDismiss = { showAddPlayerDialog = false },
-                    onAddPlayer = { profilePhotoUrl, firstName, lastName, position, skillRating ->
-                        viewModel.addPlayer(
+                    onAddPlayer = { profilePhotoUri, firstName, lastName, position, skillRating ->
+                        profilePhotoUri?.toString()?.let { it1 ->
                             PlayerData(
-                                profilePhotoUrl = profilePhotoUrl,
+                                profilePhotoUrl = it1,
                                 firstName = firstName,
                                 lastName = lastName,
                                 position = position,
                                 skillRating = skillRating
                             )
-                        )
+                        }?.let { it2 ->
+                            viewModel.addPlayer(
+                                it2,
+                                profilePhotoUri
+                            )
+                        }
                         showAddPlayerDialog = false
                     }
                 )
@@ -140,8 +150,14 @@ fun PlayerListScreen(
                 UpdatePlayerDialog(
                     playerData = playerDataToUpdate!!,
                     onDismiss = { showUpdatePlayerDialog = false },
-                    onUpdatePlayer = { updatedPlayerData ->
-                        viewModel.updatePlayerById(updatedPlayerData.id, updatedPlayerData)
+                    onUpdatePlayer = { updatedPlayerData, imageUri ->
+                        if (imageUri != null) {
+                            viewModel.updatePlayerById(
+                                updatedPlayerData.id,
+                                updatedPlayerData,
+                                imageUri
+                            )
+                        }
                         showUpdatePlayerDialog = false
                     }
                 )
@@ -150,7 +166,11 @@ fun PlayerListScreen(
     )
 }
 @Composable
-fun PlayerListItem(playerData: PlayerData, onDelete: (String) -> Unit, onUpdatePlayer: (PlayerData) -> Unit) {
+fun PlayerListItem(
+    playerData: PlayerData,
+    onDelete: (String) -> Unit,
+    onUpdatePlayer: (PlayerData) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -158,15 +178,30 @@ fun PlayerListItem(playerData: PlayerData, onDelete: (String) -> Unit, onUpdateP
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            // Resim URL'sinden resim gösterimi
+            playerData.profilePhotoUrl?.let { url ->
+                Image(
+                    painter = rememberImagePainter(url),
+                    contentDescription = "Profile Photo",
+                    modifier = Modifier
+                        .size(100.dp)  // İstediğiniz boyut
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(8.dp),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
             Text(text = "Name: ${playerData.firstName} ${playerData.lastName}")
             Text(text = "Position: ${playerData.position}")
             Text(text = "Skill Rating: ${playerData.skillRating}")
             Spacer(modifier = Modifier.height(8.dp))
             Row {
                 Button(onClick = { onDelete(playerData.id) }) {
-                Text(text = "Delete")
+                    Text(text = "Delete")
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Button(onClick = { onUpdatePlayer(playerData) }) {
                     Text(text = "Edit")
                 }
@@ -178,13 +213,19 @@ fun PlayerListItem(playerData: PlayerData, onDelete: (String) -> Unit, onUpdateP
 @Composable
 fun AddPlayerDialog(
     onDismiss: () -> Unit,
-    onAddPlayer: (String, String, String, String, Int) -> Unit
+    onAddPlayer: (Uri?, String, String, String, Int) -> Unit
 ) {
-    var profilePhotoUrl by remember { mutableStateOf("") }
+    var profilePhotoUri by remember { mutableStateOf<Uri?>(null) }
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var position by remember { mutableStateOf("") }
-    var skillRating by remember { mutableStateOf(0) }
+    var skillRating by remember { mutableIntStateOf(0) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        profilePhotoUri = uri
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -195,57 +236,36 @@ fun AddPlayerDialog(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                TextFieldComponent(
-                    stateValue = profilePhotoUrl,
-                    label = "Profile Photo",
-                    onValueChange = { profilePhotoUrl = it },
-                    painterResource = painterResource(id = R.drawable.ic_photo)  // Replace with your icon
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextFieldComponent(
-                    stateValue = firstName,
-                    label = "First Name",
+                Button(onClick = { launcher.launch("image/*") }) {
+                    Text("Select Profile Photo")
+                }
+                // Image preview and other input fields...
+                TextField(
+                    value = firstName,
                     onValueChange = { firstName = it },
-                    painterResource = painterResource(id = R.drawable.ic_person)  // Replace with your icon
+                    label = { Text("First Name") }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextFieldComponent(
-                    stateValue = lastName,
-                    label = "Last Name",
+                TextField(
+                    value = lastName,
                     onValueChange = { lastName = it },
-                    painterResource = painterResource(id = R.drawable.ic_person)  // Replace with your icon
+                    label = { Text("Last Name") }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextFieldComponent(
-                    stateValue = position,
-                    label = "Position",
+                TextField(
+                    value = position,
                     onValueChange = { position = it },
-                    painterResource = painterResource(id = R.drawable.ic_position)  // Replace with your icon
+                    label = { Text("Position") }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Skill Rating: $skillRating", fontSize = 16.sp)
-                Spacer(modifier = Modifier.height(4.dp))
-                Slider(
-                    value = skillRating.toFloat(),
-                    onValueChange = { skillRating = it.toInt() },
-                    valueRange = 0f..10f,
-                    steps = 10,
-                    modifier = Modifier.fillMaxWidth()
+                TextField(
+                    value = skillRating.toString(),
+                    onValueChange = { skillRating = it.toIntOrNull() ?: 0 },
+                    label = { Text("Skill Rating") }
                 )
             }
         },
         confirmButton = {
-            Button(
-                onClick = {
-                    if (profilePhotoUrl.isNotBlank() &&
-                        firstName.isNotBlank() &&
-                        lastName.isNotBlank() &&
-                        position.isNotBlank()
-                    ) {
-                        onAddPlayer(profilePhotoUrl, firstName, lastName, position, skillRating)
-                    }
-                }
-            ) {
+            Button(onClick = {
+                onAddPlayer(profilePhotoUri, firstName, lastName, position, skillRating)
+            }) {
                 Text("Add")
             }
         },
@@ -261,84 +281,60 @@ fun AddPlayerDialog(
 fun UpdatePlayerDialog(
     playerData: PlayerData,
     onDismiss: () -> Unit,
-    onUpdatePlayer: (PlayerData) -> Unit
-){
-    var profilePhotoUrl by remember { mutableStateOf(playerData.profilePhotoUrl) }
+    onUpdatePlayer: (PlayerData, Uri?) -> Unit
+) {
+    var profilePhotoUri by remember { mutableStateOf<Uri?>(null) }
     var firstName by remember { mutableStateOf(playerData.firstName) }
     var lastName by remember { mutableStateOf(playerData.lastName) }
     var position by remember { mutableStateOf(playerData.position) }
-    var skillRating by remember { mutableStateOf(playerData.skillRating) }
+    var skillRating by remember { mutableIntStateOf(playerData.skillRating) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        profilePhotoUri = uri
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit Player") },
+        title = { Text("Update Player") },
         text = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                TextFieldComponent(
-                    stateValue = profilePhotoUrl,
-                    label = "Profile Photo",
-                    onValueChange = { profilePhotoUrl = it },
-                    painterResource = painterResource(id = R.drawable.ic_photo)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextFieldComponent(
-                    stateValue = firstName,
-                    label = "First Name",
+                Button(onClick = { launcher.launch("image/*") }) {
+                    Text("Select Profile Photo")
+                }
+                // Image preview and other input fields...
+                TextField(
+                    value = firstName,
                     onValueChange = { firstName = it },
-                    painterResource = painterResource(id = R.drawable.ic_person)
+                    label = { Text("First Name") }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextFieldComponent(
-                    stateValue = lastName,
-                    label = "Last Name",
+                TextField(
+                    value = lastName,
                     onValueChange = { lastName = it },
-                    painterResource = painterResource(id = R.drawable.ic_person)
+                    label = { Text("Last Name") }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextFieldComponent(
-                    stateValue = position,
-                    label = "Position",
+                TextField(
+                    value = position,
                     onValueChange = { position = it },
-                    painterResource = painterResource(id = R.drawable.ic_position)
+                    label = { Text("Position") }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Skill Rating: $skillRating", fontSize = 16.sp)
-                Spacer(modifier = Modifier.height(4.dp))
-                Slider(
-                    value = skillRating.toFloat(),
-                    onValueChange = { skillRating = it.toInt() },
-                    valueRange = 0f..10f,
-                    steps = 10,
-                    modifier = Modifier.fillMaxWidth()
+                TextField(
+                    value = skillRating.toString(),
+                    onValueChange = { skillRating = it.toIntOrNull() ?: 0 },
+                    label = { Text("Skill Rating") }
                 )
             }
         },
         confirmButton = {
-            Button(
-                onClick = {
-                    if (profilePhotoUrl.isNotBlank() &&
-                        firstName.isNotBlank() &&
-                        lastName.isNotBlank() &&
-                        position.isNotBlank()
-                    ) {
-                        onUpdatePlayer(
-                            PlayerData(
-                                id = playerData.id,
-                                profilePhotoUrl = profilePhotoUrl,
-                                firstName = firstName,
-                                lastName = lastName,
-                                position = position,
-                                skillRating = skillRating
-                            )
-                        )
-                    }
-                }
-            ){
-                Text("Edit")
+            Button(onClick = {
+                onUpdatePlayer(playerData.copy(firstName = firstName, lastName = lastName, position = position, skillRating = skillRating), profilePhotoUri)
+            }) {
+                Text("Update")
             }
         },
         dismissButton = {
