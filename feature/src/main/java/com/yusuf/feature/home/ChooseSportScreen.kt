@@ -1,14 +1,20 @@
 package com.yusuf.feature.home
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -61,10 +68,19 @@ fun ChooseSportScreen(
     val addDeleteState by competitionViewModel.addDeleteState.collectAsState()
     val getAllState by competitionViewModel.getAllState.collectAsState()
     val openDialog = remember { mutableStateOf(false) }
+    val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
+    val getContext = LocalContext.current
 
     LaunchedEffect(Unit) {
         competitionViewModel.getAllCompetitions()
     }
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri: Uri? ->
+            selectedImageUri.value = uri
+        }
+    )
 
     Scaffold(
         floatingActionButton = {
@@ -98,8 +114,15 @@ fun ChooseSportScreen(
                 if (openDialog.value) {
                     AddCompetitionDialog(
                         onDismiss = { openDialog.value = false },
-                        onSave = { competition ->
-                            competitionViewModel.addCompetition(competition)
+                        onSave = { competitionName ->
+                            selectedImageUri.value?.let { uri ->
+                                val context = getContext
+                                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                                competitionViewModel.uploadImageAndAddCompetition(bitmap, competitionName)
+                            }
+                        },
+                        onImagePick = {
+                            imagePickerLauncher.launch("image/*")
                         }
                     )
                 }
@@ -156,10 +179,10 @@ fun ChooseSportScreen(
 @Composable
 fun AddCompetitionDialog(
     onDismiss: () -> Unit,
-    onSave: (CompetitionData) -> Unit
+    onSave: (String) -> Unit,
+    onImagePick: () -> Unit
 ) {
     var competitionName by remember { mutableStateOf("") }
-    var competitionImage by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -171,20 +194,15 @@ fun AddCompetitionDialog(
                     onValueChange = { competitionName = it },
                     label = { Text("Competition Name") }
                 )
-                TextField(
-                    value = competitionImage,
-                    onValueChange = { competitionImage = it },
-                    label = { Text("Competition Image URL") }
-                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = onImagePick) {
+                    Text("Pick Image")
+                }
             }
         },
         confirmButton = {
             Button(onClick = {
-                val competition = CompetitionData(
-                    competitionName = competitionName,
-                    competitionImageUrl = competitionImage
-                )
-                onSave(competition)
+                onSave(competitionName)
                 onDismiss()
             }) {
                 Text("Save")
