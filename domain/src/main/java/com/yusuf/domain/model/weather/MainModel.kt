@@ -1,4 +1,4 @@
-package com.yusuf.domain.model
+package com.yusuf.domain.model.weather
 
 data class MainModel(
     val temp: Double,

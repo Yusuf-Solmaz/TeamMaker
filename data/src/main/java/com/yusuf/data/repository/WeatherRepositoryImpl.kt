@@ -2,7 +2,7 @@ package com.yusuf.data.repository
 
 import com.yusuf.data.mapper.toCurrentWeatherModel
 import com.yusuf.data.remote.service.WeatherApiService
-import com.yusuf.domain.model.CurrentWeatherModel
+import com.yusuf.domain.model.weather.CurrentWeatherModel
 import com.yusuf.domain.repository.WeatherRepository
 import com.yusuf.domain.util.RootResult
 import dagger.hilt.android.scopes.ViewModelScoped

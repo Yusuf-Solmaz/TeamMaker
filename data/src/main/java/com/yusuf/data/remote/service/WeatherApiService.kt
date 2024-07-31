@@ -1,6 +1,6 @@
 package com.yusuf.data.remote.service
 
-import com.yusuf.data.remote.dto.CurrentWeatherDto
+import com.yusuf.data.remote.dto.weather_dto.CurrentWeatherDto
 import com.yusuf.data.util.Constants
 import retrofit2.http.GET
 import retrofit2.http.Query

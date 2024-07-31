@@ -2,7 +2,6 @@ package com.yusuf.feature.create_match.weather
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yusuf.domain.model.CurrentWeatherModel
 import com.yusuf.domain.use_cases.GetCurrentWeatherUseCase
 import com.yusuf.domain.util.RootResult
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,4 +1,4 @@
-package com.yusuf.data.remote.dto
+package com.yusuf.data.remote.dto.weather_dto
 
 data class SysDto(
     val country: String,

@@ -1,15 +1,15 @@
 package com.yusuf.data.mapper
 
-import com.yusuf.data.remote.dto.CurrentWeatherDto
-import com.yusuf.data.remote.dto.MainDto
-import com.yusuf.data.remote.dto.WeatherDto
-import com.yusuf.domain.model.CurrentWeatherModel
-import com.yusuf.domain.model.MainModel
-import com.yusuf.domain.model.WeatherModel
+import com.yusuf.data.remote.dto.weather_dto.CurrentWeatherDto
+import com.yusuf.data.remote.dto.weather_dto.MainDto
+import com.yusuf.data.remote.dto.weather_dto.WeatherDto
+import com.yusuf.domain.model.weather.CurrentWeatherModel
+import com.yusuf.domain.model.weather.MainModel
+import com.yusuf.domain.model.weather.WeatherModel
 
 // it is an extension function for CurrentWeatherDto class
 // it converts CurrentWeatherDto to CurrentWeatherModel object to use in domain layer
-fun CurrentWeatherDto.toCurrentWeatherModel(): CurrentWeatherModel{
+fun CurrentWeatherDto.toCurrentWeatherModel(): CurrentWeatherModel {
     return CurrentWeatherModel(
         id = id,
         name = name,
