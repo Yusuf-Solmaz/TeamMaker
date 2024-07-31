@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yusuf.component.LoadingLottie
 import com.yusuf.feature.R
-import com.yusuf.theme.Blue
+import com.yusuf.theme.Green
 
 @Composable
 fun SplashScreen() {
@@ -33,7 +33,7 @@ fun SplashScreen() {
         Spacer(modifier = Modifier.height(40.dp))
 
         Text(text = "Team Maker", style = TextStyle(
-            color = Blue,
+            color = Green,
             fontSize = 50.sp,
             fontFamily = FontFamily(Font(R.font.splash_title_font)),
         ))

@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.yusuf.theme.Blue
-import com.yusuf.theme.DarkBlue
+import com.yusuf.theme.Green
+import com.yusuf.theme.DarkGreen
 
 
 @Composable
@@ -38,8 +38,8 @@ fun AuthButtonComponent(value: String, onClick: () -> Unit) {
                 .background(
                     brush = Brush.verticalGradient(
                         listOf(
-                            Blue,
-                            DarkBlue
+                            Green,
+                            DarkGreen
                         )
                     ), shape = RoundedCornerShape(50.dp)
                 ),
