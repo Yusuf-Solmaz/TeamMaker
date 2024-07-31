@@ -45,11 +45,10 @@ fun PlayerListScreen(
                 Text(text = "Add Player")
             }
         },
-        content = { padding ->
+        content = {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(padding)
                 ) {
                     when {
                         playerListUiState.isLoading -> {
@@ -75,8 +74,7 @@ fun PlayerListScreen(
                             if (playerListUiState.playerList?.isEmpty() == true){
                                 Column(
                                     modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(padding),
+                                        .fillMaxSize(),
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
