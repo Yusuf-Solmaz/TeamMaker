@@ -66,8 +66,6 @@ fun CreateMatchScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(2.dp))
         LocationScreen()
         Spacer(modifier = Modifier.height(2.dp))
-        Weather()
-        Spacer(modifier = Modifier.height(2.dp))
         Button(
             onClick = {
                 navController.navigate(NavigationGraph.TEAM_LIST.route)
