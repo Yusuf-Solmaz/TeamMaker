@@ -105,6 +105,7 @@ class PlayerListViewModel @Inject constructor(
             updatePlayerByIdUseCase(playerId, updatedPlayerData, imageUri).collect { result ->
                 when (result) {
                     is RootResult.Loading -> {
+                        Log.d("AddPlayerViewModel", "Loading")
                         _playerUiState.value = _playerUiState.value.copy(
                             isLoading = true,
                             error = null,
@@ -113,6 +114,7 @@ class PlayerListViewModel @Inject constructor(
                     }
 
                     is RootResult.Error -> {
+                        Log.d("AddPlayerViewModel", "Error: ${result.message}")
                         _playerUiState.value = _playerUiState.value.copy(
                             error = result.message,
                             isLoading = false,
@@ -121,6 +123,7 @@ class PlayerListViewModel @Inject constructor(
                     }
 
                     is RootResult.Success -> {
+                        Log.d("AddPlayerViewModel", "Success")
                         _playerUiState.value = _playerUiState.value.copy(
                             transaction = true,
                             isLoading = false,
@@ -134,17 +137,35 @@ class PlayerListViewModel @Inject constructor(
     }
 
     fun addPlayer(playerData: PlayerData, imageUri: Uri) {
+        _playerUiState.value = _playerUiState.value.copy(isLoading = true)
         viewModelScope.launch {
             addPlayerUseCase(playerData, imageUri).collect { result ->
                 when (result) {
                     is RootResult.Loading -> {
-                        _playerListUIState.value = _playerListUIState.value.copy(isLoading = true)
+                        Log.d("AddPlayerViewModel", "Loading")
+                        _playerUiState.value = _playerUiState.value.copy(
+                            isLoading = true,
+                            error = null,
+                            transaction = false
+                        )
                     }
+
                     is RootResult.Error -> {
-                        _playerListUIState.value = _playerListUIState.value.copy(error = result.message, isLoading = false)
+                        Log.d("AddPlayerViewModel", "Error: ${result.message}")
+                        _playerUiState.value = _playerUiState.value.copy(
+                            error = result.message,
+                            isLoading = false,
+                            transaction = false
+                        )
                     }
+
                     is RootResult.Success -> {
-                        _playerListUIState.value = _playerListUIState.value.copy(isLoading = false)
+                        Log.d("AddPlayerViewModel", "Success")
+                        _playerUiState.value = _playerUiState.value.copy(
+                            transaction = true,
+                            isLoading = false,
+                            error = null
+                        )
                         getAllPlayers()
                     }
                 }
