@@ -1,6 +1,7 @@
 package com.yusuf.feature.home.viewmodel
 
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,7 +33,12 @@ class CompetitionViewModel @Inject constructor(
     private val _getAllState = MutableStateFlow(GetAllState())
     val getAllState: StateFlow<GetAllState> = _getAllState
 
-   private fun addCompetition(competitionData: CompetitionData) {
+    private val _competitions = MutableStateFlow<List<CompetitionData>>(emptyList())
+    val competitions: StateFlow<List<CompetitionData>> = _competitions
+
+
+
+    private fun addCompetition(competitionData: CompetitionData) {
         _addDeleteState.value = AddDeleteState(isLoading = true, result = Loading)
         viewModelScope.launch {
             addCompetitionUseCase(competitionData).collect { result ->
@@ -78,9 +84,9 @@ class CompetitionViewModel @Inject constructor(
         }
     }
 
-    fun uploadImageAndAddCompetition(uri: Uri, competitionName: String) {
+    fun uploadImageAndAddCompetition(bitmap: Bitmap, competitionName: String) {
         viewModelScope.launch {
-            val result = uploadImageUseCase(uri)
+            val result = uploadImageUseCase(bitmap, competitionName)
             if (result.isSuccess) {
                 val imageUrl = result.getOrNull()
                 val competition = CompetitionData(
@@ -94,4 +100,3 @@ class CompetitionViewModel @Inject constructor(
         }
     }
 }
-
