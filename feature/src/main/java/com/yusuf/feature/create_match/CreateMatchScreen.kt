@@ -1,5 +1,6 @@
 package com.yusuf.feature.create_match
 
+import SelectPlayerScreen
 import android.icu.text.SimpleDateFormat
 import androidx.compose.ui.Modifier
 import android.os.Build
@@ -45,6 +46,7 @@ import com.yusuf.feature.create_match.weather.Weather
 import com.yusuf.feature.R
 import com.yusuf.feature.create_match.location.LocationScreen
 
+
 import java.util.Calendar
 import java.util.Locale
 
@@ -63,6 +65,8 @@ fun CreateMatchScreen(navController: NavController) {
         LocationScreen()
         Spacer(modifier = Modifier.height(2.dp))
         Weather()
+        Spacer(modifier = Modifier.height(2.dp))
+        SelectPlayerScreen()
     }
 
 }
@@ -114,7 +118,6 @@ fun TimePicker() {
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun AdvancedTimePickerExample(
     onConfirm: (TimePickerState) -> Unit,
