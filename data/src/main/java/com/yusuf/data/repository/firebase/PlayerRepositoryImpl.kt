@@ -60,15 +60,30 @@ class PlayerRepositoryImpl @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
 
-    override suspend fun addPlayer(playerData: PlayerData): Flow<RootResult<Boolean>> = flow {
+    override suspend fun addPlayer(playerData: PlayerData, imageUri: Uri): Flow<RootResult<Boolean>> = flow {
         emit(RootResult.Loading)
         try {
             val currentUser = firebaseAuth.currentUser
             val userId = currentUser?.uid
             if (userId != null) {
-                val playerInfo = playerData.toPlayerDataDto()
-                firestore.collection("users").document(userId).collection("players").add(playerInfo).await()
-                emit(RootResult.Success(true))
+                uploadImage(imageUri).collect { result ->
+                    when (result) {
+                        is RootResult.Loading -> {
+                            // Yükleniyor
+                        }
+                        is RootResult.Success -> {
+                            val imageUrl = result.data
+                            val playerInfo = imageUrl?.let { playerData.copy(profilePhotoUrl = it).toPlayerDataDto() }
+                            if (playerInfo != null) {
+                                firestore.collection("users").document(userId).collection("players").add(playerInfo).await()
+                            }
+                            emit(RootResult.Success(true))
+                        }
+                        is RootResult.Error -> {
+                            emit(RootResult.Error(result.message ?: "Image upload failed"))
+                        }
+                    }
+                }
             } else {
                 emit(RootResult.Error("User ID is null"))
             }
@@ -177,7 +192,7 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun uploadImage(uri: Uri): Flow<RootResult<String>>  = flow {
+    override suspend fun uploadImage(uri: Uri): Flow<RootResult<String>> = flow {
         emit(RootResult.Loading)
         try {
             val storageRef = storage.reference.child("profile_images/${UUID.randomUUID()}.jpg")
