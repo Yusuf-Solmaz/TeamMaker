@@ -143,6 +143,35 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun updatePlayerById(
+        playerId: String,
+        updatedPlayerData: PlayerData
+    ): Flow<RootResult<Boolean>> = flow {
+        emit(RootResult.Loading)
+        try {
+            val currentUser = firebaseAuth.currentUser
+            val userId = currentUser?.uid
+            if (userId != null) {
+                val playerCollection = firestore.collection("users").document(userId).collection("players")
+                val querySnapshot = playerCollection.whereEqualTo("id", playerId).get().await()
+                val playerDocuments = querySnapshot.documents
+
+                if (playerDocuments.isNotEmpty()) {
+                    playerDocuments.forEach { document ->
+                        document.reference.set(updatedPlayerData.toPlayerDataDto()).await()
+                    }
+                    emit(RootResult.Success(true))
+                } else {
+                    emit(RootResult.Error("Player not found"))
+                }
+            } else {
+                emit(RootResult.Error("User ID is null"))
+            }
+        } catch (e: Exception) {
+            emit(RootResult.Error(e.message ?: "Something went wrong"))
+        }
+    }
+
 
     override suspend fun getAllCompetitions(): Flow<RootResult<List<CompetitionData>>> = flow {
         emit(RootResult.Loading)
