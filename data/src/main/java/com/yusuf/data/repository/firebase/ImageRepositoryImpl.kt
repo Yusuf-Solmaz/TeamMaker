@@ -1,7 +1,6 @@
 package com.yusuf.data.repository.firebase
 
 import android.graphics.Bitmap
-import android.net.Uri
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.yusuf.domain.repository.firebase.image.ImageRepository
