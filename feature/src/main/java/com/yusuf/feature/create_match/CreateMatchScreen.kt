@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -65,7 +66,8 @@ fun CreateMatchScreen(navController: NavController) {
         TimePicker()
         Spacer(modifier = Modifier.height(2.dp))
         LocationScreen()
-        Spacer(modifier = Modifier.height(2.dp))
+        SelectPlayerScreen()
+        Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = {
                 navController.navigate(NavigationGraph.TEAM_LIST.route)
@@ -76,9 +78,6 @@ fun CreateMatchScreen(navController: NavController) {
         ) {
             Text("Continue")
         }
-        SelectPlayerScreen()
-        Spacer(modifier = Modifier.height(2.dp))
-
     }
 }
 
