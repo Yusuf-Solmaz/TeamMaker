@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlayerRepository {
     suspend fun getAllPlayers(): Flow<RootResult<List<PlayerData>>>
-    suspend fun addPlayer(playerData: PlayerData): Flow<RootResult<Boolean>>
+    suspend fun addPlayer(playerData: PlayerData,  imageUri: Uri): Flow<RootResult<Boolean>>
     suspend fun addCompetition(competitionData: CompetitionData): Flow<RootResult<Boolean>>
     suspend fun deleteCompetition(competitionId: String): Flow <RootResult<Boolean>>
     suspend fun getAllCompetitions(): Flow<RootResult<List<CompetitionData>>>
