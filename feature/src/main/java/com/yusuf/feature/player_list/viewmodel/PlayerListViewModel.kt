@@ -122,19 +122,18 @@ class PlayerListViewModel @Inject constructor(
                         )
                     }
 
-                    is RootResult.Success -> {
-                        Log.d("AddPlayerViewModel", "Success")
-                        _playerUiState.value = _playerUiState.value.copy(
-                            transaction = true,
-                            isLoading = false,
-                            error = null
-                        )
-                        getAllPlayers()
+                        is RootResult.Success -> {
+                            Log.d("AddPlayerViewModel", "Success")
+                            _playerListUIState.value = _playerListUIState.value.copy(isLoading = false)
+                            getAllPlayers()
+                        }
                     }
                 }
             }
         }
-    }
+
+
+
 
     fun addPlayer(playerData: PlayerData, imageUri: Uri) {
         _playerUiState.value = _playerUiState.value.copy(isLoading = true)
