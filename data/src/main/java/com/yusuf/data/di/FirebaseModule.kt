@@ -53,9 +53,10 @@ object FirebaseModule {
     @Singleton
     fun providePlayerRepository(
         firebaseAuth: FirebaseAuth,
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
+        storage: FirebaseStorage
     ): PlayerRepository {
-        return PlayerRepositoryImpl(firebaseAuth, firestore)
+        return PlayerRepositoryImpl(firebaseAuth, firestore, storage)
     }
 
 
