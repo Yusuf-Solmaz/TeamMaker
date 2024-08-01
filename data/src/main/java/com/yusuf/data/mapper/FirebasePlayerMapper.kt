@@ -10,7 +10,12 @@ fun PlayerDataDto.toPlayerData(): PlayerData {
         firstName = firstName,
         lastName = lastName,
         position = position,
-        skillRating = skillRating
+        competitionType = competitionType,
+        focus = focus,
+        speed = speed,
+        condition = condition,
+        durability = durability,
+        totalSkillRating = totalSkillRating
     )
 }
 
@@ -21,6 +26,11 @@ fun PlayerData.toPlayerDataDto(): PlayerDataDto {
         firstName = firstName,
         lastName = lastName,
         position = position,
-        skillRating = skillRating
+        competitionType = competitionType,
+        focus = focus,
+        speed = speed,
+        condition = condition,
+        durability = durability,
+        totalSkillRating = totalSkillRating
     )
 }

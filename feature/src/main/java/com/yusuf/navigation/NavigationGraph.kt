@@ -12,9 +12,5 @@ enum class NavigationGraph(val route: String) {
         REGISTER("register"),
         FORGOT_PASSWORD("forgot_password");
 
-        companion object {
-            fun fromRoute(route: String?): NavigationGraph =
-                entries.firstOrNull { it.route == route } ?: throw IllegalArgumentException("Invalid route: $route")
-        }
 
 }

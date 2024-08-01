@@ -183,6 +183,33 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }
 
+
+    override suspend fun updatePlayerImage(uri: Uri, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit): Flow<RootResult<Boolean>> = flow {
+        emit(RootResult.Loading)
+        try {
+            val storageRef = FirebaseStorage.getInstance().reference
+            val fileName = UUID.randomUUID().toString()
+            val fileRef = storageRef.child("profile_images/$fileName.jpg")
+
+            fileRef.putFile(uri)
+                .addOnSuccessListener {
+                    fileRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                        onSuccess(downloadUrl.toString())
+                    }.addOnFailureListener { exception ->
+                        onFailure(exception)
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    onFailure(exception)
+                }
+        }
+        catch (e:Exception){
+            emit(RootResult.Error(e.message ?: "Something went wrong"))
+        }
+    }.flowOn(Dispatchers.IO)
+
+
+
     override suspend fun uploadImage(uri: Uri): Flow<RootResult<String>> = flow {
         emit(RootResult.Loading)
         try {
@@ -225,6 +252,32 @@ class PlayerRepositoryImpl @Inject constructor(
                     competitionDataDto?.toCompetitionData()
                 }
                 emit(RootResult.Success(competitionList))
+            } else {
+                emit(RootResult.Error("User ID is null"))
+            }
+        } catch (e: Exception) {
+            emit(RootResult.Error(e.message ?: "Something went wrong"))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun getPlayersByCompetitionType(competitionType: String): Flow<RootResult<List<PlayerData>>> = flow {
+        emit(RootResult.Loading)
+        try {
+            val currentUser = firebaseAuth.currentUser
+            val userId = currentUser?.uid
+            if (userId != null) {
+                val querySnapshot = firestore.collection("users")
+                    .document(userId)
+                    .collection("players")
+                    .whereEqualTo("competitionType", competitionType)
+                    .get()
+                    .await()
+
+                val playerList = querySnapshot.documents.mapNotNull { document ->
+                    val playerDataDto = document.toObject(PlayerDataDto::class.java)
+                    playerDataDto?.toPlayerData()
+                }
+                emit(RootResult.Success(playerList))
             } else {
                 emit(RootResult.Error("User ID is null"))
             }

@@ -2,16 +2,21 @@ package com.yusuf.feature.player_list.viewmodel
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.model.firebase.PlayerData
+import com.yusuf.domain.use_cases.firebase_use_cases.image.UpdatePlayerImageUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.AddPlayerUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.DeletePlayerByIdUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.GetAllPlayersUseCase
+import com.yusuf.domain.use_cases.firebase_use_cases.user.GetPlayersByCompetitionTypeUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.UpdatePlayerByIdUseCase
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.player_list.state.AddPlayerUIState
 import com.yusuf.feature.player_list.state.PlayerUiState
+import com.yusuf.utils.SharedPreferencesHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +28,9 @@ class PlayerListViewModel @Inject constructor(
     private val addPlayerUseCase: AddPlayerUseCase,
     private val deletePlayerByIdUseCase: DeletePlayerByIdUseCase,
     private val updatePlayerByIdUseCase: UpdatePlayerByIdUseCase,
-    private val getAllPlayersUseCase: GetAllPlayersUseCase
+    private val getAllPlayersUseCase: GetAllPlayersUseCase,
+    private val updatePlayerImageUseCase: UpdatePlayerImageUseCase,
+    private val getPlayersByCompetitionTypeUseCase: GetPlayersByCompetitionTypeUseCase,
 ) : ViewModel() {
 
     private val _playerUiState = MutableStateFlow(AddPlayerUIState())
@@ -32,19 +39,19 @@ class PlayerListViewModel @Inject constructor(
     private val _playerListUIState = MutableStateFlow(PlayerUiState())
     val playerListUIState: StateFlow<PlayerUiState> = _playerListUIState
 
-    fun getAllPlayers() {
+
+    fun getPlayersByCompetitionType(competitionType: String) {
         _playerListUIState.value = _playerListUIState.value.copy(isLoading = true)
         viewModelScope.launch {
-            getAllPlayersUseCase().collect { result ->
+            getPlayersByCompetitionTypeUseCase(competitionType).collect { result ->
                 when (result) {
-                    is RootResult.Loading -> {
+                    is RootResult.Loading ->{
                         _playerListUIState.value = _playerListUIState.value.copy(
                             isLoading = true,
                             error = null,
                             playerList = emptyList()
                         )
                     }
-
                     is RootResult.Error -> {
                         _playerListUIState.value = _playerListUIState.value.copy(
                             error = result.message,
@@ -52,7 +59,6 @@ class PlayerListViewModel @Inject constructor(
                             playerList = emptyList()
                         )
                     }
-
                     is RootResult.Success -> {
                         _playerListUIState.value = _playerListUIState.value.copy(
                             playerList = result.data,
@@ -65,10 +71,15 @@ class PlayerListViewModel @Inject constructor(
         }
     }
 
-    fun deletePlayerById(playerId: String) {
+
+    fun updatePlayerImage(
+        uri: Uri,
+        onSuccess: (String) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         _playerUiState.value = _playerUiState.value.copy(isLoading = true)
         viewModelScope.launch {
-            deletePlayerByIdUseCase(playerId).collect { result ->
+            updatePlayerImageUseCase(uri, onSuccess, onFailure).collect { result ->
                 when (result) {
                     is RootResult.Loading -> {
                         _playerUiState.value = _playerUiState.value.copy(
@@ -92,40 +103,73 @@ class PlayerListViewModel @Inject constructor(
                             isLoading = false,
                             error = null
                         )
-                        getAllPlayers()
                     }
                 }
             }
         }
     }
+        fun deletePlayerById(playerId: String,competitionType: String) {
+            _playerUiState.value = _playerUiState.value.copy(isLoading = true)
+            viewModelScope.launch {
+                deletePlayerByIdUseCase(playerId).collect { result ->
+                    when (result) {
+                        is RootResult.Loading -> {
+                            _playerUiState.value = _playerUiState.value.copy(
+                                isLoading = true,
+                                error = null,
+                                transaction = false
+                            )
+                        }
 
-    fun updatePlayerById(playerId: String, updatedPlayerData: PlayerData) {
-        _playerUiState.value = _playerUiState.value.copy(isLoading = true)
-        viewModelScope.launch {
-            updatePlayerByIdUseCase(playerId, updatedPlayerData).collect { result ->
-                when (result) {
-                    is RootResult.Loading -> {
-                        Log.d("AddPlayerViewModel", "Loading")
-                        _playerUiState.value = _playerUiState.value.copy(
-                            isLoading = true,
-                            error = null,
-                            transaction = false
-                        )
-                    }
+                        is RootResult.Error -> {
+                            _playerUiState.value = _playerUiState.value.copy(
+                                error = result.message,
+                                isLoading = false,
+                                transaction = false
+                            )
+                        }
 
-                    is RootResult.Error -> {
-                        Log.d("AddPlayerViewModel", "Error: ${result.message}")
-                        _playerUiState.value = _playerUiState.value.copy(
-                            error = result.message,
-                            isLoading = false,
-                            transaction = false
-                        )
+                        is RootResult.Success -> {
+                            _playerUiState.value = _playerUiState.value.copy(
+                                transaction = true,
+                                isLoading = false,
+                                error = null
+                            )
+                            getPlayersByCompetitionType(competitionType)
+                        }
                     }
+                }
+            }
+        }
+
+        fun updatePlayerById(playerId: String, updatedPlayerData: PlayerData) {
+            _playerUiState.value = _playerUiState.value.copy(isLoading = true)
+            viewModelScope.launch {
+                updatePlayerByIdUseCase(playerId, updatedPlayerData).collect { result ->
+                    when (result) {
+                        is RootResult.Loading -> {
+                            Log.d("AddPlayerViewModel", "Loading")
+                            _playerUiState.value = _playerUiState.value.copy(
+                                isLoading = true,
+                                error = null,
+                                transaction = false
+                            )
+                        }
+
+                        is RootResult.Error -> {
+                            Log.d("AddPlayerViewModel", "Error: ${result.message}")
+                            _playerUiState.value = _playerUiState.value.copy(
+                                error = result.message,
+                                isLoading = false,
+                                transaction = false
+                            )
+                        }
 
                         is RootResult.Success -> {
                             Log.d("AddPlayerViewModel", "Success")
-                            _playerListUIState.value = _playerListUIState.value.copy(isLoading = false)
-                            getAllPlayers()
+                            _playerListUIState.value =
+                                _playerListUIState.value.copy(isLoading = false)
+
                         }
                     }
                 }
@@ -133,42 +177,40 @@ class PlayerListViewModel @Inject constructor(
         }
 
 
+        fun addPlayer(playerData: PlayerData, imageUri: Uri) {
+            _playerUiState.value = _playerUiState.value.copy(isLoading = true)
+            viewModelScope.launch {
+                addPlayerUseCase(playerData, imageUri).collect { result ->
+                    when (result) {
+                        is RootResult.Loading -> {
+                            Log.d("AddPlayerViewModel", "Loading")
+                            _playerUiState.value = _playerUiState.value.copy(
+                                isLoading = true,
+                                error = null,
+                                transaction = false
+                            )
+                        }
 
+                        is RootResult.Error -> {
+                            Log.d("AddPlayerViewModel", "Error: ${result.message}")
+                            _playerUiState.value = _playerUiState.value.copy(
+                                error = result.message,
+                                isLoading = false,
+                                transaction = false
+                            )
+                        }
 
-    fun addPlayer(playerData: PlayerData, imageUri: Uri) {
-        _playerUiState.value = _playerUiState.value.copy(isLoading = true)
-        viewModelScope.launch {
-            addPlayerUseCase(playerData, imageUri).collect { result ->
-                when (result) {
-                    is RootResult.Loading -> {
-                        Log.d("AddPlayerViewModel", "Loading")
-                        _playerUiState.value = _playerUiState.value.copy(
-                            isLoading = true,
-                            error = null,
-                            transaction = false
-                        )
-                    }
-
-                    is RootResult.Error -> {
-                        Log.d("AddPlayerViewModel", "Error: ${result.message}")
-                        _playerUiState.value = _playerUiState.value.copy(
-                            error = result.message,
-                            isLoading = false,
-                            transaction = false
-                        )
-                    }
-
-                    is RootResult.Success -> {
-                        Log.d("AddPlayerViewModel", "Success")
-                        _playerUiState.value = _playerUiState.value.copy(
-                            transaction = true,
-                            isLoading = false,
-                            error = null
-                        )
-                        getAllPlayers()
+                        is RootResult.Success -> {
+                            Log.d("AddPlayerViewModel", "Success")
+                            _playerUiState.value = _playerUiState.value.copy(
+                                transaction = true,
+                                isLoading = false,
+                                error = null
+                            )
+                            getPlayersByCompetitionType(playerData.competitionType)
+                        }
                     }
                 }
             }
         }
-    }
 }

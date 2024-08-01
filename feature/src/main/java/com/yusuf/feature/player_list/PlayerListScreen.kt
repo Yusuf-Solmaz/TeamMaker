@@ -2,6 +2,7 @@ package com.yusuf.feature.player_list
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -15,19 +16,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.yusuf.component.LoadingLottie
+import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
+import com.yusuf.utils.SharedPreferencesHelper
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -40,8 +45,14 @@ fun PlayerListScreen(
     var showUpdatePlayerDialog by remember { mutableStateOf(false) }
     var playerDataToUpdate by remember { mutableStateOf<PlayerData?>(null) }
 
+
+    val context = LocalContext.current
+    val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
+    val competitionName = sharedPreferencesHelper.competitionName
+
+
     LaunchedEffect(true) {
-        viewModel.getAllPlayers()
+        viewModel.getPlayersByCompetitionType(competitionName.toString())
     }
 
     Scaffold(
@@ -114,7 +125,9 @@ fun PlayerListScreen(
                                 PlayerListItem(
                                     playerData = playerListUiState.playerList!![index],
                                     onDelete = { id ->
-                                        viewModel.deletePlayerById(id)
+                                        viewModel.deletePlayerById(id,competitionName.toString())
+                                        viewModel.getPlayersByCompetitionType(competitionName.toString())
+
                                     },
                                     onUpdatePlayer = { playerData ->
                                         playerDataToUpdate = playerData
@@ -129,21 +142,28 @@ fun PlayerListScreen(
 
             if (showAddPlayerDialog) {
                 AddPlayerDialog(
+                    competitionName = competitionName.toString(),
                     onDismiss = { showAddPlayerDialog = false },
-                    onAddPlayer = { profilePhotoUrl, firstName, lastName, position, skillRating ->
-                        if (profilePhotoUrl != null) {
-                            viewModel.addPlayer(
-                                PlayerData(
-                                    profilePhotoUrl = profilePhotoUrl.toString(),
-                                    firstName = firstName,
-                                    lastName = lastName,
-                                    position = position,
-                                    skillRating = skillRating
-                                ),
-                                profilePhotoUrl
-                            )
-                        }
+                    onAddPlayer = { playerData  ->
+                        viewModel.addPlayer(
+                            PlayerData(
+                                profilePhotoUrl = playerData.toString(),
+                                firstName = playerData.firstName,
+                                lastName = playerData.lastName,
+                                position = playerData.position,
+                                competitionType = playerData.competitionType,
+                                speed = playerData.speed,
+                                focus = playerData.focus,
+                                condition = playerData.condition,
+                                durability = playerData.durability,
+                                totalSkillRating = playerData.totalSkillRating
+                            ),
+                            Uri.parse(playerData.profilePhotoUrl)
+                        )
+                        viewModel.getPlayersByCompetitionType(competitionName.toString()) // Refresh the list
                         showAddPlayerDialog = false
+                    },
+                    updateList = {
                     }
                 )
             }
@@ -153,11 +173,10 @@ fun PlayerListScreen(
                     playerData = playerDataToUpdate!!,
                     onDismiss = { showUpdatePlayerDialog = false },
                     onUpdatePlayer = { updatedPlayerData ->
-
                         viewModel.updatePlayerById(updatedPlayerData.id, updatedPlayerData)
-
                         showUpdatePlayerDialog = false
-                    }
+                    },
+                    viewModel = viewModel
                 )
             }
         }
@@ -193,7 +212,7 @@ fun PlayerListItem(
 
             Text(text = "Name: ${playerData.firstName} ${playerData.lastName}")
             Text(text = "Position: ${playerData.position}")
-            Text(text = "Skill Rating: ${playerData.skillRating}")
+            Text(text = "Total Skill Rating: ${playerData.totalSkillRating}")
             Spacer(modifier = Modifier.height(8.dp))
             Row {
                 Button(onClick = { onDelete(playerData.id) }) {
@@ -210,14 +229,22 @@ fun PlayerListItem(
 
 @Composable
 fun AddPlayerDialog(
+    competitionName: String,
     onDismiss: () -> Unit,
-    onAddPlayer: (Uri?, String, String, String, Int) -> Unit
+    onAddPlayer: (
+            playerData:PlayerData
+    ) -> Unit,
+    updateList: () -> Unit
 ) {
     var profilePhotoUri by remember { mutableStateOf<Uri?>(null) }
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var position by remember { mutableStateOf("") }
-    var skillRating by remember { mutableIntStateOf(0) }
+    var speed by remember { mutableStateOf(0) }
+    var focus by remember { mutableStateOf(0) }
+    var condition by remember { mutableStateOf(0) }
+    var durability by remember { mutableStateOf(0) }
+
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -237,32 +264,85 @@ fun AddPlayerDialog(
                 Button(onClick = { launcher.launch("image/*") }) {
                     Text("Select Profile Photo")
                 }
-                // Image preview and other input fields...
-                TextField(
-                    value = firstName,
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldComponent(
+                    stateValue = firstName,
+                    label = "First Name",
                     onValueChange = { firstName = it },
-                    label = { Text("First Name") }
+                    painterResource = painterResource(id = R.drawable.ic_person)
                 )
-                TextField(
-                    value = lastName,
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldComponent(
+                    stateValue = lastName,
+                    label = "Last Name",
                     onValueChange = { lastName = it },
-                    label = { Text("Last Name") }
+                    painterResource = painterResource(id = R.drawable.ic_person)
                 )
-                TextField(
-                    value = position,
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldComponent(
+                    stateValue = position,
+                    label = "Position",
                     onValueChange = { position = it },
-                    label = { Text("Position") }
+                    painterResource = painterResource(id = R.drawable.ic_position)
                 )
-                TextField(
-                    value = skillRating.toString(),
-                    onValueChange = { skillRating = it.toIntOrNull() ?: 0 },
-                    label = { Text("Skill Rating") }
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text("Speed: $speed", fontSize = 16.sp)
+                Slider(
+                    value = speed.toFloat(),
+                    onValueChange = { speed = it.toInt() },
+                    valueRange = 0f..10f,
+                    steps = 10,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Condition: $condition", fontSize = 16.sp)
+                Slider(
+                    value = condition.toFloat(),
+                    onValueChange = { condition = it.toInt() },
+                    valueRange = 0f..10f,
+                    steps = 10,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Focus: $focus", fontSize = 16.sp)
+                Slider(
+                    value = focus.toFloat(),
+                    onValueChange = { focus = it.toInt() },
+                    valueRange = 0f..10f,
+                    steps = 10,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Durability: $durability", fontSize = 16.sp)
+                Slider(
+                    value = durability.toFloat(),
+                    onValueChange = { durability = it.toInt() },
+                    valueRange = 0f..10f,
+                    steps = 10,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         },
         confirmButton = {
             Button(onClick = {
-                onAddPlayer(profilePhotoUri, firstName, lastName, position, skillRating)
+                onAddPlayer(PlayerData(
+                    profilePhotoUrl = profilePhotoUri.toString(),
+                    firstName = firstName,
+                    lastName = lastName,
+                    position = position,
+                    competitionType = competitionName,
+                    speed = speed,
+                    focus = focus,
+                    condition = condition,
+                    durability = durability,
+                    totalSkillRating = speed+focus+condition+durability
+                    ))
+
+                updateList()
             }) {
                 Text("Add")
             }
@@ -275,22 +355,31 @@ fun AddPlayerDialog(
     )
 }
 
+
 @Composable
 fun UpdatePlayerDialog(
     playerData: PlayerData,
     onDismiss: () -> Unit,
-    onUpdatePlayer: (PlayerData) -> Unit
+    onUpdatePlayer: (PlayerData) -> Unit,
+    viewModel: PlayerListViewModel
 ) {
-    var profilePhotoUrl by remember { mutableStateOf(playerData.profilePhotoUrl) }
+    var profilePhotoUri by remember { mutableStateOf<Uri?>(playerData.profilePhotoUrl.toUri()) }
     var firstName by remember { mutableStateOf(playerData.firstName) }
     var lastName by remember { mutableStateOf(playerData.lastName) }
     var position by remember { mutableStateOf(playerData.position) }
-    var skillRating by remember { mutableIntStateOf(playerData.skillRating) }
+    var speed by remember { mutableStateOf(playerData.speed) }
+    var focus by remember { mutableStateOf(playerData.focus) }
+    var condition by remember { mutableStateOf(playerData.condition) }
+    var durability by remember { mutableStateOf(playerData.durability) }
+
+    Log.e("profilePhotoUri", profilePhotoUri.toString())
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        profilePhotoUrl = uri.toString()
+        if (uri != null) {
+            profilePhotoUri = uri
+        }
     }
 
     AlertDialog(
@@ -305,39 +394,110 @@ fun UpdatePlayerDialog(
                 Button(onClick = { launcher.launch("image/*") }) {
                     Text("Select Profile Photo")
                 }
-                TextField(
-                    value = firstName,
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldComponent(
+                    stateValue = firstName,
+                    label = "First Name",
                     onValueChange = { firstName = it },
-                    label = { Text("First Name") }
+                    painterResource = painterResource(id = R.drawable.ic_person)
                 )
-                TextField(
-                    value = lastName,
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldComponent(
+                    stateValue = lastName,
+                    label = "Last Name",
                     onValueChange = { lastName = it },
-                    label = { Text("Last Name") }
+                    painterResource = painterResource(id = R.drawable.ic_person)
                 )
-                TextField(
-                    value = position,
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldComponent(
+                    stateValue = position,
+                    label = "Position",
                     onValueChange = { position = it },
-                    label = { Text("Position") }
+                    painterResource = painterResource(id = R.drawable.ic_position)
                 )
-                TextField(
-                    value = skillRating.toString(),
-                    onValueChange = { skillRating = it.toIntOrNull() ?: 0 },
-                    label = { Text("Skill Rating") }
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text("Speed: $speed", fontSize = 16.sp)
+                Slider(
+                    value = speed.toFloat(),
+                    onValueChange = { speed = it.toInt() },
+                    valueRange = 0f..10f,
+                    steps = 10,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Condition: $condition", fontSize = 16.sp)
+                Slider(
+                    value = condition.toFloat(),
+                    onValueChange = { condition = it.toInt() },
+                    valueRange = 0f..10f,
+                    steps = 10,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Focus: $focus", fontSize = 16.sp)
+                Slider(
+                    value = focus.toFloat(),
+                    onValueChange = { focus = it.toInt() },
+                    valueRange = 0f..10f,
+                    steps = 10,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Durability: $durability", fontSize = 16.sp)
+                Slider(
+                    value = durability.toFloat(),
+                    onValueChange = { durability = it.toInt() },
+                    valueRange = 0f..10f,
+                    steps = 10,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         },
         confirmButton = {
             Button(onClick = {
-                onUpdatePlayer(
-                    playerData.copy(
-                        firstName = firstName,
-                        lastName = lastName,
-                        position = position,
-                        skillRating = skillRating,
-                        profilePhotoUrl = profilePhotoUrl
-                    ),
-                )
+                if (profilePhotoUri != playerData.profilePhotoUrl.toUri()) {
+                    profilePhotoUri?.let { uri ->
+                        viewModel.updatePlayerImage(
+                            uri= uri,
+                            onSuccess = { downloadUrl ->
+                                onUpdatePlayer(
+                                    playerData.copy(
+                                        firstName = firstName,
+                                        lastName = lastName,
+                                        position = position,
+                                        speed = speed,
+                                        focus = focus,
+                                        condition = condition,
+                                        durability = durability,
+                                        totalSkillRating = speed + focus + condition + durability,
+                                        profilePhotoUrl = downloadUrl
+                                    )
+                                )
+                            },
+                            onFailure = { exception ->
+                                Log.e("Firebase", "Image upload failed", exception)
+                            }
+                        )
+                    }
+                } else {
+                    onUpdatePlayer(
+                        playerData.copy(
+                            firstName = firstName,
+                            lastName = lastName,
+                            position = position,
+                            speed = speed,
+                            focus = focus,
+                            condition = condition,
+                            durability = durability,
+                            totalSkillRating = speed + focus + condition + durability,
+                            profilePhotoUrl = profilePhotoUri.toString()
+                        )
+                    )
+                }
             }) {
                 Text("Save")
             }
