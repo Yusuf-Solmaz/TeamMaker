@@ -42,13 +42,6 @@
                 }
             }
 
-        LaunchedEffect(mainViewModel.isLoading) {
-            if (!mainViewModel.isLoading) {
-                navController.navigate(mainViewModel.startDestination) {
-                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                }
-            }
-        }
 
         if (mainViewModel.isSplashScreenVisible) {
             SplashScreen()

@@ -9,6 +9,11 @@ data class PlayerDataDto(
     val firstName: String = "",
     val lastName: String = "",
     val position: String = "",
-    val skillRating: Int = 0
+    val competitionType:String= "",
+    val focus: Int= 0,
+    val speed: Int= 0,
+    val condition: Int= 0,
+    val durability: Int= 0,
+    val totalSkillRating: Int= 0,
 ): Serializable
 

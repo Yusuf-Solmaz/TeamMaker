@@ -68,6 +68,8 @@ import com.yusuf.feature.R
 import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.Green
+import com.yusuf.utils.SharedPreferencesHelper
+
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -86,6 +88,8 @@ fun ChooseSportScreen(
     val context = LocalContext.current
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
 
+    val sharedPreferencesHelper = SharedPreferencesHelper(context)
+
     BackHandler {
         (context as? Activity)?.finish()
     }
@@ -103,8 +107,10 @@ fun ChooseSportScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { openDialog.value = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Competition")
+            if (getAllState.result !is  RootResult.Loading){
+                FloatingActionButton(onClick = { openDialog.value = true }) {
+                    Icon(Icons.Default.Add, contentDescription = "Add Competition")
+                }
             }
         },
         content = {
@@ -193,6 +199,7 @@ fun ChooseSportScreen(
                                 CompetitionCard(
                                     competition = competition,
                                     onClick = {
+                                        sharedPreferencesHelper.competitionName = competition.competitionName
                                         navController.navigate(NavigationGraph.OPTIONS.route)
                                     },
                                     onDelete = {

@@ -33,6 +33,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,14 +47,19 @@ import com.yusuf.feature.create_match.player.viewmodel.SelectPlayerViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.DarkGreen
 import com.yusuf.theme.Green
+import com.yusuf.utils.SharedPreferencesHelper
 
 @Composable
 fun SelectPlayerScreen(navController: NavController) {
     val viewModel: SelectPlayerViewModel = hiltViewModel()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
 
+    val context = LocalContext.current
+    val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
+    val competitionName = sharedPreferencesHelper.competitionName
+
     LaunchedEffect(true) {
-        viewModel.getAllPlayers()
+        viewModel.getPlayersByCompetitionType(competitionName.toString())
     }
 
     val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
@@ -123,17 +130,17 @@ fun SelectPlayerScreen(navController: NavController) {
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 Column {
-                                    Text(text = "FOC: ${player.skillRating}", fontSize = 12.sp)
-                                    Text(text = "CON: ${player.skillRating}", fontSize = 12.sp)
+                                    Text(text = "FOC: ${player.focus}", fontSize = 12.sp)
+                                    Text(text = "CON: ${player.condition}", fontSize = 12.sp)
                                 }
                                 Column {
-                                    Text(text = "SPE: ${player.skillRating}", fontSize = 12.sp)
-                                    Text(text = "DUR: ${player.skillRating}", fontSize = 12.sp)
+                                    Text(text = "SPE: ${player.speed}", fontSize = 12.sp)
+                                    Text(text = "DUR: ${player.durability}", fontSize = 12.sp)
                                 }
                             }
                         }
                         Text(
-                            text = player.skillRating.toString(),
+                            text = player.totalSkillRating.toString(),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,

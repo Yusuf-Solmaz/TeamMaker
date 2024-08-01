@@ -8,5 +8,10 @@ data class PlayerData(
     val firstName: String,
     val lastName: String,
     val position: String,
-    val skillRating: Int
+    val competitionType:String,
+    val focus: Int,
+    val speed: Int,
+    val condition: Int,
+    val durability: Int,
+    val totalSkillRating: Int,
 )
