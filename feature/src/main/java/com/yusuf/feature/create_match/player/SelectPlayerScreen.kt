@@ -41,6 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.SubcomposeAsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.create_match.player.viewmodel.SelectPlayerViewModel
@@ -63,6 +67,7 @@ fun SelectPlayerScreen(navController: NavController) {
     }
 
     val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
 
     Column(Modifier.fillMaxSize()) {
         LazyVerticalGrid(
@@ -109,14 +114,22 @@ fun SelectPlayerScreen(navController: NavController) {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.players),
-                                contentDescription = "${player.firstName} ${player.lastName}",
+
+                            SubcomposeAsyncImage(
+                                model = player.profilePhotoUrl,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .size(100.dp)
                                     .clip(RoundedCornerShape(8.dp))
                                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
-                                contentScale = ContentScale.Crop
+                                loading = {
+                                    LottieAnimation(
+                                        composition,
+                                        modifier = Modifier.size(100.dp),
+                                        iterations = Int.MAX_VALUE
+                                    )
+                                }
                             )
                             Text(
                                 text = "${player.firstName} ${player.lastName}",
@@ -143,7 +156,7 @@ fun SelectPlayerScreen(navController: NavController) {
                             text = player.totalSkillRating.toString(),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White,
+                            color = DarkGreen,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
                                 .padding(start=20.dp, top = 40.dp)
