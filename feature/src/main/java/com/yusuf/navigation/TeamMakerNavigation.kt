@@ -22,7 +22,7 @@
     import com.yusuf.feature.onboarding.OnBoardingScreen
     import com.yusuf.feature.options.OptionsScreen
     import com.yusuf.feature.splash_screen.SplashScreen
-    import com.yusuf.feature.team_list.TeamListScreen
+    import com.yusuf.feature.match_detail.MatchDetailScreen
     import com.yusuf.navigation.main_viewmodel.MainViewModel
 
 
@@ -92,9 +92,9 @@
                     CreateMatchScreen(navController)
                     onTitleChange("Create Match")
                 }
-                composable(NavigationGraph.TEAM_LIST.route) {
-                    TeamListScreen()
-                    onTitleChange("Team List")
+                composable(NavigationGraph.MATCH_DETAIL.route) {
+                    MatchDetailScreen()
+                    onTitleChange("Match Detail")
                 }
             }
         }

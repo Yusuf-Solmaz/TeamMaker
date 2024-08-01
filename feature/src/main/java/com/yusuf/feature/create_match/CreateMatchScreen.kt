@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
@@ -63,18 +64,26 @@ fun CreateMatchScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        TimePicker()
-        Spacer(modifier = Modifier.height(2.dp))
-        LocationScreen()
-        SelectPlayerScreen()
-        Spacer(modifier = Modifier.weight(1f))
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            item { TimePicker() }
+            item { Spacer(modifier = Modifier.height(2.dp)) }
+            item { LocationScreen() }
+            item { SelectPlayerScreen() }
+        }
         Button(
             onClick = {
-                navController.navigate(NavigationGraph.TEAM_LIST.route)
+                navController.navigate(NavigationGraph.MATCH_DETAIL.route)
             },
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 8.dp)
-                .width(200.dp)
+                .fillMaxWidth()
+                .height(50.dp)
         ) {
             Text("Continue")
         }
