@@ -1,15 +1,23 @@
 package com.yusuf.feature.home.viewmodel
 
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.MediaStore
+import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.model.firebase.CompetitionData
+import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.use_cases.firebase_use_cases.image.ImageUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.AddCompetitionUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.DeleteCompetitionUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.GetAllCompetitionsUseCase
+import com.yusuf.domain.use_cases.firebase_use_cases.user.UpdateCompetitionUseCase
+import com.yusuf.domain.util.RootResult
 import com.yusuf.domain.util.RootResult.*
 import com.yusuf.feature.home.state.AddDeleteState
 import com.yusuf.feature.home.state.GetAllState
@@ -24,7 +32,8 @@ class CompetitionViewModel @Inject constructor(
     private val addCompetitionUseCase: AddCompetitionUseCase,
     private val deleteCompetitionUseCase: DeleteCompetitionUseCase,
     private val getAllCompetitionsUseCase: GetAllCompetitionsUseCase,
-    private val uploadImageUseCase: ImageUseCase
+    private val uploadImageUseCase: ImageUseCase,
+    private val updateCompetitionUseCase: UpdateCompetitionUseCase
 ) : ViewModel() {
 
     private val _addDeleteState = MutableStateFlow(AddDeleteState())
@@ -32,10 +41,6 @@ class CompetitionViewModel @Inject constructor(
 
     private val _getAllState = MutableStateFlow(GetAllState())
     val getAllState: StateFlow<GetAllState> = _getAllState
-
-    private val _competitions = MutableStateFlow<List<CompetitionData>>(emptyList())
-    val competitions: StateFlow<List<CompetitionData>> = _competitions
-
 
 
     private fun addCompetition(competitionData: CompetitionData) {
@@ -76,7 +81,8 @@ class CompetitionViewModel @Inject constructor(
             getAllCompetitionsUseCase().collect { result ->
                 _getAllState.value = GetAllState(
                     isLoading = result is Loading,
-                    competitions = if (result is Success) result.data ?: emptyList() else emptyList(),
+                    competitions = if (result is Success) result.data
+                        ?: emptyList() else emptyList(),
                     result = result,
                     error = if (result is Error) result.message else null
                 )
@@ -96,6 +102,32 @@ class CompetitionViewModel @Inject constructor(
                 addCompetition(competition)
             } else {
                 // Handle the error if needed
+            }
+        }
+    }
+
+
+    fun updateCompetition(competitionId: String, competitionData: CompetitionData, imageUri: Uri?, context: Context) {
+        _addDeleteState.value = AddDeleteState(isLoading = true, result = Loading)
+        viewModelScope.launch {
+            var updatedCompetitionData = competitionData
+            imageUri?.let { uri ->
+                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                val result = uploadImageUseCase(bitmap, competitionData.competitionName)
+                if (result.isSuccess) {
+                    val imageUrl = result.getOrNull() ?: ""
+                    updatedCompetitionData = updatedCompetitionData.copy(competitionImageUrl = imageUrl)
+                }
+            }
+            updateCompetitionUseCase(competitionId, updatedCompetitionData).collect { result ->
+                _addDeleteState.value = AddDeleteState(
+                    isLoading = result is Loading,
+                    result = result,
+                    error = if (result is Error) result.message else null
+                )
+                if (result is RootResult.Success) {
+                    getAllCompetitions()
+                }
             }
         }
     }
