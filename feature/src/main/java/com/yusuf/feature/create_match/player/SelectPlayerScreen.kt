@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.create_match.player.viewmodel.SelectPlayerViewModel
@@ -47,7 +48,7 @@ import com.yusuf.theme.DarkGreen
 import com.yusuf.theme.Green
 
 @Composable
-fun SelectPlayerScreen() {
+fun SelectPlayerScreen(navController: NavController) {
     val viewModel: SelectPlayerViewModel = hiltViewModel()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
 
@@ -150,7 +151,7 @@ fun SelectPlayerScreen() {
 
         Button(
             onClick = {
-
+                navController.navigate(NavigationGraph.MATCH_DETAIL.route)
             },
             modifier = Modifier
                 .fillMaxWidth()

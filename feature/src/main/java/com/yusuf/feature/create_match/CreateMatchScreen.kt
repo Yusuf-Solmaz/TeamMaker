@@ -67,7 +67,7 @@ fun CreateMatchScreen(navController: NavController) {
         TimePicker()
         Spacer(modifier = Modifier.height(2.dp))
         LocationScreen()
-        SelectPlayerScreen()
+        SelectPlayerScreen(navController)
     }
 }
 
