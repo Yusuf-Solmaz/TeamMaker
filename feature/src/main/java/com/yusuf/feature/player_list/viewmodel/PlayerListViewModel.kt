@@ -169,7 +169,7 @@ class PlayerListViewModel @Inject constructor(
                             Log.d("AddPlayerViewModel", "Success")
                             _playerListUIState.value =
                                 _playerListUIState.value.copy(isLoading = false)
-
+                            getPlayersByCompetitionType(updatedPlayerData.competitionType)
                         }
                     }
                 }
