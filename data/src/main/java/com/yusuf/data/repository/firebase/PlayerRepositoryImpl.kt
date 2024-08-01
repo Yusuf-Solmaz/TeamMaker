@@ -99,8 +99,9 @@ class PlayerRepositoryImpl @Inject constructor(
             val currentUser = firebaseAuth.currentUser
             val userId = currentUser?.uid
             if (userId != null) {
-                val competitionInfo = competitionData.toCompetitionDataDto()
-                firestore.collection("users").document(userId).collection("competitions").add(competitionInfo).await()
+                val competitionId = firestore.collection("users").document(userId).collection("competitions").document().id
+                val competitionInfo = competitionData.copy(competitionId = competitionId).toCompetitionDataDto()
+                firestore.collection("users").document(userId).collection("competitions").document(competitionId).set(competitionInfo).await()
                 emit(RootResult.Success(true))
             } else {
                 emit(RootResult.Error("User ID is null"))
@@ -116,18 +117,9 @@ class PlayerRepositoryImpl @Inject constructor(
             val currentUser = firebaseAuth.currentUser
             val userId = currentUser?.uid
             if (userId != null) {
-                val competitionCollection = firestore.collection("users").document(userId).collection("competitions")
-                val querySnapshot = competitionCollection.whereEqualTo("competitionId", competitionId).get().await()
-                val competitionDocuments = querySnapshot.documents
-
-                if (competitionDocuments.isNotEmpty()) {
-                    competitionDocuments.forEach { document ->
-                        document.reference.delete().await()
-                    }
-                    emit(RootResult.Success(true))
-                } else {
-                    emit(RootResult.Error("Player not found"))
-                }
+                val competitionRef = firestore.collection("users").document(userId).collection("competitions").document(competitionId)
+                competitionRef.delete().await()
+                emit(RootResult.Success(true))
             } else {
                 emit(RootResult.Error("User ID is null"))
             }
@@ -203,6 +195,24 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun updateCompetition(competitionId: String, competitionData: CompetitionData): Flow<RootResult<Boolean>> = flow {
+        emit(RootResult.Loading)
+        try {
+            val currentUser = firebaseAuth.currentUser
+            val userId = currentUser?.uid
+            if (userId != null) {
+                val competitionInfo = competitionData.toCompetitionDataDto()
+                val competitionRef = firestore.collection("users").document(userId).collection("competitions").document(competitionId)
+                competitionRef.set(competitionInfo).await()
+                emit(RootResult.Success(true))
+            } else {
+                emit(RootResult.Error("User ID is null"))
+            }
+        } catch (e: Exception) {
+            emit(RootResult.Error(e.message ?: "Something went wrong"))
+        }
+    }.flowOn(Dispatchers.IO)
+    
     override suspend fun getAllCompetitions(): Flow<RootResult<List<CompetitionData>>> = flow {
         emit(RootResult.Loading)
         try {
