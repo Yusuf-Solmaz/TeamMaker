@@ -1,7 +1,6 @@
 package com.yusuf.data.repository.firebase
 
 import android.graphics.Bitmap
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.yusuf.domain.repository.firebase.image.ImageRepository
 import kotlinx.coroutines.tasks.await
@@ -11,7 +10,6 @@ import javax.inject.Inject
 
 class ImageRepositoryImpl @Inject constructor(
     private val storage: FirebaseStorage,
-    private val firestore: FirebaseFirestore
 ) : ImageRepository {
 
     override suspend fun uploadImageToStorage(
