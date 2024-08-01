@@ -9,8 +9,6 @@ import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,24 +24,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -66,7 +58,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -74,13 +65,13 @@ import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.firebase.CompetitionData
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.R
-import com.yusuf.feature.auth.login.viewmodel.LoginViewModel
 import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.Green
+import com.yusuf.utils.SharedPreferencesHelper
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ChooseSportScreen(
@@ -94,6 +85,8 @@ fun ChooseSportScreen(
     val context = LocalContext.current
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
     val getContext = LocalContext.current
+
+    val sharedPreferencesHelper = SharedPreferencesHelper(context)
 
     BackHandler {
         (context as? Activity)?.finish()
@@ -112,8 +105,10 @@ fun ChooseSportScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { openDialog.value = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Competition")
+            if (getAllState.result !is  RootResult.Loading){
+                FloatingActionButton(onClick = { openDialog.value = true }) {
+                    Icon(Icons.Default.Add, contentDescription = "Add Competition")
+                }
             }
         },
         content = {
@@ -185,6 +180,7 @@ fun ChooseSportScreen(
                                 CompetitionCard(
                                     competition = competition,
                                     onClick = {
+                                        sharedPreferencesHelper.competitionName = competition.competitionName
                                         navController.navigate(NavigationGraph.OPTIONS.route)
                                     },
                                     onDelete = {
