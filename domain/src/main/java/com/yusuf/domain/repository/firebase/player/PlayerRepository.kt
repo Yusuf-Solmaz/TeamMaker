@@ -16,4 +16,7 @@ interface PlayerRepository {
     suspend fun deletePlayerById(playerId: String): Flow<RootResult<Boolean>>
     suspend fun updatePlayerById(playerId: String, updatedPlayerData: PlayerData) : Flow<RootResult<Boolean>>
     suspend fun uploadImage(uri: Uri): Flow<RootResult<String>>
+    suspend fun updateCompetition(competitionId: String, competitionData: CompetitionData): Flow<RootResult<Boolean>>
 }
+
+
