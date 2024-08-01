@@ -8,7 +8,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.firebase.PlayerData
@@ -65,6 +65,7 @@ fun PlayerListScreen(
                             LoadingLottie(R.raw.loading_anim)
                         }
                     }
+
                     playerListUiState.error != null -> {
                         Box(
                             modifier = Modifier
@@ -74,6 +75,7 @@ fun PlayerListScreen(
                             Text(text = "Error: ${playerListUiState.error}")
                         }
                     }
+
                     playerListUiState.playerList != null -> {
                         if (playerListUiState.playerList?.isEmpty() == true) {
                             Column(
@@ -150,10 +152,10 @@ fun PlayerListScreen(
                 UpdatePlayerDialog(
                     playerData = playerDataToUpdate!!,
                     onDismiss = { showUpdatePlayerDialog = false },
-                    onUpdatePlayer = { updatedPlayerData, imageUri ->
-                        if (imageUri != null) {
-                            viewModel.updatePlayerById(updatedPlayerData.id, updatedPlayerData, imageUri)
-                        }
+                    onUpdatePlayer = { updatedPlayerData ->
+
+                        viewModel.updatePlayerById(updatedPlayerData.id, updatedPlayerData)
+
                         showUpdatePlayerDialog = false
                     }
                 )
@@ -161,6 +163,7 @@ fun PlayerListScreen(
         }
     )
 }
+
 @Composable
 fun PlayerListItem(
     playerData: PlayerData,
@@ -174,9 +177,9 @@ fun PlayerListItem(
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            playerData.profilePhotoUrl?.let { url ->
+            playerData.profilePhotoUrl.let { url ->
                 Image(
-                    painter = rememberImagePainter(url),
+                    painter = rememberAsyncImagePainter(url),
                     contentDescription = "Profile Photo",
                     modifier = Modifier
                         .size(100.dp)
@@ -276,9 +279,9 @@ fun AddPlayerDialog(
 fun UpdatePlayerDialog(
     playerData: PlayerData,
     onDismiss: () -> Unit,
-    onUpdatePlayer: (PlayerData, Uri?) -> Unit
+    onUpdatePlayer: (PlayerData) -> Unit
 ) {
-    var profilePhotoUri by remember { mutableStateOf<Uri?>(null) }
+    var profilePhotoUrl by remember { mutableStateOf(playerData.profilePhotoUrl) }
     var firstName by remember { mutableStateOf(playerData.firstName) }
     var lastName by remember { mutableStateOf(playerData.lastName) }
     var position by remember { mutableStateOf(playerData.position) }
@@ -287,7 +290,7 @@ fun UpdatePlayerDialog(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        profilePhotoUri = uri
+        profilePhotoUrl = uri.toString()
     }
 
     AlertDialog(
@@ -326,9 +329,17 @@ fun UpdatePlayerDialog(
         },
         confirmButton = {
             Button(onClick = {
-                onUpdatePlayer(playerData.copy(firstName = firstName, lastName = lastName, position = position, skillRating = skillRating), profilePhotoUri)
+                onUpdatePlayer(
+                    playerData.copy(
+                        firstName = firstName,
+                        lastName = lastName,
+                        position = position,
+                        skillRating = skillRating,
+                        profilePhotoUrl = profilePhotoUrl
+                    ),
+                )
             }) {
-                Text("Update")
+                Text("Save")
             }
         },
         dismissButton = {
