@@ -3,7 +3,7 @@ package com.yusuf.feature.create_match.player.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yusuf.domain.use_cases.firebase_use_cases.user.GetAllPlayersUseCase
+import com.yusuf.domain.use_cases.firebase_use_cases.user.GetPlayersByCompetitionTypeUseCase
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.create_match.player.state.PlayerUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,18 +14,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectPlayerViewModel @Inject constructor(
-    private val getAllPlayersUseCase: GetAllPlayersUseCase
+    private val getPlayersByCompetitionTypeUseCase: GetPlayersByCompetitionTypeUseCase
 ): ViewModel() {
 
     private val _playerListUIState = MutableStateFlow(PlayerUiState())
     val playerListUIState: StateFlow<PlayerUiState> = _playerListUIState
 
-
-    fun getAllPlayers(){
+    fun getPlayersByCompetitionType(competitionType: String){
         _playerListUIState.value = _playerListUIState.value.copy(isLoading = true)
         viewModelScope.launch {
-            getAllPlayersUseCase().collect{
-                    result->
+            getPlayersByCompetitionTypeUseCase(competitionType).collect{
+                result->
                 when(result){
                     is RootResult.Loading -> {
                         Log.d("AddPlayerViewModel", "Loading")
@@ -34,7 +33,7 @@ class SelectPlayerViewModel @Inject constructor(
                     is RootResult.Error -> {
                         Log.d("AddPlayerViewModel", "Error: ${result.message}")
                         _playerListUIState.value = _playerListUIState.value.copy(error = result.message, isLoading = false,playerList = emptyList())
-                    }
+                }
                     is RootResult.Success -> {
                         Log.d("AddPlayerViewModel", "Success")
                         _playerListUIState.value = _playerListUIState.value.copy(playerList = result.data, isLoading = false, error = null)
