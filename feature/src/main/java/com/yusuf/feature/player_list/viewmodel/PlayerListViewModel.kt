@@ -27,7 +27,6 @@ class PlayerListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _playerUiState = MutableStateFlow(AddPlayerUIState())
-    val playerUiState: StateFlow<AddPlayerUIState> = _playerUiState
 
     private val _playerListUIState = MutableStateFlow(PlayerUiState())
     val playerListUIState: StateFlow<PlayerUiState> = _playerListUIState
