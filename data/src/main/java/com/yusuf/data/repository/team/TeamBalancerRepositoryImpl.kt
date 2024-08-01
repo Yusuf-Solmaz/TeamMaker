@@ -20,12 +20,14 @@ class TeamBalancerRepositoryImpl @Inject constructor() : TeamBalancerRepository 
         val teamSecond = mutableListOf<PlayerData>()
 
         for (player in sortedPlayers) {
-            if (teamFirst.sumOf { it.skillRating } < teamSecond.sumOf { it.skillRating }) {
+            // && teamFirst.size < teamSize is used to make sure two teams have the same size
+            if (teamFirst.sumOf { it.skillRating } < teamSecond.sumOf { it.skillRating } && teamFirst.size < teamSize) {
                 teamFirst.add(player)
             } else {
                 teamSecond.add(player)
             }
         }
         emit(teamFirst to teamSecond)
+        // IO dispatcher is used because this operation is CPU bound and doesn't require main thread
     }.flowOn(Dispatchers.IO)
 }
