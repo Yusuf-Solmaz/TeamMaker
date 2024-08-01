@@ -287,7 +287,6 @@ fun UpdateCompetitionDialog(
     onImagePick: () -> Unit
 ) {
     var competitionName by remember { mutableStateOf(competitionData.competitionName) }
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
