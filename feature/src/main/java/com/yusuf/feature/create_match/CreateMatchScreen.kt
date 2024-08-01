@@ -15,10 +15,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +48,7 @@ import androidx.navigation.NavController
 import com.yusuf.feature.create_match.weather.Weather
 import com.yusuf.feature.R
 import com.yusuf.feature.create_match.location.LocationScreen
+import com.yusuf.navigation.NavigationGraph
 
 
 import java.util.Calendar
@@ -58,17 +62,32 @@ fun CreateMatchScreen(navController: NavController) {
             .fillMaxSize()
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        TimePicker()
-        Spacer(modifier = Modifier.height(2.dp))
-        LocationScreen()
-        Spacer(modifier = Modifier.height(2.dp))
-        Weather()
-        Spacer(modifier = Modifier.height(2.dp))
-        SelectPlayerScreen()
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            item { TimePicker() }
+            item { Spacer(modifier = Modifier.height(2.dp)) }
+            item { LocationScreen() }
+            item { SelectPlayerScreen() }
+        }
+        Button(
+            onClick = {
+                navController.navigate(NavigationGraph.MATCH_DETAIL.route)
+            },
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text("Continue")
+        }
     }
-
 }
 
 
