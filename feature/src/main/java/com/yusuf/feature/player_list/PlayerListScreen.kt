@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
