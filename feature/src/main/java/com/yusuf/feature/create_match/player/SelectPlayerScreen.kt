@@ -43,20 +43,27 @@ import androidx.navigation.NavController
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.create_match.player.viewmodel.SelectPlayerViewModel
+import com.yusuf.feature.match_detail.SharedViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.DarkGreen
 import com.yusuf.theme.Green
 
 @Composable
-fun SelectPlayerScreen(navController: NavController) {
+fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedViewModel = hiltViewModel()) {
     val viewModel: SelectPlayerViewModel = hiltViewModel()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
+    val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
+    val uiState by sharedViewModel.uiState.collectAsState()
 
     LaunchedEffect(true) {
         viewModel.getAllPlayers()
     }
 
-    val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
+    LaunchedEffect(uiState.teams) {
+        if (uiState.teams != null) {
+            navController.navigate(NavigationGraph.MATCH_DETAIL.route)
+        }
+    }
 
     Column(Modifier.fillMaxSize()) {
         LazyVerticalGrid(
@@ -120,7 +127,9 @@ fun SelectPlayerScreen(navController: NavController) {
                                 modifier = Modifier.padding(top = 4.dp)
                             )
                             Row(
-                                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 Column {
@@ -140,7 +149,7 @@ fun SelectPlayerScreen(navController: NavController) {
                             color = Color.White,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
-                                .padding(start=20.dp, top = 40.dp)
+                                .padding(start = 20.dp, top = 40.dp)
                                 .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
                                 .padding(4.dp)
                         )
@@ -151,7 +160,8 @@ fun SelectPlayerScreen(navController: NavController) {
 
         Button(
             onClick = {
-                navController.navigate(NavigationGraph.MATCH_DETAIL.route)
+                sharedViewModel.setSelectedPlayers(selectedPlayers)
+                sharedViewModel.createBalancedTeams()
             },
             modifier = Modifier
                 .fillMaxWidth()
