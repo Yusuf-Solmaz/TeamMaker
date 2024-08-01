@@ -165,7 +165,6 @@ class PlayerRepositoryImpl @Inject constructor(
     override suspend fun updatePlayerById(
         playerId: String,
         updatedPlayerData: PlayerData,
-        imageUri: Uri?
     ): Flow<RootResult<Boolean>> = flow {
         emit(RootResult.Loading)
         try {
