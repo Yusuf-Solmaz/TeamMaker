@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -63,10 +61,11 @@ fun SelectPlayerScreen() {
 
                 Card(
                     modifier = Modifier
+                        .background(Color.Transparent)
                         .padding(8.dp)
                         .border(
                             width = 2.dp,
-                            color = if (isSelected) Color.Magenta else Color.Gray,
+                            color = if (isSelected) Green else Color.Transparent,
                             shape = RoundedCornerShape(8.dp)
                         )
                         .clickable {
@@ -76,11 +75,21 @@ fun SelectPlayerScreen() {
                                 selectedPlayers.add(player)
                             }
                         }
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 ) {
-                    Box {
+                    Box(
+                        modifier = Modifier.background(Color.White)
+                    ){
+                        Image(
+                            painter = painterResource(id = R.drawable.player_card),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
                         Column(
-                            modifier = Modifier.padding(8.dp),
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .align(Alignment.Center),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
@@ -88,7 +97,7 @@ fun SelectPlayerScreen() {
                                 painter = painterResource(id = R.drawable.players),
                                 contentDescription = "${player.firstName} ${player.lastName}",
                                 modifier = Modifier
-                                    .size(80.dp)
+                                    .size(100.dp)
                                     .clip(RoundedCornerShape(8.dp))
                                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
                                 contentScale = ContentScale.Crop
@@ -97,23 +106,17 @@ fun SelectPlayerScreen() {
                                 text = "${player.firstName} ${player.lastName}",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
-                                color = Color.Black
+                                color = Color.Black,
+                                modifier = Modifier.padding(top = 4.dp)
                             )
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 Column {
                                     Text(text = "FOC: ${player.skillRating}", fontSize = 12.sp)
                                     Text(text = "CON: ${player.skillRating}", fontSize = 12.sp)
                                 }
-                                VerticalDivider(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .padding(horizontal = 8.dp),
-                                    thickness = 1.dp,
-                                    color = Color.Black
-                                )
                                 Column {
                                     Text(text = "SPE: ${player.skillRating}", fontSize = 12.sp)
                                     Text(text = "DUR: ${player.skillRating}", fontSize = 12.sp)
@@ -127,9 +130,8 @@ fun SelectPlayerScreen() {
                             color = Color.White,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
-                                .padding(8.dp)
+                                .padding(start=20.dp, top = 40.dp)
                                 .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
-                                .background(Green, RoundedCornerShape(4.dp))
                                 .padding(4.dp)
                         )
                     }
