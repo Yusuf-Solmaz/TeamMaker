@@ -64,29 +64,10 @@ fun CreateMatchScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            item { TimePicker() }
-            item { Spacer(modifier = Modifier.height(2.dp)) }
-            item { LocationScreen() }
-            item { SelectPlayerScreen() }
-        }
-        Button(
-            onClick = {
-                navController.navigate(NavigationGraph.MATCH_DETAIL.route)
-            },
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .fillMaxWidth()
-                .height(50.dp)
-        ) {
-            Text("Continue")
-        }
+        TimePicker()
+        Spacer(modifier = Modifier.height(2.dp))
+        LocationScreen()
+        SelectPlayerScreen()
     }
 }
 
