@@ -1,7 +1,6 @@
 package com.yusuf.domain.repository.firebase.auth
 
 import com.google.firebase.auth.FirebaseUser
-import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.util.RootResult
 import kotlinx.coroutines.flow.Flow
 

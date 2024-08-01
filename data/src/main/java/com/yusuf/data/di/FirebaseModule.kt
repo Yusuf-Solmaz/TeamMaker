@@ -43,10 +43,9 @@ object FirebaseModule {
     @Provides
     @Singleton
     fun provideAuthRepository(
-        firebaseAuth: FirebaseAuth,
-        firestore: FirebaseFirestore
+        firebaseAuth: FirebaseAuth
     ): AuthRepository {
-        return AuthRepositoryImpl(firebaseAuth, firestore)
+        return AuthRepositoryImpl(firebaseAuth)
     }
 
     @Provides
@@ -63,10 +62,9 @@ object FirebaseModule {
     @Provides
     @Singleton
     fun provideImageRepository(
-        storage: FirebaseStorage,
-        firestore: FirebaseFirestore
+        storage: FirebaseStorage
     ): ImageRepository {
-        return ImageRepositoryImpl(storage, firestore)
+        return ImageRepositoryImpl(storage)
     }
 
 }
