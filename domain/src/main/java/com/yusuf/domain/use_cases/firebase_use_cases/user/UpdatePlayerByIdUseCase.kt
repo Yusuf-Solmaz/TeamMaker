@@ -8,6 +8,6 @@ import javax.inject.Inject
 class UpdatePlayerByIdUseCase @Inject constructor(
     private val playerRepository: PlayerRepository
 ) {
-    suspend operator fun invoke(playerId: String, updatedPlayerData: PlayerData, imageUri: Uri) =
-        playerRepository.updatePlayerById(playerId, updatedPlayerData, imageUri)
+    suspend operator fun invoke(playerId: String, updatedPlayerData: PlayerData) =
+        playerRepository.updatePlayerById(playerId, updatedPlayerData)
 }
