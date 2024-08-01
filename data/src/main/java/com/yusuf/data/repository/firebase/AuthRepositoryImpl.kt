@@ -2,8 +2,11 @@ package com.yusuf.data.repository.firebase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import com.yusuf.data.remote.dto.firebase_dto.CompetitionDataDto
 import com.yusuf.domain.repository.firebase.auth.AuthRepository
 import com.yusuf.domain.util.RootResult
+import com.yusuf.data.remote.dto.firebase_dto.PlayerDataDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,6 +16,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore,
 ) : AuthRepository{
 
     override suspend fun signInWithEmailAndPassword(email: String, password: String): Flow<RootResult<FirebaseUser>> = flow {

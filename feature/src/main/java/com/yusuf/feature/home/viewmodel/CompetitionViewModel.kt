@@ -5,14 +5,19 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.model.firebase.CompetitionData
+import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.use_cases.firebase_use_cases.image.ImageUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.AddCompetitionUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.DeleteCompetitionUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.GetAllCompetitionsUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.UpdateCompetitionUseCase
+import com.yusuf.domain.util.RootResult
 import com.yusuf.domain.util.RootResult.*
 import com.yusuf.feature.home.state.AddDeleteState
 import com.yusuf.feature.home.state.GetAllState
@@ -120,7 +125,7 @@ class CompetitionViewModel @Inject constructor(
                     result = result,
                     error = if (result is Error) result.message else null
                 )
-                if (result is Success) {
+                if (result is RootResult.Success) {
                     getAllCompetitions()
                 }
             }

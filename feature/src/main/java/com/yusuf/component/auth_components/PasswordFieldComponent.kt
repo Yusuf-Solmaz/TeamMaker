@@ -26,7 +26,7 @@ import com.yusuf.feature.R
 @Composable
 fun PasswordFieldComponent(stateValue:String,label: String,onValueChange: (String) -> Unit , painterResource : Painter){
 
-    val password = remember { mutableStateOf("") }
+    var password = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
 
     OutlinedTextField(
@@ -58,7 +58,7 @@ fun PasswordFieldComponent(stateValue:String,label: String,onValueChange: (Strin
                 R.drawable.ic_show_password
             }
 
-            val description = if(passwordVisibility.value){
+            var description = if(passwordVisibility.value){
                 "Hide Password"
             } else {
                 "Show Password"

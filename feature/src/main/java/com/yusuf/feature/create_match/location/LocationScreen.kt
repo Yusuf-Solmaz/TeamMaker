@@ -2,6 +2,8 @@ package com.yusuf.feature.create_match.location
 
 import android.content.Intent
 import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
@@ -24,11 +26,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yusuf.component.LoadingLottie
 import com.yusuf.feature.R
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
 
 @Composable
 fun LocationScreen(
@@ -118,6 +124,7 @@ fun PermissionExplanationDialog(
     onConfirm: () -> Unit,
     onSettings: () -> Unit
 ) {
+    val context = LocalContext.current
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Location Permission Required") },

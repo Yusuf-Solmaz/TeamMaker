@@ -6,6 +6,6 @@ import javax.inject.Inject
 class IsLoggedInUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-     operator fun invoke() = authRepository.isLoggedIn()
+    suspend operator fun invoke() = authRepository.isLoggedIn()
 
 }
