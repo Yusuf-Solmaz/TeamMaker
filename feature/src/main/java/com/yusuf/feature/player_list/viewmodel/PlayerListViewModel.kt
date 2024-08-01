@@ -99,10 +99,10 @@ class PlayerListViewModel @Inject constructor(
         }
     }
 
-    fun updatePlayerById(playerId: String, updatedPlayerData: PlayerData, imageUri: Uri) {
+    fun updatePlayerById(playerId: String, updatedPlayerData: PlayerData) {
         _playerUiState.value = _playerUiState.value.copy(isLoading = true)
         viewModelScope.launch {
-            updatePlayerByIdUseCase(playerId, updatedPlayerData, imageUri).collect { result ->
+            updatePlayerByIdUseCase(playerId, updatedPlayerData).collect { result ->
                 when (result) {
                     is RootResult.Loading -> {
                         Log.d("AddPlayerViewModel", "Loading")
