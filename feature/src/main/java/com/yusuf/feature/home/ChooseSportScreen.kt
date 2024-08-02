@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,6 +59,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -107,7 +109,7 @@ fun ChooseSportScreen(
 
     Scaffold(
         floatingActionButton = {
-            if (getAllState.result !is  RootResult.Loading){
+            if (getAllState.result !is RootResult.Loading) {
                 FloatingActionButton(onClick = { openDialog.value = true }) {
                     Icon(Icons.Default.Add, contentDescription = "Add Competition")
                 }
@@ -130,7 +132,8 @@ fun ChooseSportScreen(
                         },
                         onImagePick = {
                             imagePickerLauncher.launch("image/*")
-                        }
+                        },
+                        selectedImageUri = selectedImageUri.value
                     )
                 }
 
@@ -145,7 +148,8 @@ fun ChooseSportScreen(
                             },
                             onImagePick = {
                                 imagePickerLauncher.launch("image/*")
-                            }
+                            },
+                            selectedImageUri = selectedImageUri.value
                         )
                     }
                 }
@@ -246,12 +250,12 @@ fun ChooseSportScreen(
         }
     )
 }
-
 @Composable
 fun AddCompetitionDialog(
     onDismiss: () -> Unit,
     onSave: (String) -> Unit,
-    onImagePick: () -> Unit
+    onImagePick: () -> Unit,
+    selectedImageUri: Uri?
 ) {
     var competitionName by remember { mutableStateOf("") }
 
@@ -268,6 +272,13 @@ fun AddCompetitionDialog(
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onImagePick) {
                     Text("Pick Image")
+                }
+                selectedImageUri?.let { uri ->
+                    Image(
+                        painter = rememberAsyncImagePainter(uri),
+                        contentDescription = null,
+                        modifier = Modifier.size(128.dp).padding(top = 8.dp)
+                    )
                 }
             }
         },
@@ -286,15 +297,16 @@ fun AddCompetitionDialog(
         }
     )
 }
+
 @Composable
 fun UpdateCompetitionDialog(
     competitionData: CompetitionData,
     onDismiss: () -> Unit,
     onUpdateCompetition: (CompetitionData) -> Unit,
-    onImagePick: () -> Unit
+    onImagePick: () -> Unit,
+    selectedImageUri: Uri?
 ) {
     var competitionName by remember { mutableStateOf(competitionData.competitionName) }
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -309,6 +321,19 @@ fun UpdateCompetitionDialog(
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onImagePick) {
                     Text("Pick Image")
+                }
+                selectedImageUri?.let { uri ->
+                    Image(
+                        painter = rememberAsyncImagePainter(uri),
+                        contentDescription = null,
+                        modifier = Modifier.size(128.dp).padding(top = 8.dp)
+                    )
+                } ?: run {
+                    Image(
+                        painter = rememberAsyncImagePainter(competitionData.competitionImageUrl),
+                        contentDescription = null,
+                        modifier = Modifier.size(128.dp).padding(top = 8.dp)
+                    )
                 }
             }
         },
@@ -327,7 +352,6 @@ fun UpdateCompetitionDialog(
         }
     )
 }
-
 @Composable
 fun CompetitionCard(
     competition: CompetitionData,
