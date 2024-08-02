@@ -1,8 +1,7 @@
 package com.yusuf.navigation
 
-import com.yusuf.utils.CompetitionList
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.google.gson.Gson
+import com.yusuf.utils.Competition
 
 enum class NavigationGraph(val route: String) {
         ONBOARDING_SCREEN("onboarding_screen"),
@@ -16,8 +15,9 @@ enum class NavigationGraph(val route: String) {
         FORGOT_PASSWORD("forgot_password");
 
         companion object {
-                fun getOptionsRoute(competition: CompetitionList): String {
-                        val competitionJson = Json.encodeToString(competition)
+                fun getOptionsRoute(competition: Competition): String {
+                        val gson = Gson()
+                        val competitionJson = gson.toJson(competition)
                         return "options/$competitionJson"
                 }
         }
