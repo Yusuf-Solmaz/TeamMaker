@@ -11,6 +11,10 @@
     import androidx.navigation.compose.NavHost
     import androidx.navigation.compose.composable
     import androidx.compose.runtime.key
+    import androidx.navigation.NavBackStackEntry
+    import androidx.navigation.NavType
+    import androidx.navigation.navArgument
+    import com.google.gson.Gson
     import com.yusuf.component.LoadingLottie
     import com.yusuf.feature.R
     import com.yusuf.feature.player_list.PlayerListScreen
@@ -24,6 +28,7 @@
     import com.yusuf.feature.splash_screen.SplashScreen
     import com.yusuf.feature.match_detail.MatchDetailScreen
     import com.yusuf.navigation.main_viewmodel.MainViewModel
+    import com.yusuf.utils.Competition
 
 
     @Composable
@@ -73,10 +78,20 @@
                     ChooseSportScreen(navController)
                     onTitleChange("Choose Sport")
                 }
-                composable(NavigationGraph.OPTIONS.route) {
-                    OptionsScreen(navController)
+                composable(
+                    route = NavigationGraph.OPTIONS.route,
+                    arguments = listOf(navArgument("competitionJson") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val gson = Gson()
+                    val competitionJson = backStackEntry.arguments?.getString("competitionJson")
+                    val competition = gson.fromJson(competitionJson, Competition::class.java)
+                    OptionsScreen(
+                        navController = navController,
+                        competition = competition
+                    )
                     onTitleChange("Options")
                 }
+
                 composable(NavigationGraph.PLAYER_LIST.route) {
                     PlayerListScreen()
                     onTitleChange("Player List")
