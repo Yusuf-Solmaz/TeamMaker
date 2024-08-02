@@ -15,13 +15,13 @@ class TeamBalancerRepositoryImpl @Inject constructor() : TeamBalancerRepository 
         }
 
         val teamSize = players.size / 2
-        val sortedPlayers = players.sortedByDescending { it.skillRating }
+        val sortedPlayers = players.sortedByDescending { it.totalSkillRating }
         val teamFirst = mutableListOf<PlayerData>()
         val teamSecond = mutableListOf<PlayerData>()
 
         for (player in sortedPlayers) {
             // && teamFirst.size < teamSize is used to make sure two teams have the same size
-            if (teamFirst.sumOf { it.skillRating } < teamSecond.sumOf { it.skillRating } && teamFirst.size < teamSize) {
+            if (teamFirst.sumOf { it.totalSkillRating } < teamSecond.sumOf { it.totalSkillRating } && teamFirst.size < teamSize) {
                 teamFirst.add(player)
             } else {
                 teamSecond.add(player)

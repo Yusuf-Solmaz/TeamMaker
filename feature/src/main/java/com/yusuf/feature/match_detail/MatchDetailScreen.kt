@@ -138,17 +138,17 @@ fun PlayerCard(player: PlayerData?) {
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Column {
-                        Text(text = "FOC: ${player?.skillRating}", fontSize = 12.sp)
-                        Text(text = "CON: ${player?.skillRating}", fontSize = 12.sp)
+                        Text(text = "FOC: ${player?.totalSkillRating}", fontSize = 12.sp)
+                        Text(text = "CON: ${player?.totalSkillRating}", fontSize = 12.sp)
                     }
                     Column {
-                        Text(text = "SPE: ${player?.skillRating}", fontSize = 12.sp)
-                        Text(text = "DUR: ${player?.skillRating}", fontSize = 12.sp)
+                        Text(text = "SPE: ${player?.totalSkillRating}", fontSize = 12.sp)
+                        Text(text = "DUR: ${player?.totalSkillRating}", fontSize = 12.sp)
                     }
                 }
             }
             Text(
-                text = player?.skillRating.toString(),
+                text = player?.totalSkillRating.toString(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
