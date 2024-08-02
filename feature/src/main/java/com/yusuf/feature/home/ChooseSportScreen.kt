@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -33,6 +35,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -45,9 +48,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -58,10 +63,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.yusuf.component.LoadingLottie
+import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.CompetitionData
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.R
@@ -107,7 +114,7 @@ fun ChooseSportScreen(
 
     Scaffold(
         floatingActionButton = {
-            if (getAllState.result !is  RootResult.Loading){
+            if (getAllState.result !is RootResult.Loading) {
                 FloatingActionButton(onClick = { openDialog.value = true }) {
                     Icon(Icons.Default.Add, contentDescription = "Add Competition")
                 }
@@ -130,7 +137,8 @@ fun ChooseSportScreen(
                         },
                         onImagePick = {
                             imagePickerLauncher.launch("image/*")
-                        }
+                        },
+                        selectedImageUri = selectedImageUri.value
                     )
                 }
 
@@ -145,7 +153,8 @@ fun ChooseSportScreen(
                             },
                             onImagePick = {
                                 imagePickerLauncher.launch("image/*")
-                            }
+                            },
+                            selectedImageUri = selectedImageUri.value
                         )
                     }
                 }
@@ -246,12 +255,12 @@ fun ChooseSportScreen(
         }
     )
 }
-
 @Composable
 fun AddCompetitionDialog(
     onDismiss: () -> Unit,
     onSave: (String) -> Unit,
-    onImagePick: () -> Unit
+    onImagePick: () -> Unit,
+    selectedImageUri: Uri?
 ) {
     var competitionName by remember { mutableStateOf("") }
 
@@ -259,16 +268,46 @@ fun AddCompetitionDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = "Add Competition") },
         text = {
-            Column {
-                TextField(
-                    value = competitionName,
-                    onValueChange = { competitionName = it },
-                    label = { Text("Competition Name") }
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = onImagePick) {
-                    Text("Pick Image")
+                Box(
+                    modifier = Modifier
+                        .size(128.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                        .clickable { onImagePick() }
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    selectedImageUri?.let { uri ->
+                        Image(
+                            painter = rememberAsyncImagePainter(uri),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } ?: run {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Select Image",
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .size(50.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                TextFieldComponent(
+                    stateValue = competitionName,
+                    onValueChange = { competitionName = it },
+                    label =  "Competition Name",
+                    painterResource = painterResource(R.drawable.ic_person)
+
+                )
             }
         },
         confirmButton = {
@@ -286,30 +325,60 @@ fun AddCompetitionDialog(
         }
     )
 }
+
+
 @Composable
 fun UpdateCompetitionDialog(
     competitionData: CompetitionData,
     onDismiss: () -> Unit,
     onUpdateCompetition: (CompetitionData) -> Unit,
-    onImagePick: () -> Unit
+    onImagePick: () -> Unit,
+    selectedImageUri: Uri?
 ) {
     var competitionName by remember { mutableStateOf(competitionData.competitionName) }
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = "Update Competition") },
         text = {
-            Column {
-                TextField(
-                    value = competitionName,
-                    onValueChange = { competitionName = it },
-                    label = { Text("Competition Name") }
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = onImagePick) {
-                    Text("Pick Image")
+                Box(
+                    modifier = Modifier
+                        .size(128.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                        .clickable { onImagePick() }
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    selectedImageUri?.let { uri ->
+                        Image(
+                            painter = rememberAsyncImagePainter(uri),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } ?: run {
+                        Image(
+                            painter = rememberAsyncImagePainter(competitionData.competitionImageUrl),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                TextFieldComponent(
+                    stateValue = competitionName,
+                    onValueChange = { competitionName = it },
+                    label =  "Competition Name",
+                    painterResource = painterResource(R.drawable.ic_person)
+
+                )
             }
         },
         confirmButton = {
