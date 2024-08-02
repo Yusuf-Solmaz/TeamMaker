@@ -20,8 +20,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,12 +39,20 @@ import com.yusuf.feature.R
 import com.yusuf.feature.create_match.TimePicker
 import com.yusuf.feature.create_match.location.LocationScreen
 import com.yusuf.feature.create_match.weather.Weather
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun MatchDetailScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
-    val uiState by sharedViewModel.uiState.collectAsState()
+    val uiState by sharedViewModel.teamBalancerUiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     Log.d("MatchDetailScreen", "Balanced teams: ${uiState.teams}")
+
+    LaunchedEffect(uiState.teams) {
+        // Veriler güncellendiğinde loglama
+        Log.d("MatchDetailScreen: ", "Balanced teams: ${uiState.teams}")
+    }
 
     Column(
         modifier = Modifier

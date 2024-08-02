@@ -19,28 +19,32 @@ class SharedViewModel @Inject constructor(
     private val _selectedPlayers = MutableStateFlow<List<PlayerData>>(emptyList())
     val selectedPlayers: StateFlow<List<PlayerData>> get() = _selectedPlayers
 
-    private val _uiState = MutableStateFlow(TeamBalancerUIState())
-    val uiState: StateFlow<TeamBalancerUIState> get() = _uiState
+    private val _teamBalancerUiState = MutableStateFlow(TeamBalancerUIState())
+    val teamBalancerUiState: StateFlow<TeamBalancerUIState> get() = _teamBalancerUiState
 
     fun setSelectedPlayers(players: List<PlayerData>) {
         _selectedPlayers.value = players
     }
 
     fun createBalancedTeams() {
-        _uiState.value = _uiState.value.copy(isLoading = true)
+        _teamBalancerUiState.value = _teamBalancerUiState.value.copy(isLoading = true)
         viewModelScope.launch {
             try {
                 val players = _selectedPlayers.value
                 teamBalancerUseCase(players).collect { result ->
-                    _uiState.value = _uiState.value.copy(
+                    when(result) {
+
+                    }
+                    _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
                         teams = result,
                         isLoading = false,
                         errorMessage = null
                     )
-                    Log.d("SharedViewModel", "Balanced teams set: $result")
+                    Log.d("SharedViewModel", "Players set: ${players.size}")
+                    Log.d("SharedViewModel", "Create Balanced teams set: $result")
                 }
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
                     errorMessage = e.message,
                     isLoading = false
                 )

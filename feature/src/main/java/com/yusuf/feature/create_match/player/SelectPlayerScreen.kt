@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,7 +35,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -48,15 +48,21 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.create_match.player.viewmodel.SelectPlayerViewModel
+import com.yusuf.feature.match_detail.SharedViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.DarkGreen
 import com.yusuf.theme.Green
 import com.yusuf.utils.SharedPreferencesHelper
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 
 @Composable
-fun SelectPlayerScreen(navController: NavController) {
+fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedViewModel = hiltViewModel()) {
     val viewModel: SelectPlayerViewModel = hiltViewModel()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
+    val uiState by sharedViewModel.teamBalancerUiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     val context = LocalContext.current
     val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
@@ -139,7 +145,9 @@ fun SelectPlayerScreen(navController: NavController) {
                                 modifier = Modifier.padding(top = 4.dp)
                             )
                             Row(
-                                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 Column {
@@ -159,7 +167,7 @@ fun SelectPlayerScreen(navController: NavController) {
                             color = DarkGreen,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
-                                .padding(start=20.dp, top = 40.dp)
+                                .padding(start = 20.dp, top = 40.dp)
                                 .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
                                 .padding(4.dp)
                         )
@@ -170,6 +178,16 @@ fun SelectPlayerScreen(navController: NavController) {
 
         Button(
             onClick = {
+                Log.d("SelectPlayerScreen:  ", "selectedPlayers: ${selectedPlayers.size}")
+                sharedViewModel.setSelectedPlayers(selectedPlayers)
+                sharedViewModel.createBalancedTeams()
+                coroutineScope.launch {
+                    // delay() işlevi burada çalışır
+                    delay(2000L) // 2 saniye bekler
+                    // Beklemeden sonra yapacağınız işlemler
+                    Log.d("SelectPlayerScreen:  ", "createBalancedTeams: ${uiState.teams}")
+                }
+                //Log.d("SelectPlayerScreen:  ", "createBalancedTeams: ${uiState.teams}")
                 navController.navigate(NavigationGraph.MATCH_DETAIL.route)
             },
             modifier = Modifier
