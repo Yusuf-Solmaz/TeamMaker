@@ -85,7 +85,7 @@ fun MainScreen(navController: NavHostController, loginViewModel: LoginViewModel 
                         } else {
                             IconButton(onClick = { navController.navigateUp() }) {
                                 Icon(
-                                    painterResource(R.drawable.ic_back),
+                                    painterResource(R.drawable.ic_arrow_right),
                                     contentDescription = "Back",
                                     tint = Green,
                                     modifier = Modifier.size(30.dp))
