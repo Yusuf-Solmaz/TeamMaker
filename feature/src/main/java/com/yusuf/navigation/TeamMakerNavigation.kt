@@ -14,6 +14,7 @@
     import androidx.navigation.NavBackStackEntry
     import androidx.navigation.NavType
     import androidx.navigation.navArgument
+    import com.google.gson.Gson
     import com.yusuf.component.LoadingLottie
     import com.yusuf.feature.R
     import com.yusuf.feature.player_list.PlayerListScreen
@@ -27,6 +28,7 @@
     import com.yusuf.feature.splash_screen.SplashScreen
     import com.yusuf.feature.match_detail.MatchDetailScreen
     import com.yusuf.navigation.main_viewmodel.MainViewModel
+    import com.yusuf.utils.Competition
 
 
     @Composable
@@ -80,9 +82,12 @@
                     route = NavigationGraph.OPTIONS.route,
                     arguments = listOf(navArgument("competitionJson") { type = NavType.StringType })
                 ) { backStackEntry ->
+                    val gson = Gson()
+                    val competitionJson = backStackEntry.arguments?.getString("competitionJson")
+                    val competition = gson.fromJson(competitionJson, Competition::class.java)
                     OptionsScreen(
                         navController = navController,
-                        backStackEntry = backStackEntry
+                        competition = competition
                     )
                     onTitleChange("Options")
                 }
