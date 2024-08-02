@@ -273,13 +273,6 @@ fun AddCompetitionDialog(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                TextFieldComponent(
-                    stateValue = competitionName,
-                    onValueChange = { competitionName = it },
-                    label =  "Competition Name",
-                    painterResource = painterResource(R.drawable.ic_person)
-
-                )
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = Modifier
@@ -287,7 +280,7 @@ fun AddCompetitionDialog(
                         .clip(RoundedCornerShape(8.dp))
                         .background(MaterialTheme.colorScheme.surface)
                         .clickable { onImagePick() }
-                        .align(Alignment.CenterHorizontally) // Ortalamayı sağlar
+                        .align(Alignment.CenterHorizontally)
                 ) {
                     selectedImageUri?.let { uri ->
                         Image(
@@ -307,6 +300,14 @@ fun AddCompetitionDialog(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                TextFieldComponent(
+                    stateValue = competitionName,
+                    onValueChange = { competitionName = it },
+                    label =  "Competition Name",
+                    painterResource = painterResource(R.drawable.ic_person)
+
+                )
             }
         },
         confirmButton = {
@@ -345,13 +346,6 @@ fun UpdateCompetitionDialog(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                TextFieldComponent(
-                    stateValue = competitionName,
-                    onValueChange = { competitionName = it },
-                    label =  "Competition Name",
-                    painterResource = painterResource(R.drawable.ic_person)
-
-                )
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = Modifier
@@ -359,7 +353,7 @@ fun UpdateCompetitionDialog(
                         .clip(RoundedCornerShape(8.dp))
                         .background(MaterialTheme.colorScheme.surface)
                         .clickable { onImagePick() }
-                        .align(Alignment.CenterHorizontally) // Ortalamayı sağlar
+                        .align(Alignment.CenterHorizontally)
                 ) {
                     selectedImageUri?.let { uri ->
                         Image(
@@ -377,6 +371,14 @@ fun UpdateCompetitionDialog(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                TextFieldComponent(
+                    stateValue = competitionName,
+                    onValueChange = { competitionName = it },
+                    label =  "Competition Name",
+                    painterResource = painterResource(R.drawable.ic_person)
+
+                )
             }
         },
         confirmButton = {
