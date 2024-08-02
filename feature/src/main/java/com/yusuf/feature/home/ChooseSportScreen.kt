@@ -30,6 +30,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -68,8 +70,9 @@ import com.yusuf.feature.R
 import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.Green
+import com.yusuf.utils.CompetitionList
 import com.yusuf.utils.SharedPreferencesHelper
-
+import com.yusuf.utils.toCompetitionList
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -107,7 +110,7 @@ fun ChooseSportScreen(
 
     Scaffold(
         floatingActionButton = {
-            if (getAllState.result !is  RootResult.Loading){
+            if (getAllState.result !is RootResult.Loading) {
                 FloatingActionButton(onClick = { openDialog.value = true }) {
                     Icon(Icons.Default.Add, contentDescription = "Add Competition")
                 }
@@ -121,11 +124,11 @@ fun ChooseSportScreen(
                 if (openDialog.value) {
                     AddCompetitionDialog(
                         onDismiss = { openDialog.value = false },
-                        onSave = { competitionName ->
+                        onSave = { competition ->
                             selectedImageUri.value?.let { uri ->
                                 val context = context
                                 val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-                                competitionViewModel.uploadImageAndAddCompetition(bitmap, competitionName)
+                                competitionViewModel.uploadImageAndAddCompetition(bitmap, competition.competitionName)
                             }
                         },
                         onImagePick = {
@@ -140,7 +143,12 @@ fun ChooseSportScreen(
                             competitionData = it1,
                             onDismiss = { openUpdateDialog.value = false },
                             onUpdateCompetition = { competitionData ->
-                                competitionViewModel.updateCompetition(competitionData.competitionId, competitionData, selectedImageUri.value, context)
+                                competitionViewModel.updateCompetition(
+                                    competitionData.competitionId,
+                                    competitionData,
+                                    selectedImageUri.value,
+                                    context
+                                )
                                 openUpdateDialog.value = false
                             },
                             onImagePick = {
@@ -160,6 +168,7 @@ fun ChooseSportScreen(
                             LoadingLottie(R.raw.loading_anim)
                         }
                     }
+
                     is RootResult.Success -> {
                         if (getAllState.competitions.isEmpty()) {
                             Column(
@@ -199,8 +208,11 @@ fun ChooseSportScreen(
                                 CompetitionCard(
                                     competition = competition,
                                     onClick = {
-                                        sharedPreferencesHelper.competitionName = competition.competitionName
-                                        navController.navigate(NavigationGraph.OPTIONS.route)
+                                        val competitionList = competition.toCompetitionList()
+                                        if (competitionList != null) {
+                                            sharedPreferencesHelper.competitionName = competition.competitionName
+                                            navController.navigate(NavigationGraph.getOptionsRoute(competitionList))
+                                        }
                                     },
                                     onDelete = {
                                         Log.d(
@@ -232,6 +244,7 @@ fun ChooseSportScreen(
                             LoadingLottie(R.raw.loading_anim)
                         }
                     }
+
                     is RootResult.Success -> {
                         Log.d("ChooseSportScreen", "Competition added/updated successfully: ${addState.data}")
                     }
@@ -250,21 +263,49 @@ fun ChooseSportScreen(
 @Composable
 fun AddCompetitionDialog(
     onDismiss: () -> Unit,
-    onSave: (String) -> Unit,
+    onSave: (CompetitionList) -> Unit,
     onImagePick: () -> Unit
 ) {
-    var competitionName by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedCompetition by remember { mutableStateOf<CompetitionList?>(null) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = "Add Competition") },
         text = {
             Column {
-                TextField(
-                    value = competitionName,
-                    onValueChange = { competitionName = it },
-                    label = { Text("Competition Name") }
-                )
+                Box {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { expanded = true },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = selectedCompetition?.competitionName ?: "Select Competition",
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = "Dropdown",
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        CompetitionList.values().forEach { competition ->
+                            DropdownMenuItem(
+                                text = { Text(competition.competitionName) },
+                                onClick = {
+                                    selectedCompetition = competition
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onImagePick) {
                     Text("Pick Image")
@@ -273,8 +314,10 @@ fun AddCompetitionDialog(
         },
         confirmButton = {
             Button(onClick = {
-                onSave(competitionName)
-                onDismiss()
+                selectedCompetition?.let { competition ->
+                    onSave(competition)
+                    onDismiss()
+                }
             }) {
                 Text("Save")
             }
@@ -286,6 +329,8 @@ fun AddCompetitionDialog(
         }
     )
 }
+
+
 @Composable
 fun UpdateCompetitionDialog(
     competitionData: CompetitionData,
@@ -294,18 +339,51 @@ fun UpdateCompetitionDialog(
     onImagePick: () -> Unit
 ) {
     var competitionName by remember { mutableStateOf(competitionData.competitionName) }
+    var selectedCompetition by remember { mutableStateOf<CompetitionList?>(null) }
+    var expanded by remember { mutableStateOf(false) }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+
+    selectedCompetition = CompetitionList.values().find { it.competitionName == competitionData.competitionName }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = "Update Competition") },
         text = {
             Column {
-                TextField(
-                    value = competitionName,
-                    onValueChange = { competitionName = it },
-                    label = { Text("Competition Name") }
-                )
+
+                Box {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { expanded = true },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = selectedCompetition?.competitionName ?: "Select Competition",
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = "Dropdown",
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        CompetitionList.values().forEach { competition ->
+                            DropdownMenuItem(
+                                text = { Text(competition.competitionName) },
+                                onClick = {
+                                    selectedCompetition = competition
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onImagePick) {
                     Text("Pick Image")
@@ -314,7 +392,13 @@ fun UpdateCompetitionDialog(
         },
         confirmButton = {
             Button(onClick = {
-                onUpdateCompetition(competitionData.copy(competitionName = competitionName))
+                selectedCompetition?.let { competition ->
+                    onUpdateCompetition(
+                        competitionData.copy(
+                            competitionName = competition.competitionName,
+                        )
+                    )
+                }
                 onDismiss()
             }) {
                 Text("Save")
@@ -327,6 +411,7 @@ fun UpdateCompetitionDialog(
         }
     )
 }
+
 
 @Composable
 fun CompetitionCard(
@@ -381,7 +466,7 @@ fun CompetitionCard(
                     .align(Alignment.Center),
                 contentAlignment = Alignment.Center
             ) {
-                if (!isImageLoading){
+                if (!isImageLoading) {
                     Text(
                         text = competition.competitionName,
                         color = Color.White,
