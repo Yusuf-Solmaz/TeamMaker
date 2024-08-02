@@ -11,6 +11,9 @@
     import androidx.navigation.compose.NavHost
     import androidx.navigation.compose.composable
     import androidx.compose.runtime.key
+    import androidx.navigation.NavBackStackEntry
+    import androidx.navigation.NavType
+    import androidx.navigation.navArgument
     import com.yusuf.component.LoadingLottie
     import com.yusuf.feature.R
     import com.yusuf.feature.player_list.PlayerListScreen
@@ -73,10 +76,17 @@
                     ChooseSportScreen(navController)
                     onTitleChange("Choose Sport")
                 }
-                composable(NavigationGraph.OPTIONS.route) {
-                    OptionsScreen(navController)
+                composable(
+                    route = NavigationGraph.OPTIONS.route,
+                    arguments = listOf(navArgument("competitionJson") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    OptionsScreen(
+                        navController = navController,
+                        backStackEntry = backStackEntry
+                    )
                     onTitleChange("Options")
                 }
+
                 composable(NavigationGraph.PLAYER_LIST.route) {
                     PlayerListScreen()
                     onTitleChange("Player List")
