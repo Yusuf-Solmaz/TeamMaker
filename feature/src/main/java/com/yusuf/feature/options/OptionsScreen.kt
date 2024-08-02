@@ -18,15 +18,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.yusuf.feature.R
 import com.yusuf.navigation.NavigationGraph
 
 @Composable
-fun OptionsScreen(navController: NavController) {
+fun OptionsScreen(
+    navController: NavController
+    ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,6 +34,7 @@ fun OptionsScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
+
         OptionsCard(navController, "Players", R.drawable.players, NavigationGraph.PLAYER_LIST.route)
         OptionsCard(navController, "Create a Match", R.drawable.createamatch, NavigationGraph.CREATE_MATCH.route)
     }
@@ -67,12 +68,4 @@ fun OptionsCard(
             }
         }
     }
-}
-
-
-@Preview
-@Composable
-fun OptionsScreenPreview() {
-    val navController = rememberNavController()
-    OptionsScreen(navController)
 }

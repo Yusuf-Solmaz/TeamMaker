@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,30 +41,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.SubcomposeAsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.create_match.player.viewmodel.SelectPlayerViewModel
-import com.yusuf.feature.match_detail.SharedViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.DarkGreen
 import com.yusuf.theme.Green
+import com.yusuf.utils.SharedPreferencesHelper
 
 @Composable
-fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedViewModel = hiltViewModel()) {
+fun SelectPlayerScreen(navController: NavController) {
     val viewModel: SelectPlayerViewModel = hiltViewModel()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
-    val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
-    val uiState by sharedViewModel.uiState.collectAsState()
+
+    val context = LocalContext.current
+    val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
+    val competitionName = sharedPreferencesHelper.competitionName
 
     LaunchedEffect(true) {
-        viewModel.getAllPlayers()
+        viewModel.getPlayersByCompetitionType(competitionName.toString())
     }
 
-    LaunchedEffect(uiState.teams) {
-        if (uiState.teams != null) {
-            navController.navigate(NavigationGraph.MATCH_DETAIL.route)
-        }
-    }
+    val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
 
     Column(Modifier.fillMaxSize()) {
         LazyVerticalGrid(
@@ -110,14 +114,22 @@ fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedView
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.players),
-                                contentDescription = "${player.firstName} ${player.lastName}",
+
+                            SubcomposeAsyncImage(
+                                model = player.profilePhotoUrl,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .size(100.dp)
                                     .clip(RoundedCornerShape(8.dp))
                                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
-                                contentScale = ContentScale.Crop
+                                loading = {
+                                    LottieAnimation(
+                                        composition,
+                                        modifier = Modifier.size(100.dp),
+                                        iterations = Int.MAX_VALUE
+                                    )
+                                }
                             )
                             Text(
                                 text = "${player.firstName} ${player.lastName}",
@@ -127,29 +139,27 @@ fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedView
                                 modifier = Modifier.padding(top = 4.dp)
                             )
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 4.dp),
+                                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 Column {
-                                    Text(text = "FOC: ${player.skillRating}", fontSize = 12.sp)
-                                    Text(text = "CON: ${player.skillRating}", fontSize = 12.sp)
+                                    Text(text = "FOC: ${player.focus}", fontSize = 12.sp)
+                                    Text(text = "CON: ${player.condition}", fontSize = 12.sp)
                                 }
                                 Column {
-                                    Text(text = "SPE: ${player.skillRating}", fontSize = 12.sp)
-                                    Text(text = "DUR: ${player.skillRating}", fontSize = 12.sp)
+                                    Text(text = "SPE: ${player.speed}", fontSize = 12.sp)
+                                    Text(text = "DUR: ${player.durability}", fontSize = 12.sp)
                                 }
                             }
                         }
                         Text(
-                            text = player.skillRating.toString(),
+                            text = player.totalSkillRating.toString(),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White,
+                            color = DarkGreen,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
-                                .padding(start = 20.dp, top = 40.dp)
+                                .padding(start=20.dp, top = 40.dp)
                                 .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
                                 .padding(4.dp)
                         )
@@ -160,8 +170,7 @@ fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedView
 
         Button(
             onClick = {
-                sharedViewModel.setSelectedPlayers(selectedPlayers)
-                sharedViewModel.createBalancedTeams()
+                navController.navigate(NavigationGraph.MATCH_DETAIL.route)
             },
             modifier = Modifier
                 .fillMaxWidth()
