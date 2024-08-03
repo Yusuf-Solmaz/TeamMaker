@@ -1,4 +1,4 @@
-package com.yusuf.feature.create_match.weather
+package com.yusuf.feature.create_competition.weather
 
 import com.yusuf.domain.model.weather.CurrentWeatherModel
 

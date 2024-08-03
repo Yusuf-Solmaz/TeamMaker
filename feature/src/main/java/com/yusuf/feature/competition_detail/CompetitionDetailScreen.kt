@@ -1,4 +1,4 @@
-package com.yusuf.feature.match_detail
+package com.yusuf.feature.competition_detail
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -20,10 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,27 +29,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.yusuf.component.LoadingLottie
+import androidx.navigation.NavController
+import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.domain.model.firebase.PlayerData
-import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.R
-import com.yusuf.feature.create_match.TimePicker
-import com.yusuf.feature.create_match.location.LocationScreen
-import com.yusuf.feature.create_match.weather.Weather
+import com.yusuf.feature.create_competition.location.LocationScreen
+import com.yusuf.feature.create_competition.weather.Weather
 
 @Composable
-fun MatchDetailScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
-    val teamBalancerUIState by sharedViewModel.teamBalancerUiState.collectAsState()
-
-    LaunchedEffect(teamBalancerUIState.teams) {
-        Log.d("MatchDetailScreen", "Current state: $teamBalancerUIState")
-        if (teamBalancerUIState.teams == null) {
-            Log.d("MatchDetailScreen", "Teams are not ready yet.")
-        } else {
-            Log.d("MatchDetailScreen", "Balanced teams: ${teamBalancerUIState.teams}")
-        }
-    }
+fun CompetitionDetailScreen(
+    navController: NavController,
+    competitionDetail: CompetitionDetail
+) {
 
     Column(
         modifier = Modifier
@@ -61,34 +48,13 @@ fun MatchDetailScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TimePicker()
+        Text(text = competitionDetail.selectedTime, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Log.d("MatchDetailScreen", "CompetitionDetail: $competitionDetail")
         Spacer(modifier = Modifier.height(2.dp))
         LocationScreen()
         Spacer(modifier = Modifier.height(2.dp))
         Weather()
         Spacer(modifier = Modifier.height(16.dp))
-
-        when {
-            teamBalancerUIState.isLoading -> {
-                LoadingLottie(R.raw.loading_anim)
-            }
-            teamBalancerUIState.errorMessage != null -> {
-                Text("Error: ${teamBalancerUIState.errorMessage}", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            }
-            teamBalancerUIState.teams is RootResult.Success -> {
-                val teams = (teamBalancerUIState.teams as RootResult.Success).data
-                if (teams != null) {
-                    TeamSection(title = "Team 1", players = teams.first)
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                if (teams != null) {
-                    TeamSection(title = "Team 2", players = teams.second)
-                }
-            }
-            else -> {
-                Text("Teams are not ready yet", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            }
-        }
     }
 }
 

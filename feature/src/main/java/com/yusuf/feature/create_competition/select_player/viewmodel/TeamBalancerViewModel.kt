@@ -1,4 +1,4 @@
-package com.yusuf.feature.match_detail
+package com.yusuf.feature.create_competition.select_player.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.use_cases.team.TeamBalancerUseCase
 import com.yusuf.domain.util.RootResult
-import com.yusuf.feature.match_detail.team_balancer.TeamBalancerUIState
+import com.yusuf.feature.create_competition.select_player.state.TeamBalancerUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SharedViewModel @Inject constructor(
+class TeamBalancerViewModel @Inject constructor(
     private val teamBalancerUseCase: TeamBalancerUseCase
 ) : ViewModel() {
     private val _teamBalancerUiState = MutableStateFlow(TeamBalancerUIState())
@@ -29,7 +29,7 @@ class SharedViewModel @Inject constructor(
                 when (result) {
                     is RootResult.Success -> {
                         _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
-                            teams = result,
+                            teams = result.data,
                             isLoading = false,
                             errorMessage = null
                         )

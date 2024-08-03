@@ -83,7 +83,7 @@ import com.yusuf.utils.toCompetition
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ChooseSportScreen(
+fun ChooseCompetitionTypeScreen(
     navController: NavController,
     competitionViewModel: CompetitionViewModel = hiltViewModel()
 ) {

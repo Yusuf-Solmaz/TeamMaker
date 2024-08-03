@@ -58,8 +58,8 @@ fun LoginScreen(
 
     LaunchedEffect(uiState.user) {
         uiState.user?.let {
-            navController.navigate(NavigationGraph.CHOOSE_SPORT.route) {
-                popUpTo(NavigationGraph.CHOOSE_SPORT.route) {
+            navController.navigate(NavigationGraph.CHOOSE_COMPETITION_TYPE.route) {
+                popUpTo(NavigationGraph.CHOOSE_COMPETITION_TYPE.route) {
                     inclusive = true
                 }
             }
@@ -68,8 +68,8 @@ fun LoginScreen(
 
     LaunchedEffect(loggingState.transaction) {
         if (loggingState.transaction) {
-            navController.navigate(NavigationGraph.CHOOSE_SPORT.route) {
-                popUpTo(NavigationGraph.CHOOSE_SPORT.route) {
+            navController.navigate(NavigationGraph.CHOOSE_COMPETITION_TYPE.route) {
+                popUpTo(NavigationGraph.CHOOSE_COMPETITION_TYPE.route) {
                     inclusive = true
                 }
             }
