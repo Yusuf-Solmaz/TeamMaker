@@ -226,7 +226,6 @@ fun PlayerListItem(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(100.dp)
-            //        .background(MaterialTheme.colorScheme.primary)
                     .padding(16.dp)
                     .align(Alignment.CenterStart)
             ) {
@@ -276,7 +275,7 @@ fun PlayerListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
-                .zIndex(1f), // Ensure the card is on top
+                .zIndex(1f),
             elevation = CardDefaults.cardElevation(4.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
