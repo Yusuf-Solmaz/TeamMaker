@@ -27,7 +27,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,8 +52,6 @@ import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.DarkGreen
 import com.yusuf.theme.Green
 import com.yusuf.utils.SharedPreferencesHelper
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedViewModel = hiltViewModel()) {
@@ -73,10 +70,13 @@ fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedView
     }
 
     LaunchedEffect(teamBalancerUIState.teams) {
-        if (sharedViewModel.isTeamsReady()) {
+        if (teamBalancerUIState.teams != null) {
             Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
             navController.navigate(NavigationGraph.MATCH_DETAIL.route)
-        } else {
+        } else if (teamBalancerUIState.isLoading){
+            Log.d("SelectPlayerScreen", "Loading teams...")
+        }
+        else {
             Log.d("SelectPlayerScreen", "Teams are not ready yet.")
         }
     }
@@ -185,8 +185,7 @@ fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedView
         Button(
             onClick = {
                 Log.d("SelectPlayerScreen:  ", "selectedPlayers: ${selectedPlayers.size}")
-                sharedViewModel.setSelectedPlayers(selectedPlayers)
-                sharedViewModel.createBalancedTeams()
+                sharedViewModel.createBalancedTeams(selectedPlayers)
             },
             modifier = Modifier
                 .fillMaxWidth()
