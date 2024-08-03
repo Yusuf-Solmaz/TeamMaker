@@ -1,7 +1,6 @@
-package com.yusuf.feature.match_detail.team_balancer
+package com.yusuf.feature.create_competition.select_player.state
 
 import com.yusuf.domain.model.firebase.PlayerData
-import com.yusuf.domain.util.RootResult
 
 data class TeamBalancerUIState(
     val isLoading: Boolean = false,

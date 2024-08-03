@@ -1,4 +1,4 @@
-package com.yusuf.feature.create_match.location
+package com.yusuf.feature.create_competition.location
 
 import android.location.Location
 

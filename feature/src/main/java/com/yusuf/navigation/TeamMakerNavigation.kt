@@ -19,14 +19,14 @@
     import com.yusuf.feature.R
     import com.yusuf.feature.player_list.PlayerListScreen
     import com.yusuf.feature.auth.forgot_password.ForgotPasswordScreen
-    import com.yusuf.feature.create_match.CreateMatchScreen
-    import com.yusuf.feature.home.ChooseSportScreen
+    import com.yusuf.feature.create_competition.CreateCompetitionScreen
+    import com.yusuf.feature.home.ChooseCompetitionTypeScreen
     import com.yusuf.feature.auth.login.LoginScreen
     import com.yusuf.feature.auth.register.RegisterScreen
     import com.yusuf.feature.onboarding.OnBoardingScreen
     import com.yusuf.feature.options.OptionsScreen
     import com.yusuf.feature.splash_screen.SplashScreen
-    import com.yusuf.feature.match_detail.MatchDetailScreen
+    import com.yusuf.feature.competition_detail.CompetitionDetailScreen
     import com.yusuf.navigation.main_viewmodel.MainViewModel
     import com.yusuf.utils.Competition
 
@@ -46,7 +46,6 @@
                     }
                 }
             }
-
 
         if (mainViewModel.isSplashScreenVisible) {
             SplashScreen()
@@ -74,9 +73,9 @@
                 composable(NavigationGraph.FORGOT_PASSWORD.route) {
                     ForgotPasswordScreen(navController)
                 }
-                composable(NavigationGraph.CHOOSE_SPORT.route) {
-                    ChooseSportScreen(navController)
-                    onTitleChange("Choose Sport")
+                composable(NavigationGraph.CHOOSE_COMPETITION_TYPE.route) {
+                    ChooseCompetitionTypeScreen(navController)
+                    onTitleChange("Choose Competition Type")
                 }
                 composable(
                     route = NavigationGraph.OPTIONS.route,
@@ -93,26 +92,27 @@
                 }
 
                 composable(
-                    route = NavigationGraph.MATCH_DETAIL.route,
+                    route = NavigationGraph.COMPETITION_DETAIL.route,
                     arguments = listOf(navArgument("competitionDetailJson") { type = NavType.StringType })
                 ) { backStackEntry ->
                     val gson = Gson()
                     val competitionDetailJson = backStackEntry.arguments?.getString("competitionDetailJson")
                     val competitionDetail = gson.fromJson(competitionDetailJson, CompetitionDetail::class.java)
-                    MatchDetailScreen(
+                    CompetitionDetailScreen(
                         navController = navController,
                         competitionDetail = competitionDetail
                     )
-                    onTitleChange("Match Detail")
+                    onTitleChange("Competition Detail")
                 }
 
                 composable(NavigationGraph.PLAYER_LIST.route) {
                     PlayerListScreen()
                     onTitleChange("Player List")
                 }
-                composable(NavigationGraph.CREATE_MATCH.route) {
-                    CreateMatchScreen(navController)
-                    onTitleChange("Create Match")
+
+                composable(NavigationGraph.CREATE_COMPETITION.route) {
+                    CreateCompetitionScreen(navController)
+                    onTitleChange("Create Competition")
                 }
             }
         }

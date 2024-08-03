@@ -1,5 +1,4 @@
 import android.util.Log
-import android.widget.TimePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,12 +47,11 @@ import coil.compose.SubcomposeAsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
-import com.yusuf.feature.create_match.player.viewmodel.SelectPlayerViewModel
-import com.yusuf.feature.match_detail.SharedViewModel
+import com.yusuf.feature.create_competition.select_player.viewmodel.SelectPlayerViewModel
+import com.yusuf.feature.create_competition.select_player.viewmodel.TeamBalancerViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.DarkGreen
 import com.yusuf.theme.Green
@@ -62,7 +60,7 @@ import com.yusuf.utils.SharedPreferencesHelper
 @Composable
 fun SelectPlayerScreen(
     navController: NavController,
-    sharedViewModel: SharedViewModel = hiltViewModel(),
+    sharedViewModel: TeamBalancerViewModel = hiltViewModel(),
     timePicker: String = ""
 ) {
 

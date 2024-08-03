@@ -1,4 +1,4 @@
-package com.yusuf.feature.create_match
+package com.yusuf.feature.create_competition
 
 import SelectPlayerScreen
 import android.icu.text.SimpleDateFormat
@@ -15,13 +15,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,15 +36,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
-import com.yusuf.feature.create_match.weather.Weather
 import com.yusuf.feature.R
-import com.yusuf.feature.create_match.location.LocationScreen
-import com.yusuf.navigation.NavigationGraph
+import com.yusuf.feature.create_competition.location.LocationScreen
 
 
 import java.util.Calendar
@@ -56,7 +49,7 @@ import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CreateMatchScreen(navController: NavController) {
+fun CreateCompetitionScreen(navController: NavController) {
     var selectedTime by remember { mutableStateOf("") }
 
     Column(

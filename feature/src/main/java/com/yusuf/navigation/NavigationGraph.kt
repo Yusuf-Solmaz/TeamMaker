@@ -7,11 +7,11 @@ import com.yusuf.utils.Competition
 
 enum class NavigationGraph(val route: String) {
         ONBOARDING_SCREEN("onboarding_screen"),
-        CHOOSE_SPORT("choose_sport"),
+        CHOOSE_COMPETITION_TYPE("choose_competition_type"),
         OPTIONS("options/{competitionJson}"),
         PLAYER_LIST("player_list"),
-        CREATE_MATCH("create_match"),
-        MATCH_DETAIL("match_detail/{competitionDetailJson}"),
+        CREATE_COMPETITION("create_competition"),
+        COMPETITION_DETAIL("competition_detail/{competitionDetailJson}"),
         LOGIN("login"),
         REGISTER("register"),
         FORGOT_PASSWORD("forgot_password");
@@ -25,7 +25,7 @@ enum class NavigationGraph(val route: String) {
                 fun getCompetitionDetailsRoute(competitionDetail: CompetitionDetail): String {
                         val gson = Gson()
                         val competitionDetailJson = gson.toJson(competitionDetail)
-                        return "match_detail/${Uri.encode(competitionDetailJson)}"
+                        return "competition_detail/${Uri.encode(competitionDetailJson)}"
                 }
         }
 }

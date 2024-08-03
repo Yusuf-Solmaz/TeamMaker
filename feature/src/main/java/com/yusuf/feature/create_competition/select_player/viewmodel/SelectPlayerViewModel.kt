@@ -1,11 +1,11 @@
-package com.yusuf.feature.create_match.player.viewmodel
+package com.yusuf.feature.create_competition.select_player.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.use_cases.firebase_use_cases.user.GetPlayersByCompetitionTypeUseCase
 import com.yusuf.domain.util.RootResult
-import com.yusuf.feature.create_match.player.state.PlayerUiState
+import com.yusuf.feature.create_competition.select_player.state.PlayerUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
