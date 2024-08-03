@@ -70,7 +70,7 @@ fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedView
         viewModel.getPlayersByCompetitionType(competitionName.toString())
     }
 
-    LaunchedEffect(teamBalancerUIState.teams) {
+    LaunchedEffect(teamBalancerUIState) {
         if (teamBalancerUIState.teams != null) {
             Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
             navController.navigate(NavigationGraph.MATCH_DETAIL.route)
