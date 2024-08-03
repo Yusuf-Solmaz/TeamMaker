@@ -8,6 +8,7 @@ import com.yusuf.domain.use_cases.team.TeamBalancerUseCase
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.match_detail.team_balancer.TeamBalancerUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ class SharedViewModel @Inject constructor(
     fun createBalancedTeams(players: List<PlayerData>) {
         _teamBalancerUiState.value = _teamBalancerUiState.value.copy(isLoading = true)
         viewModelScope.launch {
+            delay(2000)
             teamBalancerUseCase(players).collect { result ->
                 when (result) {
                     is RootResult.Success -> {
@@ -35,7 +37,7 @@ class SharedViewModel @Inject constructor(
                     }
                     is RootResult.Error -> {
                         _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
-                            teams = result,
+                            teams = null,
                             isLoading = false,
                             errorMessage = result.message
                         )
