@@ -5,6 +5,6 @@ import com.yusuf.domain.util.RootResult
 
 data class TeamBalancerUIState(
     val isLoading: Boolean = false,
-    val teams: RootResult<Pair<List<PlayerData>, List<PlayerData>>>? = null,
+    val teams: Pair<List<PlayerData>, List<PlayerData>>? = null,
     val errorMessage: String? = null
 )

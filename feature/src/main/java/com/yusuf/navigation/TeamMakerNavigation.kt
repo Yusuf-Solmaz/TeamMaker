@@ -11,11 +11,11 @@
     import androidx.navigation.compose.NavHost
     import androidx.navigation.compose.composable
     import androidx.compose.runtime.key
-    import androidx.navigation.NavBackStackEntry
     import androidx.navigation.NavType
     import androidx.navigation.navArgument
     import com.google.gson.Gson
     import com.yusuf.component.LoadingLottie
+    import com.yusuf.domain.model.competition_detail.CompetitionDetail
     import com.yusuf.feature.R
     import com.yusuf.feature.player_list.PlayerListScreen
     import com.yusuf.feature.auth.forgot_password.ForgotPasswordScreen
@@ -92,6 +92,20 @@
                     onTitleChange("Options")
                 }
 
+                composable(
+                    route = NavigationGraph.MATCH_DETAIL.route,
+                    arguments = listOf(navArgument("competitionDetailJson") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val gson = Gson()
+                    val competitionDetailJson = backStackEntry.arguments?.getString("competitionDetailJson")
+                    val competitionDetail = gson.fromJson(competitionDetailJson, CompetitionDetail::class.java)
+                    MatchDetailScreen(
+                        navController = navController,
+                        competitionDetail = competitionDetail
+                    )
+                    onTitleChange("Match Detail")
+                }
+
                 composable(NavigationGraph.PLAYER_LIST.route) {
                     PlayerListScreen()
                     onTitleChange("Player List")
@@ -99,10 +113,6 @@
                 composable(NavigationGraph.CREATE_MATCH.route) {
                     CreateMatchScreen(navController)
                     onTitleChange("Create Match")
-                }
-                composable(NavigationGraph.MATCH_DETAIL.route) {
-                    MatchDetailScreen()
-                    onTitleChange("Match Detail")
                 }
             }
         }

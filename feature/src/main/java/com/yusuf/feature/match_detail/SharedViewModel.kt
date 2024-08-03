@@ -29,7 +29,7 @@ class SharedViewModel @Inject constructor(
                 when (result) {
                     is RootResult.Success -> {
                         _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
-                            teams = result,
+                            teams = result.data,
                             isLoading = false,
                             errorMessage = null
                         )
