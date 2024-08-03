@@ -6,12 +6,16 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,15 +24,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.wear.compose.material.ExperimentalWearMaterialApi
+import androidx.wear.compose.material.FractionalThreshold
+import androidx.wear.compose.material.rememberSwipeableState
+import androidx.wear.compose.material.swipeable
 import coil.compose.rememberAsyncImagePainter
 import com.yusuf.component.LoadingLottie
 import com.yusuf.component.TextFieldComponent
@@ -36,6 +47,7 @@ import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
 import com.yusuf.utils.SharedPreferencesHelper
+import kotlin.math.roundToInt
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -128,7 +140,7 @@ fun PlayerListScreen(
                                 PlayerListItem(
                                     playerData = playerListUiState.playerList!![index],
                                     onDelete = { id ->
-                                        viewModel.deletePlayerById(id,competitionName.toString())
+                                        viewModel.deletePlayerById(id, competitionName.toString())
                                         viewModel.getPlayersByCompetitionType(competitionName.toString())
 
                                     },
@@ -147,7 +159,7 @@ fun PlayerListScreen(
                 AddPlayerDialog(
                     competitionName = competitionName.toString(),
                     onDismiss = { showAddPlayerDialog = false },
-                    onAddPlayer = { playerData  ->
+                    onAddPlayer = { playerData ->
                         viewModel.addPlayer(
                             PlayerData(
                                 profilePhotoUrl = playerData.toString(),
@@ -186,49 +198,133 @@ fun PlayerListScreen(
     )
 }
 
+@OptIn(ExperimentalWearMaterialApi::class)
 @Composable
 fun PlayerListItem(
     playerData: PlayerData,
     onDelete: (String) -> Unit,
     onUpdatePlayer: (PlayerData) -> Unit
 ) {
-    Card(
+    val swipeableState = rememberSwipeableState(initialValue = 0)
+    val sizePx = with(LocalDensity.current) { 100.dp.toPx() }
+    val anchors = mapOf(0f to 0, sizePx to 1, -sizePx to -1)
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+            .padding(8.dp)
+            .swipeable(
+                state = swipeableState,
+                anchors = anchors,
+                thresholds = { _, _ -> FractionalThreshold(0.3f) },
+                orientation = Orientation.Horizontal
+            )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            playerData.profilePhotoUrl.let { url ->
+        // Background for Edit button
+        if (swipeableState.currentValue == 1) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(100.dp)
+            //        .background(MaterialTheme.colorScheme.primary)
+                    .padding(16.dp)
+                    .align(Alignment.CenterStart)
+            ) {
+                IconButton(
+                    onClick = { onUpdatePlayer(playerData) },
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
+
+        // Background for Delete button
+        if (swipeableState.currentValue == -1) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(100.dp)
+                    .padding(16.dp)
+                    .align(Alignment.CenterEnd)
+            ) {
+                IconButton(
+                    onClick = { onDelete(playerData.id) },
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.error.copy(alpha = 0.1f))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        }
+
+        // Card content
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
+                .zIndex(1f), // Ensure the card is on top
+            elevation = CardDefaults.cardElevation(4.dp),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Image(
-                    painter = rememberAsyncImagePainter(url),
+                    painter = rememberAsyncImagePainter(playerData.profilePhotoUrl),
                     contentDescription = "Profile Photo",
                     modifier = Modifier
-                        .size(100.dp)
+                        .size(64.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(8.dp),
+                        .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
                     contentScale = ContentScale.Crop
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
 
-            Text(text = "Name: ${playerData.firstName} ${playerData.lastName}")
-            Text(text = "Position: ${playerData.position}")
-            Text(text = "Total Skill Rating: ${playerData.totalSkillRating}")
-            Spacer(modifier = Modifier.height(8.dp))
-            Row {
-                Button(onClick = { onDelete(playerData.id) }) {
-                    Text(text = "Delete")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                Button(onClick = { onUpdatePlayer(playerData) }) {
-                    Text(text = "Edit")
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "${playerData.firstName} ${playerData.lastName}",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = playerData.position,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Total Skill Rating: ${playerData.totalSkillRating}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
                 }
             }
         }
     }
 }
+
+
 
 @Composable
 fun AddPlayerDialog(
@@ -354,18 +450,20 @@ fun AddPlayerDialog(
         },
         confirmButton = {
             Button(onClick = {
-                onAddPlayer(PlayerData(
-                    profilePhotoUrl = profilePhotoUri.toString(),
-                    firstName = firstName,
-                    lastName = lastName,
-                    position = position,
-                    competitionType = competitionName,
-                    speed = speed,
-                    focus = focus,
-                    condition = condition,
-                    durability = durability,
-                    totalSkillRating = speed + focus + condition + durability
-                ))
+                onAddPlayer(
+                    PlayerData(
+                        profilePhotoUrl = profilePhotoUri.toString(),
+                        firstName = firstName,
+                        lastName = lastName,
+                        position = position,
+                        competitionType = competitionName,
+                        speed = speed,
+                        focus = focus,
+                        condition = condition,
+                        durability = durability,
+                        totalSkillRating = speed + focus + condition + durability
+                    )
+                )
 
                 updateList()
             }) {
