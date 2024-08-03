@@ -221,20 +221,20 @@ fun PlayerListItem(
             )
     ) {
         // Background for Edit button
-        if (swipeableState.currentValue == 1) {
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(100.dp)
-                    .padding(16.dp)
-                    .align(Alignment.CenterStart)
-            ) {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(100.dp)
+                .align(Alignment.CenterStart)
+        ) {
+            if (swipeableState.currentValue == 1) {
                 IconButton(
                     onClick = { onUpdatePlayer(playerData) },
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
+                        .align(Alignment.Center)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Edit,
@@ -246,20 +246,20 @@ fun PlayerListItem(
         }
 
         // Background for Delete button
-        if (swipeableState.currentValue == -1) {
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(100.dp)
-                    .padding(16.dp)
-                    .align(Alignment.CenterEnd)
-            ) {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(100.dp)
+                .align(Alignment.CenterEnd)
+        ) {
+            if (swipeableState.currentValue == -1) {
                 IconButton(
                     onClick = { onDelete(playerData.id) },
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.error.copy(alpha = 0.1f))
+                       .background(MaterialTheme.colorScheme.error.copy(alpha = 0.1f))
+                        .align(Alignment.Center)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
@@ -276,8 +276,11 @@ fun PlayerListItem(
                 .fillMaxWidth()
                 .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
                 .zIndex(1f),
-            elevation = CardDefaults.cardElevation(4.dp),
-            shape = RoundedCornerShape(12.dp)
+            elevation = CardDefaults.cardElevation(8.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             Row(
                 modifier = Modifier
@@ -302,19 +305,21 @@ fun PlayerListItem(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = "${playerData.firstName} ${playerData.lastName}",
-                        style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.Bold
+                        text = "Player Name:${playerData.firstName} ${playerData.lastName}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = playerData.position,
-                        style = MaterialTheme.typography.labelMedium,
+                        text = "Player Position:${playerData.position}",
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "Total Skill Rating: ${playerData.totalSkillRating}",
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
@@ -322,6 +327,7 @@ fun PlayerListItem(
         }
     }
 }
+
 
 
 
