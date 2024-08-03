@@ -22,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -45,29 +46,52 @@ import com.yusuf.component.LoadingLottie
 import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
+import com.yusuf.feature.player_list.di.MainDataStoreEntryPoint
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
 import com.yusuf.utils.SharedPreferencesHelper
+import dagger.hilt.android.EntryPointAccessors.fromApplication
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlin.math.roundToInt
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PlayerListScreen(
-    viewModel: PlayerListViewModel = hiltViewModel()
+    viewModel: PlayerListViewModel = hiltViewModel(),
 ) {
     val playerListUiState by viewModel.playerListUIState.collectAsState()
+    val context = LocalContext.current
 
+    val mainDataStore = remember {
+        fromApplication(context, MainDataStoreEntryPoint::class.java).mainDataStore
+    }
+
+    var showTooltip by remember { mutableStateOf(false) }
     var showAddPlayerDialog by remember { mutableStateOf(false) }
     var showUpdatePlayerDialog by remember { mutableStateOf(false) }
     var playerDataToUpdate by remember { mutableStateOf<PlayerData?>(null) }
-
-
-    val context = LocalContext.current
     val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
     val competitionName = sharedPreferencesHelper.competitionName
 
-
-    LaunchedEffect(true) {
+    // Refresh player list when the screen is recomposed
+    LaunchedEffect(Unit) {
         viewModel.getPlayersByCompetitionType(competitionName.toString())
+    }
+
+    // Tooltip handling
+    LaunchedEffect(Unit) {
+        val tooltipShown = mainDataStore.readTooltipShown.first()
+        if (!tooltipShown) {
+            showTooltip = true
+        }
+    }
+
+    LaunchedEffect(showTooltip) {
+        if (showTooltip) {
+            delay(3000)
+            showTooltip = false
+            mainDataStore.saveTooltipShown()
+        }
     }
 
     Scaffold(
@@ -81,6 +105,16 @@ fun PlayerListScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
+                if (showTooltip) {
+                    Tooltip(
+                        text = "Swipe left or right to see more options.",
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(16.dp)
+                            .offset(y = 100.dp)
+                    )
+                }
+
                 when {
                     playerListUiState.isLoading -> {
                         Box(
@@ -142,7 +176,6 @@ fun PlayerListScreen(
                                     onDelete = { id ->
                                         viewModel.deletePlayerById(id, competitionName.toString())
                                         viewModel.getPlayersByCompetitionType(competitionName.toString())
-
                                     },
                                     onUpdatePlayer = { playerData ->
                                         playerDataToUpdate = playerData
@@ -175,7 +208,7 @@ fun PlayerListScreen(
                             ),
                             Uri.parse(playerData.profilePhotoUrl)
                         )
-                        viewModel.getPlayersByCompetitionType(competitionName.toString()) // Refresh the list
+                        viewModel.getPlayersByCompetitionType(competitionName.toString())
                         showAddPlayerDialog = false
                     },
                     updateList = {
@@ -325,6 +358,21 @@ fun PlayerListItem(
                 }
             }
         }
+    }
+}
+@Composable
+fun Tooltip(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
+            .padding(8.dp)
+            .border(1.dp, MaterialTheme.colorScheme.onSurface)
+            .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+    ) {
+        Text(text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 
