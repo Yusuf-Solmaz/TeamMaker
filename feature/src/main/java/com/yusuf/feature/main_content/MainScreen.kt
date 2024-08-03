@@ -74,7 +74,7 @@ fun MainScreen(navController: NavHostController, loginViewModel: LoginViewModel 
                         )
                     },
                     actions = {
-                        if (title == "Choose Sport") {
+                        if (title == "Choose Competition Type") {
                             IconButton(onClick = { showDialog = true }) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_logout),
