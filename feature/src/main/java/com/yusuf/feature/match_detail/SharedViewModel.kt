@@ -32,9 +32,6 @@ class SharedViewModel @Inject constructor(
             try {
                 val players = _selectedPlayers.value
                 teamBalancerUseCase(players).collect { result ->
-                    when(result) {
-
-                    }
                     _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
                         teams = result,
                         isLoading = false,
@@ -50,5 +47,11 @@ class SharedViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun isTeamsReady(): Boolean {
+        val teamsReady = _teamBalancerUiState.value.teams != null
+        Log.d("SharedViewModel", "Teams ready: $teamsReady")
+        return teamsReady
     }
 }

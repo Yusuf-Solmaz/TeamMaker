@@ -55,25 +55,31 @@ import com.yusuf.theme.Green
 import com.yusuf.utils.SharedPreferencesHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.concurrent.thread
 
 @Composable
 fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedViewModel = hiltViewModel()) {
     val viewModel: SelectPlayerViewModel = hiltViewModel()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
-    val uiState by sharedViewModel.teamBalancerUiState.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
+    val teamBalancerUIState by sharedViewModel.teamBalancerUiState.collectAsState()
 
     val context = LocalContext.current
     val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
+    val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
     val competitionName = sharedPreferencesHelper.competitionName
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
 
     LaunchedEffect(true) {
         viewModel.getPlayersByCompetitionType(competitionName.toString())
     }
 
-    val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
+    LaunchedEffect(teamBalancerUIState.teams) {
+        if (sharedViewModel.isTeamsReady()) {
+            Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
+            navController.navigate(NavigationGraph.MATCH_DETAIL.route)
+        } else {
+            Log.d("SelectPlayerScreen", "Teams are not ready yet.")
+        }
+    }
 
     Column(Modifier.fillMaxSize()) {
         LazyVerticalGrid(
@@ -181,14 +187,6 @@ fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedView
                 Log.d("SelectPlayerScreen:  ", "selectedPlayers: ${selectedPlayers.size}")
                 sharedViewModel.setSelectedPlayers(selectedPlayers)
                 sharedViewModel.createBalancedTeams()
-                coroutineScope.launch {
-                    // delay() işlevi burada çalışır
-                    delay(2000L) // 2 saniye bekler
-                    // Beklemeden sonra yapacağınız işlemler
-                    Log.d("SelectPlayerScreen:  ", "createBalancedTeams: ${uiState.teams}")
-                }
-                //Log.d("SelectPlayerScreen:  ", "createBalancedTeams: ${uiState.teams}")
-                navController.navigate(NavigationGraph.MATCH_DETAIL.route)
             },
             modifier = Modifier
                 .fillMaxWidth()
