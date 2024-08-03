@@ -54,14 +54,13 @@ fun MatchDetailScreen(
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(text = competitionDetail.selectedTime, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Log.d("MatchDetailScreen", "CompetitionDetail: $competitionDetail")
         Spacer(modifier = Modifier.height(2.dp))
         LocationScreen()
         Spacer(modifier = Modifier.height(2.dp))
         Weather()
         Spacer(modifier = Modifier.height(16.dp))
-
-
     }
 }
 

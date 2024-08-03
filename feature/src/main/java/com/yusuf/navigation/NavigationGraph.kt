@@ -1,5 +1,6 @@
 package com.yusuf.navigation
 
+import android.net.Uri
 import com.google.gson.Gson
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.utils.Competition
@@ -24,7 +25,7 @@ enum class NavigationGraph(val route: String) {
                 fun getCompetitionDetailsRoute(competitionDetail: CompetitionDetail): String {
                         val gson = Gson()
                         val competitionDetailJson = gson.toJson(competitionDetail)
-                        return "match_detail/$competitionDetailJson"
+                        return "match_detail/${Uri.encode(competitionDetailJson)}"
                 }
         }
 }

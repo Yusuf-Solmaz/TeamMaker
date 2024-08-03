@@ -83,7 +83,12 @@ fun SelectPlayerScreen(
     LaunchedEffect(teamBalancerUIState) {
         if (teamBalancerUIState.teams != null) {
             Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
-            navController.navigate(NavigationGraph.getCompetitionDetailsRoute(competitionDetail = CompetitionDetail(timePicker)))
+            val route = NavigationGraph.getCompetitionDetailsRoute(CompetitionDetail(
+                selectedTime = timePicker,
+                firstBalancedTeam = teamBalancerUIState.teams!!.first,
+                secondBalancedTeam = teamBalancerUIState.teams!!.second
+            ))
+            navController.navigate(route)
         }
         if (teamBalancerUIState.isLoading) {
             Log.d("SelectPlayerScreen", "Loading teams...")
