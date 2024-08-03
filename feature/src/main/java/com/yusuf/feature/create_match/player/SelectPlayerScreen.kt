@@ -44,6 +44,7 @@ import coil.compose.SubcomposeAsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.create_match.player.viewmodel.SelectPlayerViewModel
@@ -73,14 +74,24 @@ fun SelectPlayerScreen(navController: NavController, sharedViewModel: SharedView
         if (teamBalancerUIState.teams != null) {
             Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
             navController.navigate(NavigationGraph.MATCH_DETAIL.route)
-        } else if (teamBalancerUIState.isLoading){
+        }
+        if (teamBalancerUIState.isLoading){
             Log.d("SelectPlayerScreen", "Loading teams...")
         }
-        else {
+        if (teamBalancerUIState.errorMessage != null){
             Log.d("SelectPlayerScreen", "Teams are not ready yet.")
         }
     }
 
+    if (playerListUiState.isLoading) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            LoadingLottie(resId = R.raw.loading_anim)
+        }
+    }
     Column(Modifier.fillMaxSize()) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),

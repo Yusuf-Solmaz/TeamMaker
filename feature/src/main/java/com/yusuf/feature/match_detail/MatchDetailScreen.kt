@@ -34,24 +34,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.firebase.PlayerData
+import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.R
 import com.yusuf.feature.create_match.TimePicker
 import com.yusuf.feature.create_match.location.LocationScreen
 import com.yusuf.feature.create_match.weather.Weather
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun MatchDetailScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
-    val uiState by sharedViewModel.teamBalancerUiState.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
+    val teamBalancerUIState by sharedViewModel.teamBalancerUiState.collectAsState()
 
-    Log.d("MatchDetailScreen", "Balanced teams: ${uiState.teams}")
-
-    LaunchedEffect(uiState.teams) {
-        // Veriler güncellendiğinde loglama
-        Log.d("MatchDetailScreen: ", "Balanced teams: ${uiState.teams}")
+    LaunchedEffect(teamBalancerUIState.teams) {
+        Log.d("MatchDetailScreen", "Current state: $teamBalancerUIState")
+        if (teamBalancerUIState.teams == null) {
+            Log.d("MatchDetailScreen", "Teams are not ready yet.")
+        } else {
+            Log.d("MatchDetailScreen", "Balanced teams: ${teamBalancerUIState.teams}")
+        }
     }
 
     Column(
@@ -67,42 +68,56 @@ fun MatchDetailScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
         Weather()
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (uiState.isLoading) {
-            Text("Loading...", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        } else if (uiState.errorMessage != null) {
-            Text("Error: ${uiState.errorMessage}", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        } else {
-            Text("Team 1", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(uiState.teams?.first?.size ?: 0) { index ->
-                    val player = uiState.teams?.first?.get(index)
-                    PlayerCard(player)
+        when {
+            teamBalancerUIState.isLoading -> {
+                LoadingLottie(R.raw.loading_anim)
+            }
+            teamBalancerUIState.errorMessage != null -> {
+                Text("Error: ${teamBalancerUIState.errorMessage}", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            }
+            teamBalancerUIState.teams is RootResult.Success -> {
+                val teams = (teamBalancerUIState.teams as RootResult.Success).data
+                if (teams != null) {
+                    TeamSection(title = "Team 1", players = teams.first)
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                if (teams != null) {
+                    TeamSection(title = "Team 2", players = teams.second)
                 }
             }
-
-            Text("Team 2", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(uiState.teams?.second?.size ?: 0) { index ->
-                    val player = uiState.teams?.second?.get(index)
-                    PlayerCard(player)
-                }
+            else -> {
+                Text("Teams are not ready yet", fontWeight = FontWeight.Bold, fontSize = 20.sp)
             }
         }
     }
 }
 
 @Composable
-fun PlayerCard(player: PlayerData?) {
+fun TeamSection(title: String, players: List<PlayerData>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Text(title, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(players.size) { index ->
+                val player = players[index]
+                PlayerCard(player)
+            }
+        }
+    }
+}
+
+@Composable
+fun PlayerCard(player: PlayerData) {
     Card(
         modifier = Modifier
             .background(Color.Transparent)
@@ -127,7 +142,7 @@ fun PlayerCard(player: PlayerData?) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.players),
-                    contentDescription = "${player?.firstName} ${player?.lastName}",
+                    contentDescription = "${player.firstName} ${player.lastName}",
                     modifier = Modifier
                         .size(100.dp)
                         .clip(RoundedCornerShape(8.dp))
@@ -135,7 +150,7 @@ fun PlayerCard(player: PlayerData?) {
                     contentScale = ContentScale.Crop
                 )
                 Text(
-                    text = "${player?.firstName} ${player?.lastName}",
+                    text = "${player.firstName} ${player.lastName}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = Color.Black,
@@ -148,17 +163,17 @@ fun PlayerCard(player: PlayerData?) {
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Column {
-                        Text(text = "FOC: ${player?.totalSkillRating}", fontSize = 12.sp)
-                        Text(text = "CON: ${player?.totalSkillRating}", fontSize = 12.sp)
+                        Text(text = "FOC: ${player.focus}", fontSize = 12.sp)
+                        Text(text = "CON: ${player.condition}", fontSize = 12.sp)
                     }
                     Column {
-                        Text(text = "SPE: ${player?.totalSkillRating}", fontSize = 12.sp)
-                        Text(text = "DUR: ${player?.totalSkillRating}", fontSize = 12.sp)
+                        Text(text = "SPE: ${player.speed}", fontSize = 12.sp)
+                        Text(text = "DUR: ${player.durability}", fontSize = 12.sp)
                     }
                 }
             }
             Text(
-                text = player?.totalSkillRating.toString(),
+                text = player.totalSkillRating.toString(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -171,3 +186,4 @@ fun PlayerCard(player: PlayerData?) {
         }
     }
 }
+

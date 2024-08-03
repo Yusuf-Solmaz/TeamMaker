@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.use_cases.team.TeamBalancerUseCase
+import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.match_detail.team_balancer.TeamBalancerUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,42 +17,39 @@ import javax.inject.Inject
 class SharedViewModel @Inject constructor(
     private val teamBalancerUseCase: TeamBalancerUseCase
 ) : ViewModel() {
-    private val _selectedPlayers = MutableStateFlow<List<PlayerData>>(emptyList())
-    val selectedPlayers: StateFlow<List<PlayerData>> get() = _selectedPlayers
-
     private val _teamBalancerUiState = MutableStateFlow(TeamBalancerUIState())
     val teamBalancerUiState: StateFlow<TeamBalancerUIState> get() = _teamBalancerUiState
 
-    fun setSelectedPlayers(players: List<PlayerData>) {
-        _selectedPlayers.value = players
-    }
-
-    fun createBalancedTeams() {
+    fun createBalancedTeams(players: List<PlayerData>) {
         _teamBalancerUiState.value = _teamBalancerUiState.value.copy(isLoading = true)
         viewModelScope.launch {
-            try {
-                val players = _selectedPlayers.value
-                teamBalancerUseCase(players).collect { result ->
-                    _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
-                        teams = result,
-                        isLoading = false,
-                        errorMessage = null
-                    )
-                    Log.d("SharedViewModel", "Players set: ${players.size}")
-                    Log.d("SharedViewModel", "Create Balanced teams set: $result")
+            teamBalancerUseCase(players).collect { result ->
+                when (result) {
+                    is RootResult.Success -> {
+                        _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
+                            teams = result,
+                            isLoading = false,
+                            errorMessage = null
+                        )
+                        Log.d("SharedViewModel", "Teams set: ${_teamBalancerUiState.value.teams}")
+                    }
+                    is RootResult.Error -> {
+                        _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
+                            teams = result,
+                            isLoading = false,
+                            errorMessage = result.message
+                        )
+                        Log.e("SharedViewModel", "Error creating balanced teams: ${result.message}")
+                    }
+                    is RootResult.Loading -> {
+                        _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
+                            isLoading = true
+                        )
+                        Log.d("SharedViewModel", "Loading creating balanced teams...")
+                    }
                 }
-            } catch (e: Exception) {
-                _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
-                    errorMessage = e.message,
-                    isLoading = false
-                )
             }
         }
     }
-
-    fun isTeamsReady(): Boolean {
-        val teamsReady = _teamBalancerUiState.value.teams != null
-        Log.d("SharedViewModel", "Teams ready: $teamsReady")
-        return teamsReady
-    }
 }
+
