@@ -14,6 +14,7 @@ data class PlayerDataDto(
     val speed: Int= 0,
     val condition: Int= 0,
     val durability: Int= 0,
+    val generalSkill: Int=0,
     val totalSkillRating: Int= 0,
 ): Serializable
 

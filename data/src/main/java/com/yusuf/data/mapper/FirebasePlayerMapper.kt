@@ -15,6 +15,7 @@ fun PlayerDataDto.toPlayerData(): PlayerData {
         speed = speed,
         condition = condition,
         durability = durability,
+        generalSkill = generalSkill,
         totalSkillRating = totalSkillRating
     )
 }
@@ -31,6 +32,7 @@ fun PlayerData.toPlayerDataDto(): PlayerDataDto {
         speed = speed,
         condition = condition,
         durability = durability,
+        generalSkill = generalSkill,
         totalSkillRating = totalSkillRating
     )
 }
