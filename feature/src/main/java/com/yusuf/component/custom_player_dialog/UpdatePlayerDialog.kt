@@ -1,4 +1,4 @@
-package com.yusuf.feature.player_list.custom_dialog
+package com.yusuf.component.custom_player_dialog
 
 import android.content.Context
 import android.net.Uri
@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -38,29 +38,31 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.yusuf.component.DividerTextComponent
 import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
+import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
 
 @Composable
-fun AddPlayerDialog(
-    competitionName: String,
+fun UpdatePlayerDialog(
+    playerData: PlayerData,
     onDismiss: () -> Unit,
-    onAddPlayer: (playerData: PlayerData) -> Unit,
-    updateList: () -> Unit,
+    onUpdatePlayer: (PlayerData) -> Unit,
+    viewModel: PlayerListViewModel,
     context: Context
 ) {
-    var profilePhotoUri by remember { mutableStateOf<Uri?>(null) }
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var position by remember { mutableStateOf("") }
-    var speed by remember { mutableStateOf(0) }
-    var focus by remember { mutableStateOf(0) }
-    var condition by remember { mutableStateOf(0) }
-    var durability by remember { mutableStateOf(0) }
-    var generalSkill by remember { mutableStateOf(0) }
+    var profilePhotoUri by remember { mutableStateOf<Uri?>(playerData.profilePhotoUrl.toUri()) }
+    var firstName by remember { mutableStateOf(playerData.firstName) }
+    var lastName by remember { mutableStateOf(playerData.lastName) }
+    var position by remember { mutableStateOf(playerData.position) }
+    var speed by remember { mutableStateOf(playerData.speed) }
+    var focus by remember { mutableStateOf(playerData.focus) }
+    var condition by remember { mutableStateOf(playerData.condition) }
+    var durability by remember { mutableStateOf(playerData.durability) }
+    var generalSkill by remember { mutableStateOf(playerData.generalSkill) }
     var isGeneralSkillUsed by remember { mutableStateOf(false) }
 
     if (generalSkill == 0) {
@@ -72,12 +74,14 @@ fun AddPlayerDialog(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        profilePhotoUri = uri
+        if (uri != null) {
+            profilePhotoUri = uri
+        }
     }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Player") },
+        title = { Text("Update Player") },
         text = {
             Column(
                 modifier = Modifier
@@ -99,11 +103,11 @@ fun AddPlayerDialog(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clip(CircleShape),
-                            contentScale = ContentScale.Fit
+                            contentScale = ContentScale.Crop
                         )
                     } else {
                         Icon(
-                            imageVector = Icons.Filled.Add,
+                            imageVector = Icons.Filled.Edit,
                             contentDescription = "Select Photo",
                             modifier = Modifier
                                 .align(Alignment.Center)
@@ -137,10 +141,12 @@ fun AddPlayerDialog(
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("General Skill: $generalSkill", fontSize = 16.sp)
+                        Text("General Point: $generalSkill", fontSize = 16.sp)
                         Slider(
                             value = generalSkill.toFloat(),
-                            onValueChange = { generalSkill = it.toInt() },
+                            onValueChange = {
+                                generalSkill = it.toInt()
+                            },
                             valueRange = 0f..10f,
                             steps = 10,
                             modifier = Modifier.fillMaxWidth()
@@ -193,28 +199,52 @@ fun AddPlayerDialog(
         },
         confirmButton = {
             Button(onClick = {
+
                 if (profilePhotoUri == null) {
                     Toast.makeText(context,"Please select a profile photo.", Toast.LENGTH_SHORT).show()
+                    return@Button
                 }
-                onAddPlayer(
-                    PlayerData(
-                        profilePhotoUrl = profilePhotoUri.toString(),
-                        firstName = firstName,
-                        lastName = lastName,
-                        position = position,
-                        competitionType = competitionName,
-                        speed = speed,
-                        focus = focus,
-                        condition = condition,
-                        durability = durability,
-                        generalSkill = generalSkill,
-                        totalSkillRating = (speed + focus + condition + durability) + generalSkill
-                    )
-                )
 
-                updateList()
+                if (profilePhotoUri != playerData.profilePhotoUrl.toUri()) {
+                    profilePhotoUri?.let { uri ->
+                        viewModel.updatePlayerImage(
+                            uri = uri,
+                            onSuccess = { downloadUrl ->
+                                onUpdatePlayer(
+                                    playerData.copy(
+                                        firstName = firstName,
+                                        lastName = lastName,
+                                        position = position,
+                                        speed =  speed,
+                                        focus =  focus,
+                                        condition =  condition,
+                                        durability =  durability,
+                                        generalSkill = generalSkill,
+                                        totalSkillRating = (speed + focus + condition + durability)/4 + generalSkill,
+                                        profilePhotoUrl = downloadUrl
+                                    )
+                                )
+                            },
+                            onFailure = { /* Handle failure */ }
+                        )
+                    }
+                } else {
+                    onUpdatePlayer(
+                        playerData.copy(
+                            firstName = firstName,
+                            lastName = lastName,
+                            position = position,
+                            speed = speed,
+                            focus = focus,
+                            condition =  condition,
+                            durability =  durability,
+                            generalSkill = generalSkill,
+                            totalSkillRating = (speed + focus + condition + durability)/4 + generalSkill
+                        )
+                    )
+                }
             }) {
-                Text("Add")
+                Text("Update")
             }
         },
         dismissButton = {
