@@ -367,14 +367,23 @@ fun Tooltip(
 ) {
     Box(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
-            .padding(8.dp)
-            .border(1.dp, MaterialTheme.colorScheme.onSurface)
-            .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
+            .padding(12.dp)
+            .border(1.dp, MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(12.dp))
+            .shadow(8.dp, shape = RoundedCornerShape(12.dp))
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Text(text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp
+            ),
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
+
 
 
 
