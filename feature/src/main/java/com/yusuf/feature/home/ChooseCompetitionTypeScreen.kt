@@ -74,7 +74,8 @@ import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.R
 import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 import com.yusuf.navigation.NavigationGraph
-import com.yusuf.theme.Green
+import com.yusuf.theme.DARK_BLUE
+import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.utils.Competition
 import com.yusuf.utils.SharedPreferencesHelper
 import com.yusuf.utils.predefinedCompetitions
@@ -117,7 +118,7 @@ fun ChooseCompetitionTypeScreen(
     Scaffold(
         floatingActionButton = {
             if (getAllState.result !is RootResult.Loading) {
-                FloatingActionButton(onClick = { openDialog.value = true }) {
+                FloatingActionButton(onClick = { openDialog.value = true }, containerColor = APPBAR_GREEN, contentColor = Color.White) {
                     Icon(Icons.Default.Add, contentDescription = "Add Competition")
                 }
             }
@@ -615,7 +616,7 @@ fun CompetitionCard(
                 Button(
                     onClick = onUpdate,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Green,
+                        containerColor = DARK_BLUE,
                         contentColor = Color.White
                     )
                 ) {

@@ -21,7 +21,7 @@ import com.yusuf.feature.R
 import com.yusuf.feature.auth.login.viewmodel.LoginViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.navigation.TeamMakerNavigation
-import com.yusuf.theme.Green
+import com.yusuf.theme.APPBAR_GREEN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -67,7 +67,7 @@ fun MainScreen(navController: NavHostController, loginViewModel: LoginViewModel 
                         Text(
                             text = title,
                             style = TextStyle(
-                                color = Green,
+                                color = APPBAR_GREEN,
                                 fontSize = 25.sp
                             ),
                             fontFamily = FontFamily(Font(R.font.onboarding_title1, FontWeight.Normal))
@@ -79,7 +79,7 @@ fun MainScreen(navController: NavHostController, loginViewModel: LoginViewModel 
                                 Icon(
                                     painter = painterResource(R.drawable.ic_logout),
                                     contentDescription = "Logout",
-                                    tint = Green,
+                                    tint = APPBAR_GREEN,
                                     modifier = Modifier.size(30.dp))
                             }
                         } else {
@@ -87,7 +87,7 @@ fun MainScreen(navController: NavHostController, loginViewModel: LoginViewModel 
                                 Icon(
                                     painterResource(R.drawable.ic_arrow_right),
                                     contentDescription = "Back",
-                                    tint = Green,
+                                    tint = APPBAR_GREEN,
                                     modifier = Modifier.size(30.dp))
                             }
                         }

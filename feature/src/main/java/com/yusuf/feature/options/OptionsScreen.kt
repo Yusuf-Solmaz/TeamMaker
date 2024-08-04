@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.yusuf.feature.R
 import com.yusuf.navigation.NavigationGraph
-import com.yusuf.theme.Green
+import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.utils.Competition
 
 
@@ -102,7 +102,7 @@ fun OptionsCard(
                     navController.navigate(route)
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Green,
+                    containerColor = APPBAR_GREEN,
                     contentColor = Color.White
                 )
             ){

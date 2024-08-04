@@ -208,7 +208,7 @@ fun AddPlayerDialog(
                         condition = condition,
                         durability = durability,
                         generalSkill = generalSkill,
-                        totalSkillRating = speed + focus + condition + durability + generalSkill
+                        totalSkillRating = (speed + focus + condition + durability) + generalSkill
                     )
                 )
 
