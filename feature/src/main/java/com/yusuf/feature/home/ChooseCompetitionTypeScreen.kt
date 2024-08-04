@@ -76,10 +76,10 @@ import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.DARK_BLUE
 import com.yusuf.theme.APPBAR_GREEN
-import com.yusuf.utils.Competition
+import com.yusuf.utils.default_competition.Competition
 import com.yusuf.utils.SharedPreferencesHelper
-import com.yusuf.utils.predefinedCompetitions
-import com.yusuf.utils.toCompetition
+import com.yusuf.utils.default_competition.predefinedCompetitions
+import com.yusuf.utils.default_competition.toCompetition
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
