@@ -1,8 +1,6 @@
 package com.yusuf.feature.player_list
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.res.Resources
 import android.net.Uri
 import android.view.View
 import androidx.compose.foundation.Image
@@ -22,13 +20,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.boundsInWindow
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -44,13 +38,12 @@ import androidx.wear.compose.material.FractionalThreshold
 import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import coil.compose.rememberAsyncImagePainter
-import com.skydoves.balloon.Balloon
-import com.skydoves.balloon.BalloonAnimation
 import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.component.custom_player_dialog.AddPlayerDialog
 import com.yusuf.component.custom_player_dialog.UpdatePlayerDialog
+import com.yusuf.component.custom_player_dialog.showTooltipBalloon
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
 import com.yusuf.utils.SharedPreferencesHelper
 import kotlin.math.roundToInt
