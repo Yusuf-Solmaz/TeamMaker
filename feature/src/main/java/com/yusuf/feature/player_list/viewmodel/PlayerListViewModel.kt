@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.use_cases.firebase_use_cases.image.UpdatePlayerImageUseCase
@@ -16,6 +17,7 @@ import com.yusuf.domain.use_cases.firebase_use_cases.user.UpdatePlayerByIdUseCas
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.player_list.state.AddPlayerUIState
 import com.yusuf.feature.player_list.state.PlayerUiState
+import com.yusuf.navigation.main_datastore.MainDataStore
 import com.yusuf.utils.SharedPreferencesHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +33,7 @@ class PlayerListViewModel @Inject constructor(
     private val getAllPlayersUseCase: GetAllPlayersUseCase,
     private val updatePlayerImageUseCase: UpdatePlayerImageUseCase,
     private val getPlayersByCompetitionTypeUseCase: GetPlayersByCompetitionTypeUseCase,
+    private val mainDataStore: MainDataStore
 ) : ViewModel() {
 
     private val _playerUiState = MutableStateFlow(AddPlayerUIState())
@@ -39,6 +42,13 @@ class PlayerListViewModel @Inject constructor(
     private val _playerListUIState = MutableStateFlow(PlayerUiState())
     val playerListUIState: StateFlow<PlayerUiState> = _playerListUIState
 
+    val showTooltip = mainDataStore.readShowTooltip.asLiveData()
+
+    fun saveShowTooltip(show: Boolean) {
+        viewModelScope.launch {
+            mainDataStore.saveShowTooltip(show)
+        }
+    }
 
     fun getPlayersByCompetitionType(competitionType: String) {
         _playerListUIState.value = _playerListUIState.value.copy(isLoading = true)
