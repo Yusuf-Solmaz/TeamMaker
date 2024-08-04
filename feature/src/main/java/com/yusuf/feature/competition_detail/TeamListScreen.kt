@@ -24,7 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yusuf.domain.model.firebase.PlayerData
-import com.yusuf.theme.Green
+import com.yusuf.theme.DARK_BLUE
+import com.yusuf.theme.DARK_GREEN
+import com.yusuf.theme.GREEN
+import com.yusuf.theme.LIGHT_GREEN
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -68,7 +71,7 @@ fun TeamListScreen(
                         }
                     },
                     modifier = Modifier
-                        .background(if (pagerState.currentPage == 0) Green else MaterialTheme.colorScheme.background)
+                        .background(if (pagerState.currentPage == 0) DARK_GREEN else MaterialTheme.colorScheme.background)
                         .padding(10.dp)
                 ) {
                     Text(
@@ -76,7 +79,7 @@ fun TeamListScreen(
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (pagerState.currentPage == 0) Color.White else Green
+                            color = if (pagerState.currentPage == 0) Color.White else DARK_GREEN
                         )
                     )
                 }
@@ -88,7 +91,7 @@ fun TeamListScreen(
                         }
                     },
                     modifier = Modifier
-                        .background(if (pagerState.currentPage == 1) Green else MaterialTheme.colorScheme.background)
+                        .background(if (pagerState.currentPage == 1) DARK_GREEN else MaterialTheme.colorScheme.background)
                         .padding(10.dp)
                     ) {
                         Text(
@@ -96,7 +99,7 @@ fun TeamListScreen(
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = if (pagerState.currentPage == 1) Color.White else Green
+                                color = if (pagerState.currentPage == 1) Color.White else DARK_GREEN
                             )
                         )
                     }
