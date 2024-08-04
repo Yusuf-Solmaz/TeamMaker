@@ -13,5 +13,6 @@ data class PlayerData(
     val speed: Int,
     val condition: Int,
     val durability: Int,
+    val generalSkill: Int,
     val totalSkillRating: Int,
 )

@@ -14,6 +14,9 @@ class TeamBalancerRepositoryImpl @Inject constructor() : TeamBalancerRepository 
         emit(RootResult.Loading)
 
         try {
+            if (players.isEmpty()) {
+                throw IllegalArgumentException("Number of players must be greater than zero")
+            }
             if (players.size % 2 != 0) {
                 throw IllegalArgumentException("Number of players must be even")
             }
