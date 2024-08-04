@@ -1,4 +1,4 @@
-package com.yusuf.feature.player_list
+package com.yusuf.component.custom_player_dialog
 
 import android.content.Context
 import android.view.View
