@@ -1,4 +1,4 @@
-package com.yusuf.utils
+package com.yusuf.utils.default_competition
 
 import com.yusuf.domain.model.firebase.CompetitionData
 import com.yusuf.feature.R

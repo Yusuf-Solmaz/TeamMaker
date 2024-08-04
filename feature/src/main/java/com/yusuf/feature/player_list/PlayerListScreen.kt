@@ -2,19 +2,15 @@ package com.yusuf.feature.player_list
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
@@ -25,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -34,20 +29,17 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.FractionalThreshold
 import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import coil.compose.rememberAsyncImagePainter
-import com.yusuf.component.DividerTextComponent
 import com.yusuf.component.LoadingLottie
-import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
-import com.yusuf.feature.player_list.custom_dialog.AddPlayerDialog
-import com.yusuf.feature.player_list.custom_dialog.UpdatePlayerDialog
+import com.yusuf.component.custom_player_dialog.AddPlayerDialog
+import com.yusuf.component.custom_player_dialog.UpdatePlayerDialog
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
 import com.yusuf.utils.SharedPreferencesHelper
 import kotlin.math.roundToInt
@@ -198,7 +190,8 @@ fun PlayerListScreen(
                         viewModel.updatePlayerById(updatedPlayerData.id, updatedPlayerData)
                         showUpdatePlayerDialog = false
                     },
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    context = context
                 )
             }
         }
