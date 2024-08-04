@@ -1,4 +1,5 @@
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -81,6 +82,7 @@ fun SelectPlayerScreen(
     LaunchedEffect(teamBalancerUIState) {
         if (teamBalancerUIState.teams != null) {
             Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
+
             val route = NavigationGraph.getCompetitionDetailsRoute(CompetitionDetail(
                 selectedTime = timePicker,
                 firstBalancedTeam = teamBalancerUIState.teams!!.first,
@@ -219,8 +221,15 @@ fun SelectPlayerScreen(
 
             Button(
                 onClick = {
-                    Log.d("SelectPlayerScreen:  ", "selectedPlayers: ${selectedPlayers.size}")
-                    sharedViewModel.createBalancedTeams(selectedPlayers)
+                    if (selectedPlayers.isEmpty()) {
+                        Toast.makeText(context, "Please select at least one player", Toast.LENGTH_SHORT).show()
+                    } else if (selectedPlayers.size % 2 != 0) {
+                        Toast.makeText(context, "The number of selected players must be even", Toast.LENGTH_SHORT).show()
+                    } else if (timePicker.isEmpty()) {
+                        Toast.makeText(context, "Please select a time", Toast.LENGTH_SHORT).show()
+                    } else {
+                        sharedViewModel.createBalancedTeams(selectedPlayers)
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
