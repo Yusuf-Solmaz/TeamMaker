@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,6 +84,6 @@ dependencies {
     // Datastore
     implementation(libs.androidx.datastore.preferences)
 
-
     implementation ("com.google.code.gson:gson:2.11.0")
+    implementation ("com.github.skydoves:balloon-compose:1.5.2")
 }
