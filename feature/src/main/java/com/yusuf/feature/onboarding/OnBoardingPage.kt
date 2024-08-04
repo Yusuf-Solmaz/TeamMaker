@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yusuf.component.LoadingLottie
 import com.yusuf.feature.R
-import com.yusuf.theme.Green
+import com.yusuf.theme.APPBAR_GREEN
 
 @Composable
 fun OnboardingPage(page: Page) {
@@ -31,7 +31,7 @@ fun OnboardingPage(page: Page) {
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.onboarding_title1)),
                 fontSize = 35.sp,
-                color = Green
+                color = APPBAR_GREEN
             ),
             modifier = Modifier
                 .padding(horizontal = 8.dp, vertical = 2.dp)

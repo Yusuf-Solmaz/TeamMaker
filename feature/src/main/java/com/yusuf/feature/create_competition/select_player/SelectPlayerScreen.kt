@@ -54,8 +54,8 @@ import com.yusuf.feature.R
 import com.yusuf.feature.create_competition.select_player.viewmodel.SelectPlayerViewModel
 import com.yusuf.feature.create_competition.select_player.viewmodel.TeamBalancerViewModel
 import com.yusuf.navigation.NavigationGraph
-import com.yusuf.theme.DarkGreen
-import com.yusuf.theme.Green
+import com.yusuf.theme.DARK_GREEN
+import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.utils.SharedPreferencesHelper
 
 @Composable
@@ -109,7 +109,7 @@ fun SelectPlayerScreen(
         ) {
             Text(text = "Creating teams...", fontSize = 20.sp, fontWeight = FontWeight.Bold,
                 style = TextStyle(
-                    color = Green,
+                    color = APPBAR_GREEN,
                     fontFamily = FontFamily(
                         Font(
                             R.font.onboarding_title1
@@ -135,7 +135,7 @@ fun SelectPlayerScreen(
                             .padding(8.dp)
                             .border(
                                 width = 2.dp,
-                                color = if (isSelected) Green else Color.Transparent,
+                                color = if (isSelected) APPBAR_GREEN else Color.Transparent,
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clickable {
@@ -207,7 +207,7 @@ fun SelectPlayerScreen(
                                 text = player.totalSkillRating.toString(),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = DarkGreen,
+                                color = DARK_GREEN,
                                 modifier = Modifier
                                     .align(Alignment.TopStart)
                                     .padding(start = 20.dp, top = 40.dp)
@@ -244,8 +244,8 @@ fun SelectPlayerScreen(
                         .background(
                             brush = Brush.verticalGradient(
                                 listOf(
-                                    Green,
-                                    DarkGreen
+                                    APPBAR_GREEN,
+                                    DARK_GREEN
                                 )
                             ), shape = RoundedCornerShape(50.dp)
                         ),
