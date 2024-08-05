@@ -285,4 +285,36 @@ class PlayerRepositoryImpl @Inject constructor(
             emit(RootResult.Error(e.message ?: "Something went wrong"))
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun deleteCurrentUser(): Flow<RootResult<Boolean>> = flow {
+        emit(RootResult.Loading)
+        try {
+            val currentUser = firebaseAuth.currentUser
+            val userId = currentUser?.uid
+            if (userId != null) {
+
+                val userDocRef = firestore.collection("users").document(userId)
+
+
+                val playerCollection = userDocRef.collection("players").get().await()
+                playerCollection.documents.forEach { it.reference.delete().await() }
+
+
+                val competitionCollection = userDocRef.collection("competitions").get().await()
+                competitionCollection.documents.forEach { it.reference.delete().await() }
+
+                userDocRef.delete().await()
+
+                currentUser.delete().await()
+
+                emit(RootResult.Success(true))
+            } else {
+                emit(RootResult.Error("User ID is null"))
+            }
+        } catch (e: Exception) {
+            emit(RootResult.Error(e.message ?: "Something went wrong"))
+        }
+    }.flowOn(Dispatchers.IO)
+
+
 }
