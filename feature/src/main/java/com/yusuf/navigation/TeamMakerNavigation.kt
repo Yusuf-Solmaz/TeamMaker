@@ -28,7 +28,7 @@
     import com.yusuf.feature.splash_screen.SplashScreen
     import com.yusuf.feature.competition_detail.CompetitionDetailScreen
     import com.yusuf.navigation.main_viewmodel.MainViewModel
-    import com.yusuf.utils.Competition
+    import com.yusuf.utils.default_competition.Competition
 
 
     @Composable

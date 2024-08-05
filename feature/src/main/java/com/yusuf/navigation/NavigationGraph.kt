@@ -3,7 +3,7 @@ package com.yusuf.navigation
 import android.net.Uri
 import com.google.gson.Gson
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
-import com.yusuf.utils.Competition
+import com.yusuf.utils.default_competition.Competition
 
 enum class NavigationGraph(val route: String) {
         ONBOARDING_SCREEN("onboarding_screen"),

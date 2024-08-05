@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import com.yusuf.feature.R
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.APPBAR_GREEN
-import com.yusuf.utils.Competition
+import com.yusuf.utils.default_competition.Competition
 
 
 @Composable
