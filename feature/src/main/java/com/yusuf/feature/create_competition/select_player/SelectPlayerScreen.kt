@@ -23,9 +23,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -59,6 +63,8 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
+import com.yusuf.feature.create_competition.select_player.BackCardContent
+import com.yusuf.feature.create_competition.select_player.FrontCardContent
 import com.yusuf.feature.create_competition.select_player.viewmodel.SelectPlayerViewModel
 import com.yusuf.feature.create_competition.select_player.viewmodel.TeamBalancerViewModel
 import com.yusuf.navigation.NavigationGraph
@@ -81,7 +87,6 @@ fun SelectPlayerScreen(
     val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
     val competitionName = sharedPreferencesHelper.competitionName
 
-
     LaunchedEffect(true) {
         viewModel.getPlayersByCompetitionType(competitionName.toString())
     }
@@ -90,11 +95,13 @@ fun SelectPlayerScreen(
         if (teamBalancerUIState.teams != null) {
             Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
 
-            val route = NavigationGraph.getCompetitionDetailsRoute(CompetitionDetail(
-                selectedTime = timePicker,
-                firstBalancedTeam = teamBalancerUIState.teams!!.first,
-                secondBalancedTeam = teamBalancerUIState.teams!!.second
-            ))
+            val route = NavigationGraph.getCompetitionDetailsRoute(
+                CompetitionDetail(
+                    selectedTime = timePicker,
+                    firstBalancedTeam = teamBalancerUIState.teams!!.first,
+                    secondBalancedTeam = teamBalancerUIState.teams!!.second
+                )
+            )
             navController.navigate(route)
         }
         if (teamBalancerUIState.isLoading) {
@@ -145,32 +152,32 @@ fun SelectPlayerScreen(
                                 color = if (isSelected) APPBAR_GREEN else Color.Transparent,
                                 shape = RoundedCornerShape(8.dp)
                             )
-                            .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onPress = {
-                                        // Trigger selection on single tap
-                                        val pressStart = System.currentTimeMillis()
-                                        val result = tryAwaitRelease()
-                                        val pressEnd = System.currentTimeMillis()
-                                        val isLongPress = pressEnd - pressStart > 500 // Long press threshold
-
-                                        if (isLongPress) {
-                                            isFlipped = !isFlipped
-                                        } else {
-                                            if (isSelected) {
-                                                selectedPlayers.remove(player)
-                                            } else {
-                                                selectedPlayers.add(player)
-                                            }
-                                        }
-                                    }
-                                )
+                            .clickable {
+                                if (isSelected) {
+                                    selectedPlayers.remove(player)
+                                } else {
+                                    selectedPlayers.add(player)
+                                }
                             }
                             .fillMaxWidth()
                     ) {
                         Box(
-                            modifier = Modifier.background(Color.White)
+                            modifier = Modifier
+                                .background(Color.White)
                         ) {
+                            IconButton(
+                                onClick = { isFlipped = !isFlipped },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(8.dp)
+                                    .size(24.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = "More options"
+                                )
+                            }
+
                             this@Card.AnimatedVisibility(
                                 visible = !isFlipped,
                                 enter = fadeIn(),
@@ -196,9 +203,17 @@ fun SelectPlayerScreen(
             Button(
                 onClick = {
                     if (selectedPlayers.isEmpty()) {
-                        Toast.makeText(context, "Please select at least one player", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Please select at least one player",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else if (selectedPlayers.size % 2 != 0) {
-                        Toast.makeText(context, "The number of selected players must be even", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "The number of selected players must be even",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else if (timePicker.isEmpty()) {
                         Toast.makeText(context, "Please select a time", Toast.LENGTH_SHORT).show()
                     } else {
@@ -236,85 +251,4 @@ fun SelectPlayerScreen(
     }
 }
 
-@Composable
-fun FrontCardContent(player: PlayerData, onFlip: () -> Unit) {
-    val compositionLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.player_card),
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(RoundedCornerShape(12.dp)),
-            contentScale = ContentScale.Crop
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp)
-                .align(Alignment.Center),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            SubcomposeAsyncImage(
-                model = player.profilePhotoUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
-                loading = {
-                    LottieAnimation(
-                        composition = compositionLottie,
-                        modifier = Modifier.size(100.dp),
-                        iterations = Int.MAX_VALUE
-                    )
-                }
-            )
-            Text(
-                text = "${player.firstName} ${player.lastName}",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                color = Color.Black,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Text(
-                text = "Rating: ${player.totalSkillRating}",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = DARK_GREEN,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-    }
-}
 
-@Composable
-fun BackCardContent(player: PlayerData, onFlip: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White.copy(alpha = 0.8f), RoundedCornerShape(12.dp))
-                .align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(text = "Speed: ${player.speed}", fontSize = 16.sp)
-            Text(text = "Focus: ${player.focus}", fontSize = 16.sp)
-            Text(text = "Condition: ${player.condition}", fontSize = 16.sp)
-            Text(text = "Durability: ${player.durability}", fontSize = 16.sp)
-        }
-    }
-}
