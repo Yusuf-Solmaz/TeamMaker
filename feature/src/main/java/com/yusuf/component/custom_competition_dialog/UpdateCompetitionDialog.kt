@@ -182,11 +182,6 @@ fun UpdateCompetitionDialog(
         confirmButton = {
             Button(onClick = {
 
-                if (selectedImageUri == null) {
-                    Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
-                    return@Button
-                }
-
                 val competitionName = selectedCompetition?.competitionName ?: customCompetitionName
                 if (competitionName.isNotBlank()) {
                     onUpdateCompetition(
