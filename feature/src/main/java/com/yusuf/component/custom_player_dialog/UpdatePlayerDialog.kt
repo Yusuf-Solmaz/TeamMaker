@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -45,6 +46,7 @@ import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
+import com.yusuf.theme.APPBAR_GREEN
 
 @Composable
 fun UpdatePlayerDialog(
@@ -243,12 +245,14 @@ fun UpdatePlayerDialog(
                         )
                     )
                 }
-            }) {
+            } ,
+                colors = ButtonDefaults.buttonColors(containerColor = APPBAR_GREEN)) {
                 Text("Update")
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss) {
+            Button(onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)) {
                 Text("Cancel")
             }
         }
