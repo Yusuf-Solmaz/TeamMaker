@@ -61,13 +61,13 @@ import com.yusuf.utils.SharedPreferencesHelper
 @Composable
 fun SelectPlayerScreen(
     navController: NavController,
-    sharedViewModel: TeamBalancerViewModel = hiltViewModel(),
+    teamBalancerViewModel: TeamBalancerViewModel = hiltViewModel(),
     timePicker: String = ""
 ) {
 
     val viewModel: SelectPlayerViewModel = hiltViewModel()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
-    val teamBalancerUIState by sharedViewModel.teamBalancerUiState.collectAsState()
+    val teamBalancerUIState by teamBalancerViewModel.teamBalancerUiState.collectAsState()
 
     val context = LocalContext.current
     val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
@@ -228,7 +228,7 @@ fun SelectPlayerScreen(
                     } else if (timePicker.isEmpty()) {
                         Toast.makeText(context, "Please select a time", Toast.LENGTH_SHORT).show()
                     } else {
-                        sharedViewModel.createBalancedTeams(selectedPlayers)
+                        teamBalancerViewModel.createBalancedTeams(selectedPlayers)
                     }
                 },
                 modifier = Modifier

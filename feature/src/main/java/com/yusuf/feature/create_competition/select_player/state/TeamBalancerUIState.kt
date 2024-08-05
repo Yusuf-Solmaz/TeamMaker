@@ -5,5 +5,6 @@ import com.yusuf.domain.model.firebase.PlayerData
 data class TeamBalancerUIState(
     val isLoading: Boolean = false,
     val teams: Pair<List<PlayerData>, List<PlayerData>>? = null,
+    val teamAverageSkillRating: Pair<Double, Double>? = null,
     val errorMessage: String? = null
 )

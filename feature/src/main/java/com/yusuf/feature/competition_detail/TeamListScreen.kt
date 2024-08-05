@@ -3,15 +3,11 @@ package com.yusuf.feature.competition_detail
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -43,7 +39,6 @@ import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.theme.DARK_BLUE
 import com.yusuf.theme.DARK_GREEN
 import com.yusuf.theme.GREEN
-import com.yusuf.theme.LIGHT_GREEN
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -52,10 +47,14 @@ fun TeamListScreen(
     firstTeam: List<PlayerData>? = null,
     secondTeam: List<PlayerData>? = null
 ) {
-    val pagerState = rememberPagerState(
-        pageCount = { 2 }
-    )
+    val pagerState = rememberPagerState(pageCount = { 2 })
     val coroutineScope = rememberCoroutineScope()
+
+    // Function to calculate average skill rating
+    fun calculateAverageSkillRating(players: List<PlayerData>): Double {
+        if (players.isEmpty()) return 0.0
+        return players.sumOf { it.totalSkillRating } / players.size.toDouble()
+    }
 
     Column(
         Modifier
@@ -109,22 +108,41 @@ fun TeamListScreen(
                     modifier = Modifier
                         .background(if (pagerState.currentPage == 1) DARK_GREEN else MaterialTheme.colorScheme.background)
                         .padding(10.dp)
-                    ) {
-                        Text(
-                            text = "Second Team",
-                            style = TextStyle(
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = if (pagerState.currentPage == 1) Color.White else DARK_GREEN
-                            )
+                ) {
+                    Text(
+                        text = "Second Team",
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (pagerState.currentPage == 1) Color.White else DARK_GREEN
                         )
-                    }
+                    )
                 }
             }
-        HorizontalPager(state = pagerState)  { page ->
-            when (page) {
-                0 -> TeamList(team = firstTeam ?: emptyList())
-                1 -> TeamList(team = secondTeam ?: emptyList())
+        }
+
+        // Display average skill rating based on the current page
+        HorizontalPager(state = pagerState) { page ->
+            val team = when (page) {
+                0 -> firstTeam ?: emptyList()
+                1 -> secondTeam ?: emptyList()
+                else -> emptyList()
+            }
+            val averageSkill = calculateAverageSkillRating(team)
+
+            Column {
+                Text(
+                    text = "Average Skill Rating: %.2f".format(averageSkill),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = DARK_BLUE
+                    ),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(8.dp)
+                )
+                TeamList(team = team)
             }
         }
     }
@@ -165,7 +183,7 @@ fun TeamList(team: List<PlayerData>) {
                         contentScale = ContentScale.Crop
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    // Player details below
+                    // Player details
                     Column {
                         Text(
                             text = "${player.firstName} ${player.lastName}",
@@ -202,9 +220,9 @@ fun TeamList(team: List<PlayerData>) {
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         LinearProgressIndicator(
-                            progress = player.totalSkillRating / 100f,
+                            progress = { (player.totalSkillRating / 10f).coerceIn(0f, 1f) },
                             modifier = Modifier.fillMaxWidth(),
-                            color = GREEN
+                            color = GREEN,
                         )
                     }
                 }

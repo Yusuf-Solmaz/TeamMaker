@@ -54,4 +54,3 @@ class TeamBalancerViewModel @Inject constructor(
         }
     }
 }
-
