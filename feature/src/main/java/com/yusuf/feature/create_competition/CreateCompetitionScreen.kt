@@ -59,11 +59,18 @@ fun CreateCompetitionScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        TimePicker { time ->
-            selectedTime = time
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            LocationScreen()
+            TimePicker(onTimeSelected = { time ->
+                selectedTime = time
+            })
         }
-        Spacer(modifier = Modifier.height(2.dp))
-        LocationScreen()
+        Spacer(modifier = Modifier.height(8.dp))
         SelectPlayerScreen(navController, timePicker = selectedTime)
     }
 }
@@ -78,7 +85,7 @@ fun TimePicker(onTimeSelected: (String) -> Unit) {
 
     Column(
         modifier = Modifier
-            .width(300.dp)
+            .width(150.dp)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
