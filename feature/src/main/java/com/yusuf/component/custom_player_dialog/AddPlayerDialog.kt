@@ -99,7 +99,7 @@ fun AddPlayerDialog(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clip(CircleShape),
-                            contentScale = ContentScale.Fit
+                            contentScale = ContentScale.Crop
                         )
                     } else {
                         Icon(
