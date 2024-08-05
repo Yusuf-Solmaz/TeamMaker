@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -32,6 +33,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -67,6 +69,7 @@ import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.R
 import com.yusuf.component.custom_competition_dialog.AddCompetitionDialog
 import com.yusuf.component.custom_competition_dialog.UpdateCompetitionDialog
+import com.yusuf.feature.home.slideable_image.ImageSliderScreen
 import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.DARK_BLUE
@@ -205,18 +208,35 @@ fun ChooseCompetitionTypeScreen(
                             }
                         }
 
-                        val competitions = state.data ?: emptyList()
-                        LazyColumn(
-                            modifier = Modifier.padding(top = 8.dp)
-                        ) {
-                            items(competitions) { competition ->
+                        ImageSliderScreen()
 
+                        Row (
+                            modifier = Modifier.
+                                fillMaxWidth()
+                        ){
+                            Text(
+                                textAlign = TextAlign.Start,
+                                text = "Competitions",
+                                modifier = Modifier.padding(top = 10.dp, start = 10.dp),
+                                style = TextStyle(
+                                    color = APPBAR_GREEN,
+                                    fontSize = 25.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily(Font(R.font.main_title))
+                                )
+                            )
+                        }
+
+                        val competitions = state.data ?: emptyList()
+
+                        LazyColumn(
+                            modifier = Modifier.padding(top = 8.dp).weight(1f)
+                        ) {
+                            items(competitions.reversed()) { competition ->
                                 CompetitionCard(
                                     competition = competition,
                                     onClick = {
                                         val competitionData = competition.toCompetition()
-
-                                        Log.d("ChooseSportScreen", "Competition clicked: ${competitionData.toString()}")
 
                                         if (competitionData != null) {
                                             sharedPreferencesHelper.competitionName = competition.competitionName
@@ -374,7 +394,7 @@ fun CompetitionCard(
                 Button(
                     onClick = onUpdate,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = DARK_BLUE,
+                        containerColor = APPBAR_GREEN,
                         contentColor = Color.White
                     )
                 ) {
@@ -383,7 +403,7 @@ fun CompetitionCard(
                 Button(
                     onClick = onDelete,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Red,
+                        containerColor = MaterialTheme.colorScheme.error,
                         contentColor = Color.White
                     )
                 ) {
