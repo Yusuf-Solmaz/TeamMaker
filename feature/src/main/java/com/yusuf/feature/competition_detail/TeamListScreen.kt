@@ -3,15 +3,11 @@ package com.yusuf.feature.competition_detail
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -40,11 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.yusuf.domain.model.firebase.PlayerData
-import com.yusuf.feature.create_competition.select_player.viewmodel.TeamBalancerViewModel
 import com.yusuf.theme.DARK_BLUE
 import com.yusuf.theme.DARK_GREEN
 import com.yusuf.theme.GREEN
-import com.yusuf.theme.LIGHT_GREEN
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -226,9 +220,9 @@ fun TeamList(team: List<PlayerData>) {
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         LinearProgressIndicator(
-                            progress = player.totalSkillRating / 100f,
+                            progress = { (player.totalSkillRating / 10f).coerceIn(0f, 1f) },
                             modifier = Modifier.fillMaxWidth(),
-                            color = GREEN
+                            color = GREEN,
                         )
                     }
                 }
