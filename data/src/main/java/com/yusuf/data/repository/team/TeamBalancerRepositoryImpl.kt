@@ -39,4 +39,12 @@ class TeamBalancerRepositoryImpl @Inject constructor() : TeamBalancerRepository 
         }
         // IO dispatcher is used because this operation is CPU bound and doesn't require main thread
     }.flowOn(Dispatchers.IO)
+
+    override fun calculateTeamAverageSkillRating(players: List<PlayerData>): Double {
+        return if (players.isNotEmpty()) {
+            players.sumOf { it.totalSkillRating } / players.size.toDouble()
+        } else {
+            0.0
+        }
+    }
 }
