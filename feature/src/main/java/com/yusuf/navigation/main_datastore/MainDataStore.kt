@@ -22,26 +22,40 @@ class MainDataStore @Inject constructor(
 ) {
     private val myPreferencesDataStore = context.myPreferencesDataStore
 
-    private object PreferencesKeys{
+    private object PreferencesKeys {
         val APP_ENTRY_KEY = booleanPreferencesKey("app_entry")
+        val SHOW_TOOLTIP_KEY = booleanPreferencesKey("show_tooltip")
     }
 
-    val readAppEntry = myPreferencesDataStore.data.catch {
-            exception->
-        if (exception is IOException){
+    val readAppEntry = myPreferencesDataStore.data.catch { exception ->
+        if (exception is IOException) {
             emit(emptyPreferences())
-        }else{
+        } else {
             throw exception
         }
-    }.map {
-            preferences ->
+    }.map { preferences ->
         preferences[PreferencesKeys.APP_ENTRY_KEY] ?: true
     }
 
-    suspend fun saveAppEntry(){
-        myPreferencesDataStore.edit {
-                preferences ->
+    val readShowTooltip = myPreferencesDataStore.data.catch { exception ->
+        if (exception is IOException) {
+            emit(emptyPreferences())
+        } else {
+            throw exception
+        }
+    }.map { preferences ->
+        preferences[PreferencesKeys.SHOW_TOOLTIP_KEY] ?: true
+    }
+
+    suspend fun saveAppEntry() {
+        myPreferencesDataStore.edit { preferences ->
             preferences[PreferencesKeys.APP_ENTRY_KEY] = false
+        }
+    }
+
+    suspend fun saveShowTooltip(show: Boolean) {
+        myPreferencesDataStore.edit { preferences ->
+            preferences[PreferencesKeys.SHOW_TOOLTIP_KEY] = show
         }
     }
 }

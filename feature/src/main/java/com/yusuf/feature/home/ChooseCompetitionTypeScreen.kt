@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -42,7 +43,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -278,7 +281,7 @@ fun CompetitionCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(top = 10.dp, start = 10.dp, end = 10.dp)
             .clickable { onClick() }
     ) {
         Box {
@@ -306,41 +309,57 @@ fun CompetitionCard(
                     isImageLoading = false
                 }
             )
+            if (!isImageLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f))
+                )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.3f))
-            )
+                Box(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .align(Alignment.Center),
+                    contentAlignment = Alignment.Center
+                ) {
 
-            Box(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .align(Alignment.Center),
-                contentAlignment = Alignment.Center
-            ) {
-                if (!isImageLoading) {
                     Text(
                         text = competition.competitionName,
                         color = Color.White,
                         style = TextStyle(
                             fontSize = 35.sp,
                             color = Color.White,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            shadow = Shadow(
+                                color = Color(0xFF333333),
+                                offset = androidx.compose.ui.geometry.Offset(4f, 4f),
+                                blurRadius = 10f
+                            )
                         )
                     )
-                }
-            }
 
-            IconButton(
-                onClick = { expanded = !expanded },
-                modifier = Modifier.align(Alignment.TopEnd)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "Expand",
-                    tint = Color.White
-                )
+                }
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .size(24.dp, 24.dp)
+                        .background(
+                            color = Color.Black.copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+
+                ) {
+                    IconButton(
+                        onClick = { expanded = !expanded },
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = "Expand",
+                            tint = Color.White,
+                        )
+                    }
+                }
             }
         }
 
