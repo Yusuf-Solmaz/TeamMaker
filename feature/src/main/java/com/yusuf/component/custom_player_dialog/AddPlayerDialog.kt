@@ -46,6 +46,7 @@ import com.yusuf.component.DividerTextComponent
 import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
+import com.yusuf.theme.APPBAR_GREEN
 
 @Composable
 fun AddPlayerDialog(
@@ -218,7 +219,7 @@ fun AddPlayerDialog(
 
                 updateList()
             },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Green)) {
+                colors = ButtonDefaults.buttonColors(containerColor = APPBAR_GREEN)) {
                 Text("Add")
             }
         },
