@@ -70,7 +70,6 @@ fun CreateCompetitionScreen(navController: NavController) {
 
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimePicker(onTimeSelected: (String) -> Unit) {
     var showAdvancedExample by remember { mutableStateOf(false) }
