@@ -2,6 +2,7 @@ package com.yusuf.feature.player_list
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
@@ -40,6 +43,7 @@ import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.component.custom_player_dialog.AddPlayerDialog
 import com.yusuf.component.custom_player_dialog.UpdatePlayerDialog
+import com.yusuf.component.custom_player_dialog.showTooltipBalloon
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
 import com.yusuf.utils.SharedPreferencesHelper
 import kotlin.math.roundToInt
@@ -51,16 +55,15 @@ fun PlayerListScreen(
 ) {
     val playerListUiState by viewModel.playerListUIState.collectAsState()
     val playerTransactionUiState by viewModel.playerUiState.collectAsState()
+    val showTooltip by viewModel.showTooltip.observeAsState(true)
 
     var showAddPlayerDialog by remember { mutableStateOf(false) }
     var showUpdatePlayerDialog by remember { mutableStateOf(false) }
     var playerDataToUpdate by remember { mutableStateOf<PlayerData?>(null) }
 
-
     val context = LocalContext.current
     val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
     val competitionName = sharedPreferencesHelper.competitionName
-
 
     LaunchedEffect(true) {
         viewModel.getPlayersByCompetitionType(competitionName.toString())
@@ -68,7 +71,12 @@ fun PlayerListScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { showAddPlayerDialog = true }) {
+            FloatingActionButton(onClick = {
+                showAddPlayerDialog = true
+                if (showTooltip) {
+                    viewModel.saveShowTooltip(false)
+                }
+            }) {
                 Text(text = "Add Player")
             }
         },
@@ -78,60 +86,45 @@ fun PlayerListScreen(
                     .fillMaxSize()
             ) {
                 when {
-
-                    playerListUiState.isLoading or playerTransactionUiState.isLoading -> {
+                    playerListUiState.isLoading || playerTransactionUiState.isLoading -> {
                         Box(
-                            modifier = Modifier
-                                .fillMaxSize(),
+                            modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
                             LoadingLottie(R.raw.loading_anim)
                         }
                     }
-
                     playerListUiState.error != null -> {
                         Box(
-                            modifier = Modifier
-                                .fillMaxSize(),
+                            modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(text = "Error: ${playerListUiState.error}")
                         }
                     }
-
                     playerListUiState.playerList != null -> {
                         if (playerListUiState.playerList?.isEmpty() == true) {
                             Column(
-                                modifier = Modifier
-                                    .fillMaxSize(),
+                                modifier = Modifier.fillMaxSize(),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
                                     text = "You don't have any players yet.",
                                     modifier = Modifier.padding(bottom = 10.dp),
-                                    fontFamily = FontFamily(
-                                        Font(R.font.onboarding_title1, FontWeight.Normal)
-                                    ),
-                                    style = TextStyle(
-                                        fontSize = 20.sp
-                                    )
+                                    fontFamily = FontFamily(Font(R.font.onboarding_title1, FontWeight.Normal)),
+                                    style = TextStyle(fontSize = 20.sp)
                                 )
                                 Text(
                                     text = "Start adding now.",
-                                    fontFamily = FontFamily(
-                                        Font(R.font.onboarding_title1, FontWeight.Normal)
-                                    ),
-                                    style = TextStyle(
-                                        fontSize = 20.sp
-                                    )
+                                    fontFamily = FontFamily(Font(R.font.onboarding_title1, FontWeight.Normal)),
+                                    style = TextStyle(fontSize = 20.sp)
                                 )
                             }
                         }
 
                         LazyColumn(
-                            modifier = Modifier
-                                .weight(1f)
+                            modifier = Modifier.weight(1f)
                         ) {
                             items(playerListUiState.playerList!!.size) { index ->
                                 PlayerListItem(
@@ -139,7 +132,6 @@ fun PlayerListScreen(
                                     onDelete = { id ->
                                         viewModel.deletePlayerById(id, competitionName.toString())
                                         viewModel.getPlayersByCompetitionType(competitionName.toString())
-
                                     },
                                     onUpdatePlayer = { playerData ->
                                         playerDataToUpdate = playerData
@@ -176,8 +168,7 @@ fun PlayerListScreen(
                         viewModel.getPlayersByCompetitionType(competitionName.toString())
                         showAddPlayerDialog = false
                     },
-                    updateList = {
-                    },
+                    updateList = { },
                     context = context
                 )
             }
@@ -196,7 +187,23 @@ fun PlayerListScreen(
             }
         }
     )
+
+    if (showTooltip) {
+        AndroidView(
+            factory = { context ->
+                View(context).apply {
+                    post {
+                        showTooltipBalloon(context, this, "You can slide right to edit or left to delete players") {
+                            viewModel.saveShowTooltip(false)
+                        }
+                    }
+                }
+            }
+        )
+    }
 }
+
+
 
 @OptIn(ExperimentalWearMaterialApi::class)
 @Composable
