@@ -193,7 +193,7 @@ fun PlayerListScreen(
             factory = { context ->
                 View(context).apply {
                     post {
-                        showTooltipBalloon(context, this, "Click here to add a player!") {
+                        showTooltipBalloon(context, this, "You can slide right to edit or left to delete players") {
                             viewModel.saveShowTooltip(false)
                         }
                     }
