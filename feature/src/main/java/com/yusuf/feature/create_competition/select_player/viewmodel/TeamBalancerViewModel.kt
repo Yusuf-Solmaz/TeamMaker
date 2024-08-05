@@ -42,14 +42,6 @@ class TeamBalancerViewModel @Inject constructor(
                             )
                             Log.d("TeamBalancerViewModel", "Teams set: ${_teamBalancerUiState.value.teams}")
                             Log.d("TeamBalancerViewModel", "Team Average Skill Ratings: $teamFirstAverage and $teamSecondAverage")
-                        } ?: run {
-                            _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
-                                teams = null,
-                                teamAverageSkillRating = null,
-                                isLoading = false,
-                                errorMessage = "Teams data is null"
-                            )
-                            Log.e("TeamBalancerViewModel", "Teams data is null")
                         }
                     }
                     is RootResult.Error -> {
