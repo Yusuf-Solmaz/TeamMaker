@@ -99,7 +99,7 @@ fun AddCompetitionDialog(
                             painter = rememberAsyncImagePainter(uri),
                             contentDescription = null,
                             modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Fit,
+                            contentScale = ContentScale.Crop,
 
                             )
                     } ?: run {
