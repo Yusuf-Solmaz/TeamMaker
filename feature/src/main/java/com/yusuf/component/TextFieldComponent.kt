@@ -20,7 +20,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TextFieldComponent(stateValue: String, label:String,onValueChange: (String) -> Unit, painterResource: Painter) {
+fun TextFieldComponent(
+    stateValue: String,
+    label: String,
+    onValueChange: (String) -> Unit,
+    painterResource: Painter,
+    focusedLabelColor: Color = Color.Gray,
+    unfocusedLabelColor: Color = Color.LightGray
+) {
     var textValue by remember { mutableStateOf(stateValue) }
 
     OutlinedTextField(
@@ -32,8 +39,8 @@ fun TextFieldComponent(stateValue: String, label:String,onValueChange: (String) 
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color.LightGray,
             unfocusedBorderColor = Color.Gray,
-            focusedLabelColor = Color.Gray,
-            unfocusedLabelColor = Color.LightGray,
+            focusedLabelColor = focusedLabelColor,
+            unfocusedLabelColor = unfocusedLabelColor,
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White
         ),
