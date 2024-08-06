@@ -27,6 +27,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderColors
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,6 +41,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -47,6 +53,9 @@ import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.theme.APPBAR_GREEN
+import com.yusuf.theme.LIGHT_GREEN
+import com.yusuf.theme.PurpleGrey80
+import com.yusuf.theme.YELLOW
 
 @Composable
 fun AddPlayerDialog(
@@ -80,8 +89,17 @@ fun AddPlayerDialog(
     }
 
     AlertDialog(
+        containerColor = LIGHT_GREEN,
         onDismissRequest = onDismiss,
-        title = { Text("Add Player") },
+        title = { Text("Add Player",
+            style = TextStyle(
+                color = Color.White,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.main_title))
+            )
+        )
+                },
         text = {
             Column(
                 modifier = Modifier
@@ -123,26 +141,34 @@ fun AddPlayerDialog(
                             stateValue = firstName,
                             label = "First Name",
                             onValueChange = { firstName = it },
-                            painterResource = painterResource(id = R.drawable.ic_person)
+                            painterResource = painterResource(id = R.drawable.ic_person),
+                            focusedLabelColor = Color.White
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         TextFieldComponent(
                             stateValue = lastName,
                             label = "Last Name",
                             onValueChange = { lastName = it },
-                            painterResource = painterResource(id = R.drawable.ic_person)
+                            painterResource = painterResource(id = R.drawable.ic_person),
+                            focusedLabelColor = Color.White
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         TextFieldComponent(
                             stateValue = position,
                             label = "Position",
                             onValueChange = { position = it },
-                            painterResource = painterResource(id = R.drawable.ic_position)
+                            painterResource = painterResource(id = R.drawable.ic_position),
+                            focusedLabelColor = Color.White
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("General Skill: $generalSkill", fontSize = 16.sp)
+                        Text("General Skill: $generalSkill", fontSize = 16.sp,color = Color.White)
                         Slider(
+                            colors = SliderDefaults.colors(
+                                thumbColor = if (isGeneralSkillUsed) APPBAR_GREEN else YELLOW,
+                                activeTrackColor = APPBAR_GREEN,
+
+                            ),
                             value = generalSkill.toFloat(),
                             onValueChange = { generalSkill = it.toInt() },
                             valueRange = 0f..10f,
@@ -152,11 +178,17 @@ fun AddPlayerDialog(
 
                         if (!isGeneralSkillUsed) {
                             Spacer(modifier = Modifier.height(8.dp))
-                            DividerTextComponent()
+                            DividerTextComponent(
+                                textColor = Color.White
+                            )
 
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("Speed: $speed", fontSize = 16.sp)
+                            Text("Speed: $speed", fontSize = 16.sp,color = Color.White)
                             Slider(
+                                colors = SliderDefaults.colors(
+                                    thumbColor = if (speed != 0) APPBAR_GREEN else YELLOW,
+                                    activeTrackColor = APPBAR_GREEN
+                                ),
                                 value = speed.toFloat(),
                                 onValueChange = { speed = it.toInt() },
                                 valueRange = 0f..10f,
@@ -164,8 +196,12 @@ fun AddPlayerDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Condition: $condition", fontSize = 16.sp)
+                            Text("Condition: $condition", fontSize = 16.sp,color = Color.White)
                             Slider(
+                                colors = SliderDefaults.colors(
+                                    thumbColor = if (condition != 0) APPBAR_GREEN else YELLOW,
+                                    activeTrackColor = APPBAR_GREEN
+                                ),
                                 value = condition.toFloat(),
                                 onValueChange = { condition = it.toInt() },
                                 valueRange = 0f..10f,
@@ -173,8 +209,12 @@ fun AddPlayerDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Focus: $focus", fontSize = 16.sp)
+                            Text("Focus: $focus", fontSize = 16.sp,color = Color.White)
                             Slider(
+                                colors = SliderDefaults.colors(
+                                    thumbColor = if (focus != 0) APPBAR_GREEN else YELLOW,
+                                    activeTrackColor = APPBAR_GREEN
+                                ),
                                 value = focus.toFloat(),
                                 onValueChange = { focus = it.toInt() },
                                 valueRange = 0f..10f,
@@ -182,8 +222,12 @@ fun AddPlayerDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Durability: $durability", fontSize = 16.sp)
+                            Text("Durability: $durability", fontSize = 16.sp,color = Color.White)
                             Slider(
+                                colors = SliderDefaults.colors(
+                                    thumbColor = if (durability != 0) APPBAR_GREEN else YELLOW,
+                                    activeTrackColor = APPBAR_GREEN
+                                ),
                                 value = durability.toFloat(),
                                 onValueChange = { durability = it.toInt() },
                                 valueRange = 0f..10f,
