@@ -39,28 +39,28 @@ import java.util.Calendar
 import java.util.Locale
 
 @Composable
-fun TimePicker(onTimeSelected: (String) -> Unit) {
+fun TimePicker(
+    onTimeSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var showAdvancedExample by remember { mutableStateOf(false) }
     var selectedTime: String? by remember { mutableStateOf(null) }
     val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
 
     Column(
-        modifier = Modifier
-            .width(150.dp)
-            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         IconButton(onClick = {
             showAdvancedExample = true
         }) {
-            Text("")
             Icon(painterResource(R.drawable.baseline_watch_later_24), contentDescription = null)
         }
         if (selectedTime != null) {
-            Text("Selected time = $selectedTime")
+            Text("$selectedTime")
         } else {
-            Text("No time selected.")
+            Modifier.fillMaxWidth()
+            Text("Choose Time")
         }
     }
 
@@ -76,15 +76,12 @@ fun TimePicker(onTimeSelected: (String) -> Unit) {
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdvancedTimePickerExample(
-    onConfirm: (String) -> Unit, // We'r using string instead of timestate
+    onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
-
     val currentTime = Calendar.getInstance()
 
     val timePickerState = rememberTimePickerState(
