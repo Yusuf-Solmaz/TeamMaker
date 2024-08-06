@@ -120,7 +120,7 @@ fun TimePicker(onTimeSelected: (String) -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdvancedTimePickerExample(
-    onConfirm: (String) -> Unit, // TimePickerState yerine String kullanıyoruz
+    onConfirm: (String) -> Unit, // We'r using string instead of timestate
     onDismiss: () -> Unit,
 ) {
 
