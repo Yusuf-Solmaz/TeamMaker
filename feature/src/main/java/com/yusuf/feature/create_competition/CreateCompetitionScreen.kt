@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -91,7 +92,6 @@ import java.util.Calendar
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateCompetitionScreen(navController: NavController) {
     var selectedTime by remember { mutableStateOf("") }
@@ -107,32 +107,37 @@ fun CreateCompetitionScreen(navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
-                .height(IntrinsicSize.Min),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                .padding(horizontal = 75.dp),
+            horizontalArrangement = Arrangement.spacedBy(25.dp), // Equal spacing
             verticalAlignment = Alignment.CenterVertically
         ) {
-            LocationScreen(modifier = Modifier.weight(2f))
-            Column(
-                  modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TimePicker(
-                    onTimeSelected = { time ->
-                        selectedTime = time
-                    }
-                )
+            // Time Picker with equal weight
+            TimePicker(
+                onTimeSelected = { time ->
+                    selectedTime = time
+                },
+                modifier = Modifier.weight(1f) // Equal width
+            )
 
-                DatePickerWithDialog(
-                    onDateSelected = { date ->
-                        selectedDate = date
-                    }
-                )
-            }
+            // Date Picker with equal weight
+            DatePickerWithDialog(
+                onDateSelected = { date ->
+                    selectedDate = date
+                },
+           //     modifier = Modifier.weight(1f) // Equal width
+            )
         }
+
+        // Location section below Time and Date
+        LocationScreen(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Player selection screen
         SelectPlayerScreen(navController, timePicker = selectedTime)
     }
 }
