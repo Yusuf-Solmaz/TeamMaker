@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LocationScreen(
+    modifier: Modifier = Modifier,
     viewModel: LocationViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.locationUIState.collectAsState()
@@ -115,7 +116,7 @@ fun LocationScreen(
     }
 
     Column(
-        modifier = Modifier.padding(2.dp),
+        modifier = modifier.padding(2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when {
@@ -126,8 +127,6 @@ fun LocationScreen(
                 Text("Error: ${uiState.error}")
             }
             uiState.location != null -> {
-                //Text("Latitude: ${uiState.location!!.latitude}, Longitude: ${uiState.location!!.longitude}")
-                //Text(uiState.locationName ?: "Unknown city")
                 LocationCard(
                     locationName = uiState.locationName ?: "Unknown city"
                 )
@@ -146,7 +145,7 @@ fun LocationCard(
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
-            .size(width = 180.dp, height = 120.dp)
+            .size(width = 200.dp, height = 100.dp)
             .padding(8.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ){
@@ -183,7 +182,6 @@ fun LocationCard(
             }
         }
     }
-
 }
 
 @Composable
