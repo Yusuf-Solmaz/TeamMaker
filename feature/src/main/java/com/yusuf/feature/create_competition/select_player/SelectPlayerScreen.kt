@@ -169,7 +169,7 @@ fun SelectPlayerScreen(
                                 onClick = { isFlipped = !isFlipped },
                                 modifier = Modifier
                                     .align(Alignment.TopEnd)
-                                    .padding(8.dp)
+                                    .padding(top = 1.dp, end = 1.dp)
                                     .size(24.dp)
                             ) {
                                 Icon(
