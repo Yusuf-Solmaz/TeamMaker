@@ -23,11 +23,6 @@ import androidx.navigation.NavController
 import com.yusuf.feature.create_competition.location.LocationScreen
 import java.time.LocalDate
 
-
-
-import java.util.Calendar
-import java.util.Locale
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CreateCompetitionScreen(navController: NavController) {
