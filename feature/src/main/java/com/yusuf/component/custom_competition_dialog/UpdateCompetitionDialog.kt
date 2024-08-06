@@ -20,12 +20,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,10 +37,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.yusuf.domain.model.firebase.CompetitionData
+import com.yusuf.feature.R
+import com.yusuf.theme.APPBAR_GREEN
+import com.yusuf.theme.LIGHT_GREEN
 import com.yusuf.utils.default_competition.Competition
 import com.yusuf.utils.default_competition.predefinedCompetitions
 
@@ -61,8 +72,16 @@ fun UpdateCompetitionDialog(
     }
 
     AlertDialog(
+        containerColor = LIGHT_GREEN,
         onDismissRequest = onDismiss,
-        title = { Text(text = "Update Competition") },
+        title = { Text(text = "Update Competition",
+            style = TextStyle(
+                color = Color.White,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.main_title))
+            )
+        ) },
         text = {
             Column(
                 modifier = Modifier
@@ -109,15 +128,19 @@ fun UpdateCompetitionDialog(
                     ) {
                         Text(
                             text = selectedCompetition?.competitionName ?: "Select Competition",
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            color = Color.White
                         )
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
                             contentDescription = "Dropdown",
-                            modifier = Modifier.padding(8.dp)
+                            modifier = Modifier.padding(8.dp),
+                            tint = Color.White
                         )
                     }
                     DropdownMenu(
+                        modifier = Modifier.background(Color.White)
+                            .height(300.dp),
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
@@ -135,6 +158,17 @@ fun UpdateCompetitionDialog(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
+                    colors = TextFieldDefaults.colors(
+                        unfocusedContainerColor = LIGHT_GREEN,
+                        focusedContainerColor = LIGHT_GREEN,
+                        focusedTextColor = Color.White,
+                        focusedIndicatorColor = Color.White,
+                        unfocusedIndicatorColor = Color.White,
+                        unfocusedLabelColor = Color.White,
+                        focusedLabelColor = Color.White,
+                        cursorColor = Color.White,
+                        unfocusedTextColor = Color.White
+                    ),
                     value = customCompetitionName,
                     onValueChange = {
                         customCompetitionName = it
@@ -148,11 +182,6 @@ fun UpdateCompetitionDialog(
         confirmButton = {
             Button(onClick = {
 
-                if (selectedImageUri == null) {
-                    Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
-                    return@Button
-                }
-
                 val competitionName = selectedCompetition?.competitionName ?: customCompetitionName
                 if (competitionName.isNotBlank()) {
                     onUpdateCompetition(
@@ -162,12 +191,14 @@ fun UpdateCompetitionDialog(
                     )
                     onDismiss()
                 }
-            }) {
+            },
+                colors = ButtonDefaults.buttonColors(containerColor = APPBAR_GREEN)) {
                 Text("Save")
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss) {
+            Button(onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)) {
                 Text("Cancel")
             }
         }
