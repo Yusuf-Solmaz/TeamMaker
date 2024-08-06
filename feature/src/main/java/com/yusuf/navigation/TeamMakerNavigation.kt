@@ -36,7 +36,8 @@
         navController: NavHostController,
         mainViewModel: MainViewModel = hiltViewModel(),
         onTitleChange: (String) -> Unit,
-        key: Int,) {
+        key: Int
+        ) {
 
         key(key) {
             LaunchedEffect(mainViewModel.isLoading) {
