@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 
 @Composable
-fun BackCardContent(player: PlayerData, onFlip: () -> Unit) {
+fun BackCardContent(player: PlayerData) {
     Box(
         modifier = Modifier
             .fillMaxSize()

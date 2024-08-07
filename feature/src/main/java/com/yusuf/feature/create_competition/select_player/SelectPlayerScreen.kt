@@ -184,7 +184,7 @@ fun SelectPlayerScreen(
                                 exit = fadeOut(),
                                 modifier = Modifier.fillMaxSize()
                             ) {
-                                FrontCardContent(player, { isFlipped = !isFlipped })
+                                FrontCardContent(player)
                             }
 
                             this@Card.AnimatedVisibility(
@@ -193,7 +193,7 @@ fun SelectPlayerScreen(
                                 exit = fadeOut(),
                                 modifier = Modifier.fillMaxSize()
                             ) {
-                                BackCardContent(player, { isFlipped = !isFlipped })
+                                BackCardContent(player)
                             }
                         }
                     }
