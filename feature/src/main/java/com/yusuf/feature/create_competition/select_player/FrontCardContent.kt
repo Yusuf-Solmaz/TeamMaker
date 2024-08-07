@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
@@ -36,20 +39,20 @@ fun FrontCardContent(player: PlayerData, onFlip: () -> Unit) {
     val compositionLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .height(250.dp)
             .padding(8.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.player_card),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxHeight()
                 .clip(RoundedCornerShape(12.dp)),
             contentScale = ContentScale.Crop
         )
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxHeight()
                 .padding(8.dp)
                 .align(Alignment.Center),
             verticalArrangement = Arrangement.Center,
@@ -75,6 +78,8 @@ fun FrontCardContent(player: PlayerData, onFlip: () -> Unit) {
                 text = "${player.firstName} ${player.lastName}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 color = Color.Black,
                 modifier = Modifier.padding(top = 8.dp)
             )
