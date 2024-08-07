@@ -1,7 +1,9 @@
 package com.yusuf.feature.home
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import android.net.Uri
@@ -45,7 +47,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
@@ -57,6 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
@@ -72,10 +74,13 @@ import com.yusuf.component.custom_competition_dialog.UpdateCompetitionDialog
 import com.yusuf.feature.home.slideable_image.ImageSliderScreen
 import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 import com.yusuf.navigation.NavigationGraph
-import com.yusuf.theme.DARK_BLUE
+import com.yusuf.navigation.main_datastore.MainDataStore
 import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.utils.SharedPreferencesHelper
 import com.yusuf.utils.default_competition.toCompetition
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -93,6 +98,8 @@ fun ChooseCompetitionTypeScreen(
 
     val context = LocalContext.current
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
+    val mainDataStore = remember { MainDataStore(context) }
+    val galleryPermissionGranted by mainDataStore.readGalleryPermission.collectAsState(initial = false)
 
     val sharedPreferencesHelper = SharedPreferencesHelper(context)
 
@@ -100,8 +107,30 @@ fun ChooseCompetitionTypeScreen(
         (context as? Activity)?.finish()
     }
 
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // Save permission granted status in DataStore
+            CoroutineScope(Dispatchers.IO).launch {
+                mainDataStore.saveGalleryPermission(true)
+            }
+        }
+    }
+
     LaunchedEffect(Unit) {
         competitionViewModel.getAllCompetitions()
+
+        if (!galleryPermissionGranted) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            } else {
+                // Save permission granted status in DataStore
+                CoroutineScope(Dispatchers.IO).launch {
+                    mainDataStore.saveGalleryPermission(true)
+                }
+            }
+        }
     }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -212,7 +241,7 @@ fun ChooseCompetitionTypeScreen(
 
                         Row (
                             modifier = Modifier.
-                                fillMaxWidth()
+                            fillMaxWidth()
                         ){
                             Text(
                                 textAlign = TextAlign.Start,
@@ -288,6 +317,7 @@ fun ChooseCompetitionTypeScreen(
         }
     )
 }
+
 
 @Composable
 fun CompetitionCard(
