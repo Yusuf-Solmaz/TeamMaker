@@ -1,11 +1,8 @@
 package com.yusuf.component.custom_competition_dialog
 
-import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,7 +46,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.yusuf.domain.repository.firebase.image.PhotoRepository
 import com.yusuf.feature.R
 import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.theme.GREEN
@@ -62,46 +58,27 @@ import com.yusuf.utils.default_competition.predefinedCompetitions
 fun AddCompetitionDialog(
     onDismiss: () -> Unit,
     onSave: (Competition) -> Unit,
-    imageRepository: PhotoRepository, // Repository burada parametre olarak alınır
+    onImagePick: () -> Unit,
+    selectedImageUri: Uri?,
     context: Context
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedCompetition by remember { mutableStateOf<Competition?>(null) }
     var customCompetitionName by remember { mutableStateOf("") }
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            selectedImageUri = result.data?.data
-        }
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            imageRepository.openGallery(galleryLauncher)
-        } else {
-            Toast.makeText(context, "Permission denied, cannot access gallery", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     AlertDialog(
         containerColor = LIGHT_GREEN,
         onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = "Add Competition",
-                style = TextStyle(
+        title = { Text(text = "Add Competition",
+            style = TextStyle(
                     color = Color.White,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily(Font(R.font.main_title))
-                )
             )
-        },
+        )
+                },
         text = {
             Column(
                 modifier = Modifier
@@ -114,14 +91,7 @@ fun AddCompetitionDialog(
                         .height(128.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(MaterialTheme.colorScheme.surface)
-                        .clickable {
-                            imageRepository.checkAndRequestPermission(
-                                permissionLauncher = permissionLauncher,
-                                onPermissionGranted = {
-                                    imageRepository.openGallery(galleryLauncher)
-                                }
-                            )
-                        }
+                        .clickable { onImagePick() }
                         .align(Alignment.CenterHorizontally)
                 ) {
                     selectedImageUri?.let { uri ->
@@ -129,8 +99,9 @@ fun AddCompetitionDialog(
                             painter = rememberAsyncImagePainter(uri),
                             contentDescription = null,
                             modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
+                            contentScale = ContentScale.Crop,
+
+                            )
                     } ?: run {
                         Icon(
                             imageVector = Icons.Filled.Add,
@@ -167,8 +138,7 @@ fun AddCompetitionDialog(
                         )
                     }
                     DropdownMenu(
-                        modifier = Modifier
-                            .background(Color.White)
+                        modifier = Modifier.background(Color.White)
                             .height(300.dp),
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
@@ -212,7 +182,7 @@ fun AddCompetitionDialog(
         confirmButton = {
             Button(onClick = {
                 if (selectedImageUri == null) {
-                    if (selectedCompetition == null || customCompetitionName.isBlank()) {
+                    if (selectedCompetition == null ||  customCompetitionName.isBlank()) {
                         Toast.makeText(context, "Please choose at least one competition", Toast.LENGTH_SHORT).show()
                         return@Button
                     }
@@ -248,5 +218,4 @@ fun AddCompetitionDialog(
         }
     )
 }
-
 
