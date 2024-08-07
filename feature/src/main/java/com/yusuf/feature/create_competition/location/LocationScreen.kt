@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -120,13 +119,28 @@ fun LocationScreen(
         modifier = modifier.padding(2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LocationCard(uiState)
+        when {
+            uiState.isLoading -> {
+                LoadingLottie(R.raw.loading_anim)
+            }
+            uiState.error != null -> {
+                Text("Error: ${uiState.error}")
+            }
+            uiState.location != null -> {
+                LocationCard(
+                    locationName = uiState.locationName ?: "Unknown city"
+                )
+            }
+            else -> {
+                Text("No location data available")
+            }
+        }
     }
 }
 
 @Composable
 fun LocationCard(
-    uiState: LocationUIState
+    locationName: String
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -140,59 +154,31 @@ fun LocationCard(
                 .background(color = MaterialTheme.colorScheme.surface)
                 .padding(16.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             )  {
-
-                when {
-                    uiState.isLoading -> {
-                        LoadingLottie(R.raw.image_loading)
-                    }
-                    uiState.error != null -> {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_location),
-                            contentDescription = "Error icon",
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = uiState.error,
-                            style = TextStyle(
-                                fontFamily = FontFamily(Font(R.font.onboarding_content)),
-                                fontSize = 18.sp,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                textAlign = TextAlign.Center
-                            ),
-                            modifier = Modifier.weight(1f),
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                    uiState.location != null -> {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_location),
-                            contentDescription = "Error icon",
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text =   uiState.location.toString(),
-                            style = TextStyle(
-                                fontFamily = FontFamily(Font(R.font.splash_title_font)),
-                                fontSize = 18.sp,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                textAlign = TextAlign.Center
-                            ),
-                            modifier = Modifier.weight(1f),
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
+                Image(
+                    painter = painterResource(id = R.drawable.ic_location),
+                    contentDescription = "Location icon",
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = locationName,
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.splash_title_font)),
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center
+                    ),
+                    modifier = Modifier.weight(1f),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }

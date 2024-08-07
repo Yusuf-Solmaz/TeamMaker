@@ -302,13 +302,9 @@ fun CompetitionCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 10.dp, start = 10.dp, end = 10.dp)
+            .clickable { onClick() }
     ) {
-        Box (
-            modifier = Modifier.fillMaxSize()
-                .clickable {
-                    onClick()
-                }
-        ){
+        Box {
             val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
             var isImageLoading by remember { mutableStateOf(true) }
 

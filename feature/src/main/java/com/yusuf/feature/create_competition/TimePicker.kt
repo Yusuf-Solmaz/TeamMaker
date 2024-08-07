@@ -1,8 +1,7 @@
-package com.yusuf.feature.create_competition.date_time
+package com.yusuf.feature.create_competition
 
 import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,22 +56,17 @@ fun TimePicker(
 
     Card(
         modifier = Modifier
-            .size(width = 100.dp, height = 100.dp),
+            .size(width = 100.dp, height = 120.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
-
-        Box(Modifier.fillMaxSize()
-            .clickable {
-                showAdvancedExample = true
-            }) {
-
             Column(
                 modifier = modifier
                     .background(color = MaterialTheme.colorScheme.surface)
+                    .padding(10.dp)
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceEvenly
+                horizontalAlignment = Alignment.CenterHorizontally
+
             ) {
                 IconButton(onClick = {
                     showAdvancedExample = true
@@ -82,6 +76,7 @@ fun TimePicker(
                         contentDescription = null
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = selectedTime ?: "Choose Time",
                     style = MaterialTheme.typography.bodyMedium,
@@ -94,16 +89,15 @@ fun TimePicker(
 
 
 
-        when {
-            showAdvancedExample -> AdvancedTimePickerExample(
-                onDismiss = { showAdvancedExample = false },
-                onConfirm = { time ->
-                    selectedTime = time
-                    onTimeSelected(time)
-                    showAdvancedExample = false
-                },
-            )
-        }
+    when {
+        showAdvancedExample -> AdvancedTimePickerExample(
+            onDismiss = { showAdvancedExample = false },
+            onConfirm = { time ->
+                selectedTime = time
+                onTimeSelected(time)
+                showAdvancedExample = false
+            },
+        )
     }
 }
 
