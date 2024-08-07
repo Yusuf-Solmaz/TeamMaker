@@ -20,7 +20,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -46,7 +45,6 @@ import com.yusuf.component.custom_player_dialog.AddPlayerDialog
 import com.yusuf.component.custom_player_dialog.UpdatePlayerDialog
 import com.yusuf.component.custom_player_dialog.showTooltipBalloon
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
-import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.utils.SharedPreferencesHelper
 import kotlin.math.roundToInt
 
@@ -73,9 +71,7 @@ fun PlayerListScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                containerColor = APPBAR_GREEN, contentColor = Color.White,
-                onClick = {
+            FloatingActionButton(onClick = {
                 showAddPlayerDialog = true
                 if (showTooltip) {
                     viewModel.saveShowTooltip(false)
@@ -289,7 +285,7 @@ fun PlayerListItem(
             elevation = CardDefaults.cardElevation(8.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
             Row(
