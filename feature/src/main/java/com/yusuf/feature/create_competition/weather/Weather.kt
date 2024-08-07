@@ -28,6 +28,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,6 +43,7 @@ import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.weather.CurrentWeatherModel
 import com.yusuf.feature.R
 import com.yusuf.feature.create_competition.location.LocationViewModel
+import com.yusuf.theme.DARK_BLUE
 import com.yusuf.utils.getLottieAnimationResource
 
 @Composable
@@ -94,7 +98,7 @@ fun WeatherCard(weatherModel: CurrentWeatherModel) {
 
     Card(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(8.dp)
             .heightIn(min = 120.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -125,23 +129,26 @@ fun WeatherCard(weatherModel: CurrentWeatherModel) {
             ) {
                 Text(
                     text = "${weatherModel.mainModel.temp}°C",
-                    fontSize = 22.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.headlineMedium
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        color = Color.Black,
+                    )
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "Min: ${weatherModel.mainModel.tempMin}°C Max: ${weatherModel.mainModel.tempMax}°C",
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = weatherModel.weatherModel.firstOrNull()?.main.orEmpty(),
-                    fontSize = 20.sp,
-                    color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.bodySmall
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.splash_title_font)),
+                        fontSize = 18.sp,
+                        color = Color.Black,
+                    )
                 )
                 }
         }
