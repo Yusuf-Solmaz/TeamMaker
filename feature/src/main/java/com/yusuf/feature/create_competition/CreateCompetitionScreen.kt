@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.yusuf.feature.create_competition.date_time.DatePickerWithDialog
+import com.yusuf.feature.create_competition.date_time.TimePicker
 import com.yusuf.feature.create_competition.location.LocationScreen
 import java.time.LocalDate
 
@@ -36,40 +39,41 @@ fun CreateCompetitionScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 75.dp),
-            horizontalArrangement = Arrangement.spacedBy(25.dp), // Equal spacing
+            modifier = Modifier.fillMaxWidth()
+                .wrapContentHeight(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Time Picker with equal weight
             TimePicker(
                 onTimeSelected = { time ->
                     selectedTime = time
-                },
-                modifier = Modifier.weight(1f) // Equal width
+                }
             )
 
-            // Date Picker with equal weight
+
             DatePickerWithDialog(
                 onDateSelected = { date ->
                     selectedDate = date
-                },
-           //     modifier = Modifier.weight(1f) // Equal width
+                }
             )
         }
 
-        // Location section below Time and Date
-        LocationScreen(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-        )
+        Row (
+            modifier = Modifier.fillMaxWidth()
+                .wrapContentHeight(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            LocationScreen(
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Player selection screen
         SelectPlayerScreen(navController, timePicker = selectedTime)
     }
 }

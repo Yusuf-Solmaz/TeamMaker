@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -119,28 +120,13 @@ fun LocationScreen(
         modifier = modifier.padding(2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        when {
-            uiState.isLoading -> {
-                LoadingLottie(R.raw.loading_anim)
-            }
-            uiState.error != null -> {
-                Text("Error: ${uiState.error}")
-            }
-            uiState.location != null -> {
-                LocationCard(
-                    locationName = uiState.locationName ?: "Unknown city"
-                )
-            }
-            else -> {
-                Text("No location data available")
-            }
-        }
+        LocationCard(uiState)
     }
 }
 
 @Composable
 fun LocationCard(
-    locationName: String
+    uiState: LocationUIState
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -154,31 +140,59 @@ fun LocationCard(
                 .background(color = MaterialTheme.colorScheme.surface)
                 .padding(16.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             )  {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_location),
-                    contentDescription = "Location icon",
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = locationName,
-                    style = TextStyle(
-                        fontFamily = FontFamily(Font(R.font.splash_title_font)),
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center
-                    ),
-                    modifier = Modifier.weight(1f),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+
+                when {
+                    uiState.isLoading -> {
+                        LoadingLottie(R.raw.image_loading)
+                    }
+                    uiState.error != null -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_location),
+                            contentDescription = "Error icon",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = uiState.error,
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.onboarding_content)),
+                                fontSize = 18.sp,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = TextAlign.Center
+                            ),
+                            modifier = Modifier.weight(1f),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    uiState.location != null -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_location),
+                            contentDescription = "Error icon",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text =   uiState.location.toString(),
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.splash_title_font)),
+                                fontSize = 18.sp,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = TextAlign.Center
+                            ),
+                            modifier = Modifier.weight(1f),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
             }
         }
     }
