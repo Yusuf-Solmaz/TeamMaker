@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
@@ -32,11 +34,12 @@ import com.yusuf.feature.R
 import com.yusuf.theme.DARK_GREEN
 
 @Composable
-fun FrontCardContent(player: PlayerData, onFlip: () -> Unit) {
+fun FrontCardContent(player: PlayerData) {
     val compositionLottie by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .height(250.dp)
             .padding(8.dp)
     ) {
         Image(
@@ -45,12 +48,12 @@ fun FrontCardContent(player: PlayerData, onFlip: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(12.dp)),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Fit
         )
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp)
+                .padding(16.dp)
                 .align(Alignment.Center),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -72,11 +75,23 @@ fun FrontCardContent(player: PlayerData, onFlip: () -> Unit) {
                 }
             )
             Text(
-                text = "${player.firstName} ${player.lastName}",
+                text = player.firstName,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 color = Color.Black,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+            )
+
+            Text(
+                text = player.lastName,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = Color.Black,
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
             )
             Text(
                 text = "Rating: ${player.totalSkillRating}",
