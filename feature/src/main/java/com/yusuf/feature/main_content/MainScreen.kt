@@ -148,7 +148,6 @@ fun MainScreen(
                                         text = { Text("Saved Competitions", color = Color.White) },
                                         onClick = {
                                             expanded = false
-
                                             navController.navigate(NavigationGraph.SAVED_COMPETITIONS.route)
                                         }
                                     )

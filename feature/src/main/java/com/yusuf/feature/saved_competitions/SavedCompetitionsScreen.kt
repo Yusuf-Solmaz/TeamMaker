@@ -17,6 +17,5 @@ fun SavedCompetitionsScreen (navController: NavController){
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = "Saved Competitions Screen")
-
     }
 }

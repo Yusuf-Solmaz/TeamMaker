@@ -17,7 +17,6 @@ enum class NavigationGraph(val route: String) {
         FORGOT_PASSWORD("forgot_password"),
         SAVED_COMPETITIONS("saved_competitions");
 
-
         companion object {
                 fun getOptionsRoute(competition: Competition): String {
                         val gson = Gson()

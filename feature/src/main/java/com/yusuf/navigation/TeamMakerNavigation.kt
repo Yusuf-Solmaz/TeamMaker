@@ -31,7 +31,6 @@
     import com.yusuf.navigation.main_viewmodel.MainViewModel
     import com.yusuf.utils.default_competition.Competition
 
-
     @Composable
     fun TeamMakerNavigation(
         navController: NavHostController,
