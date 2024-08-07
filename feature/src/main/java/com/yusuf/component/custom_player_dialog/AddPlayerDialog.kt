@@ -1,12 +1,8 @@
 package com.yusuf.component.custom_player_dialog
 
-import android.Manifest
-import android.app.Activity.RESULT_OK
+import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -43,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -51,9 +46,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ComponentActivity
 import coil.compose.rememberAsyncImagePainter
-import com.google.android.material.snackbar.Snackbar
 import com.yusuf.component.DividerTextComponent
 import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
@@ -72,6 +65,7 @@ fun AddPlayerDialog(
     updateList: () -> Unit,
     context: Context
 ) {
+    val imageRepository = remember { PhotoRepository(context) }
     var profilePhotoUri by remember { mutableStateOf<Uri?>(null) }
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
@@ -89,12 +83,10 @@ fun AddPlayerDialog(
         isGeneralSkillUsed = true
     }
 
-    val context = LocalContext.current
-
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == RESULT_OK) {
+        if (result.resultCode == Activity.RESULT_OK) {
             profilePhotoUri = result.data?.data
         }
     }
@@ -103,8 +95,7 @@ fun AddPlayerDialog(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            val intentToGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            galleryLauncher.launch(intentToGallery)
+            imageRepository.openGallery(galleryLauncher)
         } else {
             Toast.makeText(context, "Permission denied, cannot access gallery", Toast.LENGTH_SHORT).show()
         }
@@ -136,11 +127,12 @@ fun AddPlayerDialog(
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.surface)
                         .clickable {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
-                            } else {
-                                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                            }
+                            imageRepository.checkAndRequestPermission(
+                                permissionLauncher = permissionLauncher,
+                                onPermissionGranted = {
+                                    imageRepository.openGallery(galleryLauncher)
+                                }
+                            )
                         }
                         .align(Alignment.CenterHorizontally)
                 ) {
