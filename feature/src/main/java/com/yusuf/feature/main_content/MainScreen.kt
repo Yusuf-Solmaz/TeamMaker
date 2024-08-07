@@ -143,6 +143,15 @@ fun MainScreen(
                                     onDismissRequest = { expanded = false },
                                     Modifier.background(LIGHT_GREEN_V2)
                                 ) {
+
+                                    DropdownMenuItem(
+                                        text = { Text("Saved Competitions", color = Color.White) },
+                                        onClick = {
+                                            expanded = false
+
+                                            navController.navigate(NavigationGraph.SAVED_COMPETITIONS.route)
+                                        }
+                                    )
                                     DropdownMenuItem(
                                         text = { Text("Delete Account", color = Color.White) },
                                         onClick = {
