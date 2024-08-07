@@ -1,5 +1,6 @@
 package com.yusuf.component.custom_player_dialog
 
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.widget.Toast
@@ -50,6 +51,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.yusuf.component.DividerTextComponent
 import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
+import com.yusuf.domain.repository.firebase.image.PhotoRepository
 import com.yusuf.feature.R
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
 import com.yusuf.theme.APPBAR_GREEN
@@ -64,6 +66,7 @@ fun UpdatePlayerDialog(
     viewModel: PlayerListViewModel,
     context: Context
 ) {
+    val imageRepository = remember { PhotoRepository(context) }
     var profilePhotoUri by remember { mutableStateOf<Uri?>(playerData.profilePhotoUrl.toUri()) }
     var firstName by remember { mutableStateOf(playerData.firstName) }
     var lastName by remember { mutableStateOf(playerData.lastName) }
@@ -81,26 +84,38 @@ fun UpdatePlayerDialog(
         isGeneralSkillUsed = true
     }
 
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        if (uri != null) {
-            profilePhotoUri = uri
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            profilePhotoUri = result.data?.data
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            imageRepository.openGallery(galleryLauncher)
+        } else {
+            Toast.makeText(context, "Permission denied, cannot access gallery", Toast.LENGTH_SHORT).show()
         }
     }
 
     AlertDialog(
         containerColor = LIGHT_GREEN,
         onDismissRequest = onDismiss,
-        title = { Text("Update Player",
-            style = TextStyle(
-                color = Color.White,
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.main_title))
+        title = {
+            Text(
+                "Update Player",
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.main_title))
+                )
             )
-        )
-                },
+        },
         text = {
             Column(
                 modifier = Modifier
@@ -112,7 +127,14 @@ fun UpdatePlayerDialog(
                         .size(100.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.surface)
-                        .clickable { launcher.launch("image/*") }
+                        .clickable {
+                            imageRepository.checkAndRequestPermission(
+                                permissionLauncher = permissionLauncher,
+                                onPermissionGranted = {
+                                    imageRepository.openGallery(galleryLauncher)
+                                }
+                            )
+                        }
                         .align(Alignment.CenterHorizontally)
                 ) {
                     if (profilePhotoUri != null) {
@@ -170,9 +192,8 @@ fun UpdatePlayerDialog(
                         Slider(
                             colors = SliderDefaults.colors(
                                 thumbColor = if (isGeneralSkillUsed) APPBAR_GREEN else YELLOW,
-                                activeTrackColor = APPBAR_GREEN,
-
-                                ),
+                                activeTrackColor = APPBAR_GREEN
+                            ),
                             value = generalSkill.toFloat(),
                             onValueChange = {
                                 generalSkill = it.toInt()
@@ -244,62 +265,64 @@ fun UpdatePlayerDialog(
             }
         },
         confirmButton = {
-            Button(onClick = {
+            Button(
+                onClick = {
+                    if (profilePhotoUri == null) {
+                        Toast.makeText(context, "Please select a profile photo.", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
 
-                if (profilePhotoUri == null) {
-                    Toast.makeText(context,"Please select a profile photo.", Toast.LENGTH_SHORT).show()
-                    return@Button
-                }
-
-                if (profilePhotoUri != playerData.profilePhotoUrl.toUri()) {
-                    profilePhotoUri?.let { uri ->
-                        viewModel.updatePlayerImage(
-                            uri = uri,
-                            onSuccess = { downloadUrl ->
-                                onUpdatePlayer(
-                                    playerData.copy(
-                                        firstName = firstName,
-                                        lastName = lastName,
-                                        position = position,
-                                        speed =  speed,
-                                        focus =  focus,
-                                        condition =  condition,
-                                        durability =  durability,
-                                        generalSkill = generalSkill,
-                                        totalSkillRating = (speed + focus + condition + durability)/4 + generalSkill,
-                                        profilePhotoUrl = downloadUrl
+                    if (profilePhotoUri != playerData.profilePhotoUrl.toUri()) {
+                        profilePhotoUri?.let { uri ->
+                            viewModel.updatePlayerImage(
+                                uri = uri,
+                                onSuccess = { downloadUrl ->
+                                    onUpdatePlayer(
+                                        playerData.copy(
+                                            firstName = firstName,
+                                            lastName = lastName,
+                                            position = position,
+                                            speed = speed,
+                                            focus = focus,
+                                            condition = condition,
+                                            durability = durability,
+                                            generalSkill = generalSkill,
+                                            totalSkillRating = (speed + focus + condition + durability) / 4 + generalSkill,
+                                            profilePhotoUrl = downloadUrl
+                                        )
                                     )
-                                )
-                            },
-                            onFailure = { /* Handle failure */ }
+                                },
+                                onFailure = { /* Handle failure */ }
+                            )
+                        }
+                    } else {
+                        onUpdatePlayer(
+                            playerData.copy(
+                                firstName = firstName,
+                                lastName = lastName,
+                                position = position,
+                                speed = speed,
+                                focus = focus,
+                                condition = condition,
+                                durability = durability,
+                                generalSkill = generalSkill,
+                                totalSkillRating = (speed + focus + condition + durability) / 4 + generalSkill
+                            )
                         )
                     }
-                } else {
-                    onUpdatePlayer(
-                        playerData.copy(
-                            firstName = firstName,
-                            lastName = lastName,
-                            position = position,
-                            speed = speed,
-                            focus = focus,
-                            condition =  condition,
-                            durability =  durability,
-                            generalSkill = generalSkill,
-                            totalSkillRating = (speed + focus + condition + durability)/4 + generalSkill
-                        )
-                    )
-                }
-            } ,
-                colors = ButtonDefaults.buttonColors(containerColor = APPBAR_GREEN)) {
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = APPBAR_GREEN)
+            ) {
                 Text("Update")
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)) {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+            ) {
                 Text("Cancel")
             }
         }
     )
 }
-
