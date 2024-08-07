@@ -34,6 +34,7 @@ import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.weather.CurrentWeatherModel
 import com.yusuf.feature.R
 import com.yusuf.feature.create_competition.location.LocationViewModel
+import com.yusuf.utils.getLottieAnimationResource
 
 @Composable
 fun Weather(
@@ -83,6 +84,8 @@ fun Weather(
 
 @Composable
 fun WeatherCard(weatherModel: CurrentWeatherModel) {
+    val lottieAnimationResource = weatherModel.weatherModel.firstOrNull()?.getLottieAnimationResource() ?: R.raw.broken_clouds_anim
+
     Card(
         modifier = Modifier
             .padding(16.dp)
@@ -97,7 +100,7 @@ fun WeatherCard(weatherModel: CurrentWeatherModel) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Static Lottie animation for weather icon
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.clear_sky_anim))
+            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(lottieAnimationResource))
             val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
 
             LottieAnimation(
