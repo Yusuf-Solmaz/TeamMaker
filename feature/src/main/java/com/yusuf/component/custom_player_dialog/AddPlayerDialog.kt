@@ -1,7 +1,12 @@
 package com.yusuf.component.custom_player_dialog
 
+import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,12 +27,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderColors
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -47,15 +51,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ComponentActivity
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.material.snackbar.Snackbar
 import com.yusuf.component.DividerTextComponent
 import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
+import com.yusuf.domain.repository.firebase.image.PhotoRepository
 import com.yusuf.feature.R
 import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.theme.LIGHT_GREEN
-import com.yusuf.theme.PurpleGrey80
 import com.yusuf.theme.YELLOW
+
 
 @Composable
 fun AddPlayerDialog(
@@ -82,24 +89,41 @@ fun AddPlayerDialog(
         isGeneralSkillUsed = true
     }
 
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        profilePhotoUri = uri
+    val context = LocalContext.current
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            profilePhotoUri = result.data?.data
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            val intentToGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            galleryLauncher.launch(intentToGallery)
+        } else {
+            Toast.makeText(context, "Permission denied, cannot access gallery", Toast.LENGTH_SHORT).show()
+        }
     }
 
     AlertDialog(
         containerColor = LIGHT_GREEN,
         onDismissRequest = onDismiss,
-        title = { Text("Add Player",
-            style = TextStyle(
-                color = Color.White,
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.main_title))
+        title = {
+            Text(
+                "Add Player",
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.main_title))
+                )
             )
-        )
-                },
+        },
         text = {
             Column(
                 modifier = Modifier
@@ -111,7 +135,13 @@ fun AddPlayerDialog(
                         .size(100.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.surface)
-                        .clickable { launcher.launch("image/*") }
+                        .clickable {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                            } else {
+                                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            }
+                        }
                         .align(Alignment.CenterHorizontally)
                 ) {
                     if (profilePhotoUri != null) {
@@ -162,12 +192,11 @@ fun AddPlayerDialog(
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("General Skill: $generalSkill", fontSize = 16.sp,color = Color.White)
+                        Text("General Skill: $generalSkill", fontSize = 16.sp, color = Color.White)
                         Slider(
                             colors = SliderDefaults.colors(
                                 thumbColor = if (isGeneralSkillUsed) APPBAR_GREEN else YELLOW,
                                 activeTrackColor = APPBAR_GREEN,
-
                             ),
                             value = generalSkill.toFloat(),
                             onValueChange = { generalSkill = it.toInt() },
@@ -183,7 +212,7 @@ fun AddPlayerDialog(
                             )
 
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("Speed: $speed", fontSize = 16.sp,color = Color.White)
+                            Text("Speed: $speed", fontSize = 16.sp, color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
                                     thumbColor = if (speed != 0) APPBAR_GREEN else YELLOW,
@@ -196,7 +225,7 @@ fun AddPlayerDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Condition: $condition", fontSize = 16.sp,color = Color.White)
+                            Text("Condition: $condition", fontSize = 16.sp, color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
                                     thumbColor = if (condition != 0) APPBAR_GREEN else YELLOW,
@@ -209,7 +238,7 @@ fun AddPlayerDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Focus: $focus", fontSize = 16.sp,color = Color.White)
+                            Text("Focus: $focus", fontSize = 16.sp, color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
                                     thumbColor = if (focus != 0) APPBAR_GREEN else YELLOW,
@@ -222,7 +251,7 @@ fun AddPlayerDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Durability: $durability", fontSize = 16.sp,color = Color.White)
+                            Text("Durability: $durability", fontSize = 16.sp, color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
                                     thumbColor = if (durability != 0) APPBAR_GREEN else YELLOW,
@@ -242,7 +271,7 @@ fun AddPlayerDialog(
         confirmButton = {
             Button(onClick = {
                 if (profilePhotoUri == null || firstName.isBlank() || lastName.isBlank() || position.isBlank()) {
-                    Toast.makeText(context,"Please fill all fields.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Please fill all fields.", Toast.LENGTH_SHORT).show()
                     return@Button
                 }
                 onAddPlayer(
@@ -257,7 +286,7 @@ fun AddPlayerDialog(
                         condition = condition,
                         durability = durability,
                         generalSkill = generalSkill,
-                        totalSkillRating = (speed + focus + condition + durability)/4 + generalSkill
+                        totalSkillRating = (speed + focus + condition + durability) / 4 + generalSkill
                     )
                 )
 
@@ -277,4 +306,3 @@ fun AddPlayerDialog(
         }
     )
 }
-
