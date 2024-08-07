@@ -35,11 +35,7 @@ fun CompetitionDetailScreen(
 
         Spacer(modifier = Modifier.height(2.dp))
 
-        LocationScreen()
-
-        Spacer(modifier = Modifier.height(2.dp))
-
-        Weather()
+        Weather(location = competitionDetail.location!!, locationName = competitionDetail.locationName!!)
 
         Spacer(modifier = Modifier.height(16.dp))
 

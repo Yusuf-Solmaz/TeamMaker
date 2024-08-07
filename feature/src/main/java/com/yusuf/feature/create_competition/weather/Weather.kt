@@ -1,20 +1,18 @@
 package com.yusuf.feature.create_competition.weather
 
+import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,7 +24,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -43,16 +40,15 @@ import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.weather.CurrentWeatherModel
 import com.yusuf.feature.R
 import com.yusuf.feature.create_competition.location.LocationViewModel
-import com.yusuf.theme.DARK_BLUE
 import com.yusuf.utils.getLottieAnimationResource
 
 @Composable
 fun Weather(
-    viewModel: WeatherViewModel = hiltViewModel(),
-    locationViewModel: LocationViewModel = hiltViewModel()
+    weatherViewModel: WeatherViewModel = hiltViewModel(),
+    location: Location,
+    locationName: String
 ) {
-    val currentWeatherState by viewModel.currentWeatherUIState.collectAsState()
-    val locationState by locationViewModel.locationUIState.collectAsState()
+    val currentWeatherState by weatherViewModel.currentWeatherUIState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -70,7 +66,7 @@ fun Weather(
 //                Text(text = "Min Temp: ${weather?.mainModel?.tempMin}°C")
 //                Text(text = "Max Temp: ${weather?.mainModel?.tempMax}°C")
 //                Text(text = "Weather: ${weather?.weatherModel?.firstOrNull()?.main}")
-                WeatherCard(weatherModel = currentWeatherState.currentWeather!!)
+                WeatherCard(weatherModel = currentWeatherState.currentWeather!!, locationName = locationName)
             }
             currentWeatherState.error != null -> {
                 val errorMessage = currentWeatherState.error
@@ -80,20 +76,18 @@ fun Weather(
     }
 
     // Trigger fetching weather data
-    LaunchedEffect(locationState.location) {
-        locationState.location?.let { location ->
+    LaunchedEffect(true) {
             try {
                 Log.d("WeatherComponent", "Fetching weather data for location: ${location.latitude}, ${location.longitude}")
-                viewModel.getCurrentWeather(lat = location.latitude, lon = location.longitude)
+                weatherViewModel.getCurrentWeather(lat = location.latitude, lon = location.longitude)
             } catch (e: Exception) {
                 Log.e("WeatherComponent", "Error fetching weather data", e)
             }
-        }
     }
 }
 
 @Composable
-fun WeatherCard(weatherModel: CurrentWeatherModel) {
+fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
     val lottieAnimationResource = weatherModel.weatherModel.firstOrNull()?.getLottieAnimationResource() ?: R.raw.broken_clouds_anim
 
     Card(
@@ -150,6 +144,15 @@ fun WeatherCard(weatherModel: CurrentWeatherModel) {
                         color = Color.Black,
                     )
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = locationName,
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                )
+
                 }
         }
     }
