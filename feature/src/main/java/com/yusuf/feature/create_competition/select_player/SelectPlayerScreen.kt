@@ -221,14 +221,13 @@ fun SelectPlayerScreen(
                     }
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(24.dp),
-                contentPadding = PaddingValues(),
+                    .width(250.dp)
+                    .align(Alignment.CenterHorizontally),
                 colors = ButtonDefaults.buttonColors(Color.White)
             ) {
                 Box(
                     modifier = Modifier
-                        .width(250.dp)
+                        .fillMaxWidth()
                         .heightIn(34.dp)
                         .background(
                             brush = Brush.verticalGradient(
