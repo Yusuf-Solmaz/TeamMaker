@@ -1,12 +1,13 @@
-package com.yusuf.feature.create_competition
+package com.yusuf.feature.create_competition.date_time
 
-import android.graphics.drawable.shapes.Shape
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -30,7 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.time.Instant
 import java.time.LocalDate
@@ -43,7 +43,6 @@ import java.time.format.DateTimeFormatter
 fun DatePickerWithDialog(
     modifier: Modifier = Modifier,
     onDateSelected: (LocalDate) -> Unit,
-
 ) {
     val dateState = rememberDatePickerState()
     val millisToLocalDate = dateState.selectedDateMillis?.let {
@@ -58,18 +57,29 @@ fun DatePickerWithDialog(
 
     Card(
         modifier = Modifier
-            .size(width = 100.dp, height = 120.dp),
+            .size(width = 100.dp, height = 100.dp)
+            ,
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(8.dp)
+
     ) {
+        Box(
+            Modifier.fillMaxSize()
+                .clickable {
+                    showDialog = true
+                }
+        ){
+
         Column(
             modifier = modifier
                 .background(color = MaterialTheme.colorScheme.surface)
-                .padding(10.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            IconButton(onClick = { showDialog = true }) {
+            IconButton(onClick = {
+                showDialog = true
+            }) {
                 Icon(Icons.Default.DateRange, contentDescription = "Select Date")
             }
             Text(
@@ -104,6 +114,7 @@ fun DatePickerWithDialog(
                     )
                 }
             }
+        }
         }
     }
 }
