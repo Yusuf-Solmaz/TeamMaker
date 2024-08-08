@@ -211,6 +211,7 @@ fun SelectPlayerScreen(
                     } else if (timePicker.isEmpty()) {
                         Toast.makeText(context, "Please select a time", Toast.LENGTH_SHORT).show()
                     } else if (datePicker.isEmpty()) {
+                        Log.d("SelectPlayerScreen", "Selected date: $datePicker")
                         Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
                     }
                     else {
