@@ -2,6 +2,7 @@ package com.yusuf.feature.create_competition.location
 
 import android.content.Intent
 import android.Manifest
+import android.location.Location
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
@@ -54,7 +55,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun LocationScreen(
     modifier: Modifier = Modifier,
-    viewModel: LocationViewModel = hiltViewModel()
+    viewModel: LocationViewModel = hiltViewModel(),
+    // Location - location
+    location: (location: Location, locationName: String) -> Unit
 ) {
     val uiState by viewModel.locationUIState.collectAsState()
     val context = LocalContext.current
@@ -124,6 +127,7 @@ fun LocationScreen(
                 LocationCard(error = uiState.error)
             }
             uiState.location != null -> {
+                location(uiState.location!!, uiState.locationName!!)
                 LocationCard(
                     locationName = uiState.locationName ?: "Unknown city"
                 )
@@ -144,7 +148,7 @@ fun LocationCard(
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
-            .size(width = 200.dp, height = 100.dp)
+            .size(width = 200.dp, height = 80.dp)
             .padding(8.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ){

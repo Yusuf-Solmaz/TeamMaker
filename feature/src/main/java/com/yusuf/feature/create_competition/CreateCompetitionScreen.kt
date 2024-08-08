@@ -1,6 +1,7 @@
 package com.yusuf.feature.create_competition
 
 import SelectPlayerScreen
+import android.location.Location
 import androidx.compose.ui.Modifier
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -31,6 +32,8 @@ import java.time.LocalDate
 fun CreateCompetitionScreen(navController: NavController) {
     var selectedTime by remember { mutableStateOf("") }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    var selectedLocation by remember { mutableStateOf<Location?>(null) }
+    var selectedLocationName by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -69,12 +72,16 @@ fun CreateCompetitionScreen(navController: NavController) {
             LocationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
-            )
+            ){
+                location, locationName ->
+                selectedLocation = location
+                selectedLocationName = locationName
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        SelectPlayerScreen(navController, timePicker = selectedTime)
+        SelectPlayerScreen(navController, timePicker = selectedTime, location = selectedLocation, locationName = selectedLocationName)
     }
 }
 

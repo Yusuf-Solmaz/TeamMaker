@@ -1,3 +1,4 @@
+import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -76,7 +77,9 @@ import com.yusuf.utils.SharedPreferencesHelper
 fun SelectPlayerScreen(
     navController: NavController,
     teamBalancerViewModel: TeamBalancerViewModel = hiltViewModel(),
-    timePicker: String = ""
+    timePicker: String = "",
+    location: Location? = null,
+    locationName: String? = null
 ) {
     val viewModel: SelectPlayerViewModel = hiltViewModel()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
@@ -99,7 +102,9 @@ fun SelectPlayerScreen(
                 CompetitionDetail(
                     selectedTime = timePicker,
                     firstBalancedTeam = teamBalancerUIState.teams!!.first,
-                    secondBalancedTeam = teamBalancerUIState.teams!!.second
+                    secondBalancedTeam = teamBalancerUIState.teams!!.second,
+                    location = location,
+                    locationName = locationName
                 )
             )
             navController.navigate(route)

@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.feature.create_competition.location.LocationScreen
-import com.yusuf.feature.create_competition.weather.Weather
+import com.yusuf.feature.competition_detail.weather.Weather
 
 @Composable
 fun CompetitionDetailScreen(
@@ -35,11 +35,7 @@ fun CompetitionDetailScreen(
 
         Spacer(modifier = Modifier.height(2.dp))
 
-        LocationScreen()
-
-        Spacer(modifier = Modifier.height(2.dp))
-
-        Weather()
+        Weather(location = competitionDetail.location!!, locationName = competitionDetail.locationName!!)
 
         Spacer(modifier = Modifier.height(16.dp))
 
