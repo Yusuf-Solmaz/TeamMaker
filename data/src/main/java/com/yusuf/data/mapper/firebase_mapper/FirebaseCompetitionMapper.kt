@@ -1,4 +1,4 @@
-package com.yusuf.data.mapper
+package com.yusuf.data.mapper.firebase_mapper
 
 import com.yusuf.data.remote.dto.firebase_dto.CompetitionDataDto
 import com.yusuf.domain.model.firebase.CompetitionData

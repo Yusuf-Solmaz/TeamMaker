@@ -9,30 +9,34 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
+import com.yusuf.domain.model.firebase.SavedCompetitionsModel
+import com.yusuf.feature.competition_detail.viewmodel.CompetitionDetailViewModel
 import com.yusuf.feature.create_competition.location.LocationScreen
 import com.yusuf.feature.competition_detail.weather.Weather
 
 @Composable
 fun CompetitionDetailScreen(
     navController: NavController,
-    competitionDetail: CompetitionDetail
+    competitionDetail: CompetitionDetail?=null,
+    competitionDetailViewModel: CompetitionDetailViewModel = hiltViewModel()
 ) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    val saveCompetitionState by competitionDetailViewModel.competitionDetailState.collectAsState()
+
+    if (competitionDetail != null) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -44,11 +48,6 @@ fun CompetitionDetailScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = competitionDetail.selectedTime,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
                 Text(
                     text = competitionDetail.selectedDate,
                     fontSize = 24.sp,
@@ -70,7 +69,24 @@ fun CompetitionDetailScreen(
                 firstTeam = competitionDetail.firstBalancedTeam,
                 secondTeam = competitionDetail.secondBalancedTeam
             )
+
+            val savedCompetition = SavedCompetitionsModel(
+                firstTeam = competitionDetail.firstBalancedTeam,
+                secondTeam = competitionDetail.secondBalancedTeam,
+                imageUrl = "",
+                competitionTime = competitionDetail.selectedTime,
+                competitionDate = "",
+                locationName = "",
+                weather = ""
+            )
+            Button(onClick = {
+                competitionDetailViewModel.saveCompetition(savedCompetition)
+            }) {
+                Text(text = "Save Competition")
+            }
         }
+    } else {
+        Text(text = "No competition detail found")
     }
 }
 

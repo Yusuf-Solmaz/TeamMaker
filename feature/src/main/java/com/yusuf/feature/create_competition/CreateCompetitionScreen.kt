@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +27,7 @@ import androidx.navigation.NavController
 import com.yusuf.feature.create_competition.date_time.DatePickerWithDialog
 import com.yusuf.feature.create_competition.date_time.TimePicker
 import com.yusuf.feature.create_competition.location.LocationScreen
+import com.yusuf.navigation.NavigationGraph
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -42,9 +45,9 @@ fun CreateCompetitionScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .wrapContentHeight(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
@@ -63,7 +66,8 @@ fun CreateCompetitionScreen(navController: NavController) {
         }
 
         Row (
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .wrapContentHeight(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
