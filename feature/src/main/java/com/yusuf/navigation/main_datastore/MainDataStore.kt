@@ -14,7 +14,7 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-val Context.myPreferencesDataStore: DataStore<Preferences> by preferencesDataStore( "settings")
+private val Context.myPreferencesDataStore: DataStore<Preferences> by preferencesDataStore( "settings")
 
 @Singleton
 class MainDataStore @Inject constructor(
@@ -25,6 +25,7 @@ class MainDataStore @Inject constructor(
     private object PreferencesKeys {
         val APP_ENTRY_KEY = booleanPreferencesKey("app_entry")
         val SHOW_TOOLTIP_KEY = booleanPreferencesKey("show_tooltip")
+        val GALLERY_PERMISSION_KEY = booleanPreferencesKey("gallery_permission")
     }
 
     val readAppEntry = myPreferencesDataStore.data.catch { exception ->
@@ -47,6 +48,16 @@ class MainDataStore @Inject constructor(
         preferences[PreferencesKeys.SHOW_TOOLTIP_KEY] ?: true
     }
 
+    val readGalleryPermission = myPreferencesDataStore.data.catch { exception ->
+        if (exception is IOException) {
+            emit(emptyPreferences())
+        } else {
+            throw exception
+        }
+    }.map { preferences ->
+        preferences[PreferencesKeys.GALLERY_PERMISSION_KEY] ?: false
+    }
+
     suspend fun saveAppEntry() {
         myPreferencesDataStore.edit { preferences ->
             preferences[PreferencesKeys.APP_ENTRY_KEY] = false
@@ -56,6 +67,12 @@ class MainDataStore @Inject constructor(
     suspend fun saveShowTooltip(show: Boolean) {
         myPreferencesDataStore.edit { preferences ->
             preferences[PreferencesKeys.SHOW_TOOLTIP_KEY] = show
+        }
+    }
+
+    suspend fun saveGalleryPermission(granted: Boolean) {
+        myPreferencesDataStore.edit { preferences ->
+            preferences[PreferencesKeys.GALLERY_PERMISSION_KEY] = granted
         }
     }
 }

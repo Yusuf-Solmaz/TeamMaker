@@ -1,11 +1,15 @@
 package com.yusuf.feature.home
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -22,7 +26,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -45,7 +48,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
@@ -57,6 +59,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
@@ -72,10 +75,13 @@ import com.yusuf.component.custom_competition_dialog.UpdateCompetitionDialog
 import com.yusuf.feature.home.slideable_image.ImageSliderScreen
 import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 import com.yusuf.navigation.NavigationGraph
-import com.yusuf.theme.DARK_BLUE
+import com.yusuf.navigation.main_datastore.MainDataStore
 import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.utils.SharedPreferencesHelper
 import com.yusuf.utils.default_competition.toCompetition
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -93,6 +99,8 @@ fun ChooseCompetitionTypeScreen(
 
     val context = LocalContext.current
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
+    val mainDataStore = remember { MainDataStore(context) }
+    val galleryPermissionGranted by mainDataStore.readGalleryPermission.collectAsState(initial = false)
 
     val sharedPreferencesHelper = SharedPreferencesHelper(context)
 
@@ -100,16 +108,43 @@ fun ChooseCompetitionTypeScreen(
         (context as? Activity)?.finish()
     }
 
-    LaunchedEffect(Unit) {
-        competitionViewModel.getAllCompetitions()
+    // Initialize image picker launcher
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        selectedImageUri.value = uri
     }
 
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri: Uri? ->
-            selectedImageUri.value = uri
+    // Initialize permission launcher
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // Save permission granted status in DataStore
+            CoroutineScope(Dispatchers.IO).launch {
+                mainDataStore.saveGalleryPermission(true)
+            }
+        } else {
+            Toast.makeText(context, "Gallery permission is required to select an image.", Toast.LENGTH_SHORT).show()
         }
-    )
+    }
+
+    val apiLevel = Build.VERSION.SDK_INT
+    LaunchedEffect(Unit) {
+        competitionViewModel.getAllCompetitions()
+
+        // Only request permission if needed (API level below 33)
+        if (apiLevel < 33 && !galleryPermissionGranted) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            } else {
+                // Save permission granted status in DataStore
+                CoroutineScope(Dispatchers.IO).launch {
+                    mainDataStore.saveGalleryPermission(true)
+                }
+            }
+        }
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -137,7 +172,12 @@ fun ChooseCompetitionTypeScreen(
                             }
                         },
                         onImagePick = {
-                            imagePickerLauncher.launch("image/*")
+                            if (apiLevel >= 33 || galleryPermissionGranted) {
+                                imagePickerLauncher.launch("image/*")
+                            } else {
+                                // Request permission if not granted
+                                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            }
                         },
                         selectedImageUri = selectedImageUri.value,
                         context = context
@@ -159,7 +199,12 @@ fun ChooseCompetitionTypeScreen(
                                 openUpdateDialog.value = false
                             },
                             onImagePick = {
-                                imagePickerLauncher.launch("image/*")
+                                if (apiLevel >= 33 || galleryPermissionGranted) {
+                                    imagePickerLauncher.launch("image/*")
+                                } else {
+                                    // Request permission if not granted
+                                    permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                }
                             },
                             selectedImageUri = selectedImageUri.value,
                             context = context
@@ -211,8 +256,8 @@ fun ChooseCompetitionTypeScreen(
                         ImageSliderScreen()
 
                         Row (
-                            modifier = Modifier.
-                                fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
                         ){
                             Text(
                                 textAlign = TextAlign.Start,
@@ -288,6 +333,10 @@ fun ChooseCompetitionTypeScreen(
         }
     )
 }
+
+
+
+
 
 @Composable
 fun CompetitionCard(
