@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import android.net.Uri
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -24,7 +25,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -107,6 +107,14 @@ fun ChooseCompetitionTypeScreen(
         (context as? Activity)?.finish()
     }
 
+    // Initialize image picker launcher
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        selectedImageUri.value = uri
+    }
+
+    // Initialize permission launcher
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -115,6 +123,8 @@ fun ChooseCompetitionTypeScreen(
             CoroutineScope(Dispatchers.IO).launch {
                 mainDataStore.saveGalleryPermission(true)
             }
+        } else {
+            Toast.makeText(context, "Gallery permission is required to select an image.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -122,6 +132,7 @@ fun ChooseCompetitionTypeScreen(
         competitionViewModel.getAllCompetitions()
 
         if (!galleryPermissionGranted) {
+            // Check if the permission is already granted
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             } else {
@@ -132,13 +143,6 @@ fun ChooseCompetitionTypeScreen(
             }
         }
     }
-
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri: Uri? ->
-            selectedImageUri.value = uri
-        }
-    )
 
     Scaffold(
         floatingActionButton = {
@@ -166,7 +170,12 @@ fun ChooseCompetitionTypeScreen(
                             }
                         },
                         onImagePick = {
-                            imagePickerLauncher.launch("image/*")
+                            if (galleryPermissionGranted) {
+                                imagePickerLauncher.launch("image/*")
+                            } else {
+                                // Request permission if not granted
+                                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            }
                         },
                         selectedImageUri = selectedImageUri.value,
                         context = context
@@ -188,7 +197,12 @@ fun ChooseCompetitionTypeScreen(
                                 openUpdateDialog.value = false
                             },
                             onImagePick = {
-                                imagePickerLauncher.launch("image/*")
+                                if (galleryPermissionGranted) {
+                                    imagePickerLauncher.launch("image/*")
+                                } else {
+                                    // Request permission if not granted
+                                    permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                }
                             },
                             selectedImageUri = selectedImageUri.value,
                             context = context
@@ -317,6 +331,8 @@ fun ChooseCompetitionTypeScreen(
         }
     )
 }
+
+
 
 
 @Composable
