@@ -14,7 +14,8 @@ enum class NavigationGraph(val route: String) {
         COMPETITION_DETAIL("competition_detail/{competitionDetailJson}"),
         LOGIN("login"),
         REGISTER("register"),
-        FORGOT_PASSWORD("forgot_password");
+        FORGOT_PASSWORD("forgot_password"),
+        SAVED_COMPETITIONS("saved_competitions");
 
         companion object {
                 fun getOptionsRoute(competition: Competition): String {

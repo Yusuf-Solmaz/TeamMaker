@@ -27,9 +27,9 @@
     import com.yusuf.feature.options.OptionsScreen
     import com.yusuf.feature.splash_screen.SplashScreen
     import com.yusuf.feature.competition_detail.CompetitionDetailScreen
+    import com.yusuf.feature.saved_competitions.SavedCompetitionsScreen
     import com.yusuf.navigation.main_viewmodel.MainViewModel
     import com.yusuf.utils.default_competition.Competition
-
 
     @Composable
     fun TeamMakerNavigation(
@@ -114,6 +114,11 @@
                 composable(NavigationGraph.CREATE_COMPETITION.route) {
                     CreateCompetitionScreen(navController)
                     onTitleChange("Create Competition")
+                }
+
+                composable(NavigationGraph.SAVED_COMPETITIONS.route) {
+                    SavedCompetitionsScreen(navController)
+                    onTitleChange("Saved Competitions")
                 }
             }
         }
