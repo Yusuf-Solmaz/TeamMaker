@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -128,11 +129,12 @@ fun ChooseCompetitionTypeScreen(
         }
     }
 
+    val apiLevel = Build.VERSION.SDK_INT
     LaunchedEffect(Unit) {
         competitionViewModel.getAllCompetitions()
 
-        if (!galleryPermissionGranted) {
-            // Check if the permission is already granted
+        // Only request permission if needed (API level below 33)
+        if (apiLevel < 33 && !galleryPermissionGranted) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             } else {
@@ -170,7 +172,7 @@ fun ChooseCompetitionTypeScreen(
                             }
                         },
                         onImagePick = {
-                            if (galleryPermissionGranted) {
+                            if (apiLevel >= 33 || galleryPermissionGranted) {
                                 imagePickerLauncher.launch("image/*")
                             } else {
                                 // Request permission if not granted
@@ -197,7 +199,7 @@ fun ChooseCompetitionTypeScreen(
                                 openUpdateDialog.value = false
                             },
                             onImagePick = {
-                                if (galleryPermissionGranted) {
+                                if (apiLevel >= 33 || galleryPermissionGranted) {
                                     imagePickerLauncher.launch("image/*")
                                 } else {
                                     // Request permission if not granted
@@ -254,8 +256,8 @@ fun ChooseCompetitionTypeScreen(
                         ImageSliderScreen()
 
                         Row (
-                            modifier = Modifier.
-                            fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
                         ){
                             Text(
                                 textAlign = TextAlign.Start,
@@ -331,6 +333,7 @@ fun ChooseCompetitionTypeScreen(
         }
     )
 }
+
 
 
 
