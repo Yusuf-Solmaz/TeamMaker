@@ -218,7 +218,10 @@ fun SelectPlayerScreen(
                         ).show()
                     } else if (timePicker.isEmpty()) {
                         Toast.makeText(context, "Please select a time", Toast.LENGTH_SHORT).show()
-                    } else {
+                    } else if (datePicker.isEmpty()) {
+                        Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
                         teamBalancerViewModel.createBalancedTeams(selectedPlayers)
                     }
                 },
