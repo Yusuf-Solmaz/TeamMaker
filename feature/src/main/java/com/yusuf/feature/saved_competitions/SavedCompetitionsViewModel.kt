@@ -25,7 +25,11 @@ class SavedCompetitionsViewModel @Inject constructor(
     private val _deleteSavedCompetitionUIState = MutableStateFlow(DeleteSavedCompetitionsUIState())
     val deleteSavedCompetitionUIState : StateFlow<DeleteSavedCompetitionsUIState> = _deleteSavedCompetitionUIState
 
-    fun getSavedCompetitions() {
+    init {
+        getSavedCompetitions()
+    }
+
+    private fun getSavedCompetitions() {
         _getSavedCompetitionsUIState.value =
             _getSavedCompetitionsUIState.value.copy(isLoading = true)
         viewModelScope.launch {

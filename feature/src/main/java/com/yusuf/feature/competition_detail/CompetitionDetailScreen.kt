@@ -53,6 +53,11 @@ fun CompetitionDetailScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
+                    text = competitionDetail.selectedTime,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
                     text = competitionDetail.selectedDate,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
