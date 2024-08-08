@@ -14,6 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +38,7 @@ fun CompetitionDetailScreen(
 ) {
 
     val saveCompetitionState by competitionDetailViewModel.competitionDetailState.collectAsState()
+    var sentWeatherName by remember { mutableStateOf("") }
 
     if (competitionDetail != null) {
         Column(
@@ -61,7 +65,10 @@ fun CompetitionDetailScreen(
             Weather(
                 location = competitionDetail.location!!,
                 locationName = competitionDetail.locationName!!
-            )
+            ){
+                weather ->
+                sentWeatherName = weather
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -75,9 +82,9 @@ fun CompetitionDetailScreen(
                 secondTeam = competitionDetail.secondBalancedTeam,
                 imageUrl = "",
                 competitionTime = competitionDetail.selectedTime,
-                competitionDate = "",
-                locationName = "",
-                weather = ""
+                competitionDate = competitionDetail.selectedDate,
+                locationName = competitionDetail.locationName!!,
+                weather = sentWeatherName
             )
             Button(onClick = {
                 competitionDetailViewModel.saveCompetition(savedCompetition)

@@ -46,7 +46,8 @@ import com.yusuf.utils.getLottieAnimationResource
 fun Weather(
     weatherViewModel: WeatherViewModel = hiltViewModel(),
     location: Location,
-    locationName: String
+    locationName: String,
+    weatherName: (String) -> Unit
 ) {
     val currentWeatherState by weatherViewModel.currentWeatherUIState.collectAsState()
 
@@ -61,6 +62,7 @@ fun Weather(
                 LoadingLottie(R.raw.loading_anim)
             }
             currentWeatherState.currentWeather != null -> {
+                weatherName(currentWeatherState.currentWeather!!.weatherModel.firstOrNull()?.main.orEmpty())
                 WeatherCard(weatherModel = currentWeatherState.currentWeather!!, locationName = locationName)
             }
             currentWeatherState.error != null -> {
