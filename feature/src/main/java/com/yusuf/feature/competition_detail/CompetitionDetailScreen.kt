@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.feature.create_competition.location.LocationScreen
-import com.yusuf.feature.create_competition.weather.Weather
+import com.yusuf.feature.competition_detail.weather.Weather
 
 @Composable
 fun CompetitionDetailScreen(

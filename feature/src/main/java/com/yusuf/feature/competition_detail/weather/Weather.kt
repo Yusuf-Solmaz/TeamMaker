@@ -1,4 +1,4 @@
-package com.yusuf.feature.create_competition.weather
+package com.yusuf.feature.competition_detail.weather
 
 import android.location.Location
 import android.util.Log
@@ -61,11 +61,6 @@ fun Weather(
                 LoadingLottie(R.raw.loading_anim)
             }
             currentWeatherState.currentWeather != null -> {
-//                val weather = currentWeatherState.currentWeather
-//                Text(text = "Current Weather: ${weather?.mainModel?.temp}°C")
-//                Text(text = "Min Temp: ${weather?.mainModel?.tempMin}°C")
-//                Text(text = "Max Temp: ${weather?.mainModel?.tempMax}°C")
-//                Text(text = "Weather: ${weather?.weatherModel?.firstOrNull()?.main}")
                 WeatherCard(weatherModel = currentWeatherState.currentWeather!!, locationName = locationName)
             }
             currentWeatherState.error != null -> {
@@ -111,7 +106,7 @@ fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
             LottieAnimation(
                 composition = composition,
                 progress = progress,
-                modifier = Modifier.size(60.dp)
+                modifier = Modifier.size(80.dp)
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -121,6 +116,15 @@ fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
+                Text(
+                    text = locationName,
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.splash_title_font)),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "${weatherModel.mainModel.temp}°C",
                     style = TextStyle(
@@ -139,21 +143,11 @@ fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
                 Text(
                     text = weatherModel.weatherModel.firstOrNull()?.main.orEmpty(),
                     style = TextStyle(
-                        fontFamily = FontFamily(Font(R.font.splash_title_font)),
                         fontSize = 18.sp,
                         color = Color.Black,
                     )
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = locationName,
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                )
-
-                }
+            }
         }
     }
 }
