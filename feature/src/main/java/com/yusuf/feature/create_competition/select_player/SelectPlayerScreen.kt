@@ -4,19 +4,14 @@ import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,13 +37,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -57,10 +48,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.SubcomposeAsyncImage
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
@@ -78,6 +65,7 @@ fun SelectPlayerScreen(
     navController: NavController,
     teamBalancerViewModel: TeamBalancerViewModel = hiltViewModel(),
     timePicker: String = "",
+    datePicker: String = "",
     location: Location? = null,
     locationName: String? = null
 ) {
@@ -101,6 +89,7 @@ fun SelectPlayerScreen(
             val route = NavigationGraph.getCompetitionDetailsRoute(
                 CompetitionDetail(
                     selectedTime = timePicker,
+                    selectedDate = datePicker,
                     firstBalancedTeam = teamBalancerUIState.teams!!.first,
                     secondBalancedTeam = teamBalancerUIState.teams!!.second,
                     location = location,
@@ -221,7 +210,11 @@ fun SelectPlayerScreen(
                         ).show()
                     } else if (timePicker.isEmpty()) {
                         Toast.makeText(context, "Please select a time", Toast.LENGTH_SHORT).show()
-                    } else {
+                    } else if (datePicker.isEmpty()) {
+                        Log.d("SelectPlayerScreen", "Selected date: $datePicker")
+                        Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
                         teamBalancerViewModel.createBalancedTeams(selectedPlayers)
                     }
                 },
