@@ -76,7 +76,8 @@ import com.yusuf.utils.SharedPreferencesHelper
 fun SelectPlayerScreen(
     navController: NavController,
     teamBalancerViewModel: TeamBalancerViewModel = hiltViewModel(),
-    timePicker: String = ""
+    timePicker: String = "",
+    datePicker: String = ""
 ) {
     val viewModel: SelectPlayerViewModel = hiltViewModel()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
@@ -98,6 +99,7 @@ fun SelectPlayerScreen(
             val route = NavigationGraph.getCompetitionDetailsRoute(
                 CompetitionDetail(
                     selectedTime = timePicker,
+                    selectedDate = datePicker,
                     firstBalancedTeam = teamBalancerUIState.teams!!.first,
                     secondBalancedTeam = teamBalancerUIState.teams!!.second
                 )

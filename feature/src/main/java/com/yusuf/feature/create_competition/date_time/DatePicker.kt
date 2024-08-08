@@ -42,7 +42,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun DatePickerWithDialog(
     modifier: Modifier = Modifier,
-    onDateSelected: (LocalDate) -> Unit,
+    onDateSelected: (String) -> Unit,
 ) {
     val dateState = rememberDatePickerState()
     val millisToLocalDate = dateState.selectedDateMillis?.let {
@@ -94,7 +94,7 @@ fun DatePickerWithDialog(
                         Button(
                             onClick = {
                                 showDialog = false
-                                millisToLocalDate?.let { onDateSelected(it) }
+                                millisToLocalDate?.let { onDateSelected(it.toString()) }
                             }
                         ) {
                             Text(text = "OK")

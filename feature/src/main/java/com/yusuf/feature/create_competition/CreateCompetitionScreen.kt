@@ -30,7 +30,7 @@ import java.time.LocalDate
 @Composable
 fun CreateCompetitionScreen(navController: NavController) {
     var selectedTime by remember { mutableStateOf("") }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    var selectedDate by remember { mutableStateOf("")}
 
     Column(
         modifier = Modifier
@@ -51,7 +51,6 @@ fun CreateCompetitionScreen(navController: NavController) {
                     selectedTime = time
                 }
             )
-
 
             DatePickerWithDialog(
                 onDateSelected = { date ->
@@ -74,7 +73,7 @@ fun CreateCompetitionScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        SelectPlayerScreen(navController, timePicker = selectedTime)
+        SelectPlayerScreen(navController, timePicker = selectedTime, datePicker = selectedDate)
     }
 }
 
