@@ -83,6 +83,7 @@ fun SelectPlayerScreen(
     }
 
     LaunchedEffect(teamBalancerUIState) {
+        Log.d("SelectPlayerScreen", "Team balancer UI state changed: $teamBalancerUIState")
         if (teamBalancerUIState.teams != null) {
             Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
 
@@ -97,6 +98,8 @@ fun SelectPlayerScreen(
                 )
             )
             navController.navigate(route)
+
+            teamBalancerUIState.teams = null
         }
         if (teamBalancerUIState.isLoading) {
             Log.d("SelectPlayerScreen", "Loading teams...")
@@ -200,12 +203,6 @@ fun SelectPlayerScreen(
                         Toast.makeText(
                             context,
                             "Please select at least one player",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else if (selectedPlayers.size % 2 != 0) {
-                        Toast.makeText(
-                            context,
-                            "The number of selected players must be even",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else if (timePicker.isEmpty()) {
