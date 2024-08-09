@@ -34,56 +34,70 @@ import com.yusuf.navigation.NavigationGraph
 @Composable
 fun CompetitionDetailScreen(
     navController: NavController,
-    competitionDetail: CompetitionDetail?=null,
-    savedCompetitionDetail: SavedCompetitionsModel?=null,
+    competitionDetail: CompetitionDetail? = null,
+    savedCompetitionDetail: SavedCompetitionsModel? = null,
     competitionDetailViewModel: CompetitionDetailViewModel = hiltViewModel()
 ) {
 
     val saveCompetitionState by competitionDetailViewModel.competitionDetailState.collectAsState()
     var sentWeatherName by remember { mutableStateOf("") }
 
-    if (competitionDetail != null) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .weight(1f) // Bu kısmı esnek yaparak içeriğin üstte hizalanmasını sağlar
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = competitionDetail.selectedTime,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = competitionDetail.selectedDate,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Log.d("MatchDetailScreen", "CompetitionDetail: $competitionDetail")
 
+                Text(
+                    text = competitionDetail?.selectedTime
+                        ?: savedCompetitionDetail?.competitionTime!!,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = competitionDetail?.selectedDate
+                        ?: savedCompetitionDetail?.competitionDate!!,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Log.d("MatchDetailScreen", "CompetitionDetail: $competitionDetail")
+            }
             Spacer(modifier = Modifier.height(2.dp))
 
-            Weather(
-                location = competitionDetail.location!!,
-                locationName = competitionDetail.locationName!!
-            ){
-                weather ->
-                sentWeatherName = weather
+            if (competitionDetail != null) {
+                Weather(
+                    location = competitionDetail.location!!,
+                    locationName = competitionDetail.locationName!!
+                ) { weather ->
+                    sentWeatherName = weather
+                }
+            } else {
+                // weather card
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             TeamListScreen(
-                firstTeam = competitionDetail.firstBalancedTeam,
-                secondTeam = competitionDetail.secondBalancedTeam
+                firstTeam = competitionDetail?.firstBalancedTeam
+                    ?: savedCompetitionDetail?.firstTeam!!,
+                secondTeam = competitionDetail?.secondBalancedTeam
+                    ?: savedCompetitionDetail?.secondTeam!!
             )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
 
+        if (competitionDetail != null) {
             val savedCompetition = SavedCompetitionsModel(
                 firstTeam = competitionDetail.firstBalancedTeam,
                 secondTeam = competitionDetail.secondBalancedTeam,
@@ -100,8 +114,6 @@ fun CompetitionDetailScreen(
                 Text(text = "Save Competition")
             }
         }
-    } else {
-        Text(text = savedCompetitionDetail!!.weather)
     }
 }
 
