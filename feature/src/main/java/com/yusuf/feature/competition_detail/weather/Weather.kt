@@ -38,6 +38,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.weather.CurrentWeatherModel
+import com.yusuf.domain.model.weather.WeatherModel
 import com.yusuf.feature.R
 import com.yusuf.feature.create_competition.location.LocationViewModel
 import com.yusuf.utils.getLottieAnimationResource
@@ -46,7 +47,8 @@ import com.yusuf.utils.getLottieAnimationResource
 fun Weather(
     weatherViewModel: WeatherViewModel = hiltViewModel(),
     location: Location,
-    locationName: String
+    locationName: String,
+    weatherName: (CurrentWeatherModel) -> Unit
 ) {
     val currentWeatherState by weatherViewModel.currentWeatherUIState.collectAsState()
 
@@ -61,6 +63,7 @@ fun Weather(
                 LoadingLottie(R.raw.loading_anim)
             }
             currentWeatherState.currentWeather != null -> {
+                weatherName(currentWeatherState.currentWeather!!)
                 WeatherCard(weatherModel = currentWeatherState.currentWeather!!, locationName = locationName)
             }
             currentWeatherState.error != null -> {
@@ -83,7 +86,7 @@ fun Weather(
 
 @Composable
 fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
-    val lottieAnimationResource = weatherModel.weatherModel.firstOrNull()?.getLottieAnimationResource() ?: R.raw.broken_clouds_anim
+    val lottieAnimationResource = weatherModel.weatherModel?.firstOrNull()?.getLottieAnimationResource() ?: R.raw.broken_clouds_anim
 
     Card(
         modifier = Modifier
@@ -126,7 +129,7 @@ fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "${weatherModel.mainModel.temp}°C",
+                    text = "${weatherModel.mainModel?.temp}°C",
                     style = TextStyle(
                         fontSize = 18.sp,
                         color = Color.Black,
@@ -134,14 +137,14 @@ fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = "Min: ${weatherModel.mainModel.tempMin}°C Max: ${weatherModel.mainModel.tempMax}°C",
+                    text = "Min: ${weatherModel.mainModel?.tempMin}°C Max: ${weatherModel.mainModel?.tempMax}°C",
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = weatherModel.weatherModel.firstOrNull()?.main.orEmpty(),
+                    text = weatherModel.weatherModel?.firstOrNull()?.main.orEmpty(),
                     style = TextStyle(
                         fontSize = 18.sp,
                         color = Color.Black,

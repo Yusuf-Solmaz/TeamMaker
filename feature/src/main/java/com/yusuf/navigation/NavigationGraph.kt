@@ -3,6 +3,7 @@ package com.yusuf.navigation
 import android.net.Uri
 import com.google.gson.Gson
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
+import com.yusuf.domain.model.firebase.SavedCompetitionsModel
 import com.yusuf.utils.default_competition.Competition
 
 enum class NavigationGraph(val route: String) {
@@ -12,6 +13,7 @@ enum class NavigationGraph(val route: String) {
         PLAYER_LIST("player_list"),
         CREATE_COMPETITION("create_competition"),
         COMPETITION_DETAIL("competition_detail/{competitionDetailJson}"),
+        SAVED_COMPETITION_DETAIL("saved_competition_detail/{savedCompetitionDetailJson}"),
         LOGIN("login"),
         REGISTER("register"),
         FORGOT_PASSWORD("forgot_password"),
@@ -27,6 +29,12 @@ enum class NavigationGraph(val route: String) {
                         val gson = Gson()
                         val competitionDetailJson = gson.toJson(competitionDetail)
                         return "competition_detail/${Uri.encode(competitionDetailJson)}"
+                }
+
+                fun getSavedCompetitionDetailsRoute(savedCompetitionsModel: SavedCompetitionsModel): String {
+                        val gson = Gson()
+                        val savedCompetitionDetailJson = gson.toJson(savedCompetitionsModel)
+                        return "saved_competition_detail/${Uri.encode(savedCompetitionDetailJson)}"
                 }
         }
 }
