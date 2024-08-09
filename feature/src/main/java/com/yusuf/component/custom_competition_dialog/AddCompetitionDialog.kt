@@ -48,8 +48,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.yusuf.feature.R
 import com.yusuf.theme.APPBAR_GREEN
+import com.yusuf.theme.CREAM
 import com.yusuf.theme.GREEN
+import com.yusuf.theme.GREY
+import com.yusuf.theme.LIGHT_BLACK
 import com.yusuf.theme.LIGHT_GREEN
+import com.yusuf.theme.ORANGE
 import com.yusuf.theme.YELLOW
 import com.yusuf.utils.default_competition.Competition
 import com.yusuf.utils.default_competition.predefinedCompetitions
@@ -68,7 +72,7 @@ fun AddCompetitionDialog(
 
 
     AlertDialog(
-        containerColor = LIGHT_GREEN,
+        containerColor = LIGHT_BLACK,
         onDismissRequest = onDismiss,
         title = { Text(text = "Add Competition",
             style = TextStyle(
@@ -157,15 +161,15 @@ fun AddCompetitionDialog(
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = LIGHT_GREEN,
-                        focusedContainerColor = LIGHT_GREEN,
-                        focusedTextColor = Color.White,
-                        focusedIndicatorColor = Color.White,
-                        unfocusedIndicatorColor = Color.White,
-                        unfocusedLabelColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        cursorColor = Color.White,
-                        unfocusedTextColor = Color.White
+                        unfocusedContainerColor = Color.White,
+                        focusedContainerColor = Color.White,
+                        focusedTextColor = Color.Black,
+                        focusedIndicatorColor = Color.Black,
+                        unfocusedIndicatorColor = Color.Black,
+                        unfocusedLabelColor =Color.Black,
+                        focusedLabelColor = Color.Black,
+                        cursorColor = Color.Black,
+                        unfocusedTextColor = Color.Black
                     ),
                     value = customCompetitionName,
                     onValueChange = {
