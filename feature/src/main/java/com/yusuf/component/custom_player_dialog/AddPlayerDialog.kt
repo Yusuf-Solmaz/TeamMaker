@@ -58,8 +58,10 @@ import com.yusuf.component.TextFieldComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.theme.APPBAR_GREEN
+import com.yusuf.theme.LIGHT_BLACK
 import com.yusuf.theme.LIGHT_GREEN
 import com.yusuf.theme.PurpleGrey80
+import com.yusuf.theme.RED
 import com.yusuf.theme.YELLOW
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -109,7 +111,7 @@ fun AddPlayerDialog(
     val hasGalleryPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
 
     AlertDialog(
-        containerColor = LIGHT_GREEN,
+        containerColor = LIGHT_BLACK,
         onDismissRequest = onDismiss,
         title = {
             Text("Add Player",
@@ -196,7 +198,7 @@ fun AddPlayerDialog(
                         Text("General Skill: $generalSkill", fontSize = 16.sp,color = Color.White)
                         Slider(
                             colors = SliderDefaults.colors(
-                                thumbColor = if (isGeneralSkillUsed) APPBAR_GREEN else YELLOW,
+                                thumbColor = if (isGeneralSkillUsed) APPBAR_GREEN else RED,
                                 activeTrackColor = APPBAR_GREEN,
                             ),
                             value = generalSkill.toFloat(),
@@ -214,7 +216,7 @@ fun AddPlayerDialog(
                             Text("Speed: $speed", fontSize = 16.sp,color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
-                                    thumbColor = if (speed != 0) APPBAR_GREEN else YELLOW,
+                                    thumbColor = if (speed != 0) APPBAR_GREEN else RED,
                                     activeTrackColor = APPBAR_GREEN
                                 ),
                                 value = speed.toFloat(),
@@ -227,7 +229,7 @@ fun AddPlayerDialog(
                             Text("Condition: $condition", fontSize = 16.sp,color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
-                                    thumbColor = if (condition != 0) APPBAR_GREEN else YELLOW,
+                                    thumbColor = if (condition != 0) APPBAR_GREEN else RED,
                                     activeTrackColor = APPBAR_GREEN
                                 ),
                                 value = condition.toFloat(),
@@ -240,7 +242,7 @@ fun AddPlayerDialog(
                             Text("Focus: $focus", fontSize = 16.sp,color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
-                                    thumbColor = if (focus != 0) APPBAR_GREEN else YELLOW,
+                                    thumbColor = if (focus != 0) APPBAR_GREEN else RED,
                                     activeTrackColor = APPBAR_GREEN
                                 ),
                                 value = focus.toFloat(),
@@ -253,7 +255,7 @@ fun AddPlayerDialog(
                             Text("Durability: $durability", fontSize = 16.sp,color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
-                                    thumbColor = if (durability != 0) APPBAR_GREEN else YELLOW,
+                                    thumbColor = if (durability != 0) APPBAR_GREEN else RED,
                                     activeTrackColor = APPBAR_GREEN
                                 ),
                                 value = durability.toFloat(),
