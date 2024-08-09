@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.yusuf.data.mapper.toCompetitionData
 import com.yusuf.data.mapper.toCompetitionDataDto
 import com.yusuf.data.mapper.toPlayerData
@@ -26,7 +27,7 @@ class PlayerRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val storage: FirebaseStorage
-): PlayerRepository {
+) : PlayerRepository {
 
     override suspend fun getAllPlayers(): Flow<RootResult<List<PlayerData>>> = flow {
         emit(RootResult.Loading)
@@ -34,7 +35,9 @@ class PlayerRepositoryImpl @Inject constructor(
             val currentUser = firebaseAuth.currentUser
             val userId = currentUser?.uid
             if (userId != null) {
-                val querySnapshot = firestore.collection("users").document(userId).collection("players").get().await()
+                val querySnapshot =
+                    firestore.collection("users").document(userId).collection("players").get()
+                        .await()
                 val playerList = querySnapshot.documents.mapNotNull { document ->
                     val playerDataDto = document.toObject(PlayerDataDto::class.java)
                     playerDataDto?.toPlayerData()
@@ -60,7 +63,10 @@ class PlayerRepositoryImpl @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
 
-    override suspend fun addPlayer(playerData: PlayerData, imageUri: Uri): Flow<RootResult<Boolean>> = flow {
+    override suspend fun addPlayer(
+        playerData: PlayerData,
+        imageUri: Uri
+    ): Flow<RootResult<Boolean>> = flow {
         emit(RootResult.Loading)
         try {
             val currentUser = firebaseAuth.currentUser
@@ -71,14 +77,19 @@ class PlayerRepositoryImpl @Inject constructor(
                         is RootResult.Loading -> {
 
                         }
+
                         is RootResult.Success -> {
                             val imageUrl = result.data
-                            val playerInfo = imageUrl?.let { playerData.copy(profilePhotoUrl = it).toPlayerDataDto() }
+                            val playerInfo = imageUrl?.let {
+                                playerData.copy(profilePhotoUrl = it).toPlayerDataDto()
+                            }
                             if (playerInfo != null) {
-                                firestore.collection("users").document(userId).collection("players").add(playerInfo).await()
+                                firestore.collection("users").document(userId).collection("players")
+                                    .add(playerInfo).await()
                             }
                             emit(RootResult.Success(true))
                         }
+
                         is RootResult.Error -> {
                             emit(RootResult.Error(result.message ?: "Image upload failed"))
                         }
@@ -93,48 +104,57 @@ class PlayerRepositoryImpl @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
 
-    override suspend fun addCompetition(competitionData: CompetitionData): Flow<RootResult<Boolean>> = flow {
-        emit(RootResult.Loading)
-        try {
-            val currentUser = firebaseAuth.currentUser
-            val userId = currentUser?.uid
-            if (userId != null) {
-                val competitionId = firestore.collection("users").document(userId).collection("competitions").document().id
-                val competitionInfo = competitionData.copy(competitionId = competitionId).toCompetitionDataDto()
-                firestore.collection("users").document(userId).collection("competitions").document(competitionId).set(competitionInfo).await()
-                emit(RootResult.Success(true))
-            } else {
-                emit(RootResult.Error("User ID is null"))
+    override suspend fun addCompetition(competitionData: CompetitionData): Flow<RootResult<Boolean>> =
+        flow {
+            emit(RootResult.Loading)
+            try {
+                val currentUser = firebaseAuth.currentUser
+                val userId = currentUser?.uid
+                if (userId != null) {
+                    val competitionId =
+                        firestore.collection("users").document(userId).collection("competitions")
+                            .document().id
+                    val competitionInfo =
+                        competitionData.copy(competitionId = competitionId).toCompetitionDataDto()
+                    firestore.collection("users").document(userId).collection("competitions")
+                        .document(competitionId).set(competitionInfo).await()
+                    emit(RootResult.Success(true))
+                } else {
+                    emit(RootResult.Error("User ID is null"))
+                }
+            } catch (e: Exception) {
+                emit(RootResult.Error(e.message ?: "Something went wrong"))
             }
-        } catch (e: Exception) {
-            emit(RootResult.Error(e.message ?: "Something went wrong"))
-        }
-    }.flowOn(Dispatchers.IO)
+        }.flowOn(Dispatchers.IO)
 
-    override suspend fun deleteCompetition(competitionId: String): Flow<RootResult<Boolean>> = flow {
-        emit(RootResult.Loading)
-        try {
-            val currentUser = firebaseAuth.currentUser
-            val userId = currentUser?.uid
-            if (userId != null) {
-                val competitionRef = firestore.collection("users").document(userId).collection("competitions").document(competitionId)
-                competitionRef.delete().await()
-                emit(RootResult.Success(true))
-            } else {
-                emit(RootResult.Error("User ID is null"))
+    override suspend fun deleteCompetition(competitionId: String): Flow<RootResult<Boolean>> =
+        flow {
+            emit(RootResult.Loading)
+            try {
+                val currentUser = firebaseAuth.currentUser
+                val userId = currentUser?.uid
+                if (userId != null) {
+                    val competitionRef =
+                        firestore.collection("users").document(userId).collection("competitions")
+                            .document(competitionId)
+                    competitionRef.delete().await()
+                    emit(RootResult.Success(true))
+                } else {
+                    emit(RootResult.Error("User ID is null"))
+                }
+            } catch (e: Exception) {
+                emit(RootResult.Error(e.message ?: "Something went wrong"))
             }
-        } catch (e: Exception) {
-            emit(RootResult.Error(e.message ?: "Something went wrong"))
-        }
-    }.flowOn(Dispatchers.IO)
-    
-     override suspend fun deletePlayerById(playerId: String): Flow<RootResult<Boolean>> = flow {
+        }.flowOn(Dispatchers.IO)
+
+    override suspend fun deletePlayerById(playerId: String): Flow<RootResult<Boolean>> = flow {
         emit(RootResult.Loading)
         try {
             val currentUser = firebaseAuth.currentUser
             val userId = currentUser?.uid
             if (userId != null) {
-                val playerCollection = firestore.collection("users").document(userId).collection("players")
+                val playerCollection =
+                    firestore.collection("users").document(userId).collection("players")
                 val querySnapshot = playerCollection.whereEqualTo("id", playerId).get().await()
                 val playerDocuments = querySnapshot.documents
 
@@ -163,7 +183,8 @@ class PlayerRepositoryImpl @Inject constructor(
             val currentUser = firebaseAuth.currentUser
             val userId = currentUser?.uid
             if (userId != null) {
-                val playerCollection = firestore.collection("users").document(userId).collection("players")
+                val playerCollection =
+                    firestore.collection("users").document(userId).collection("players")
                 val querySnapshot = playerCollection.whereEqualTo("id", playerId).get().await()
                 val playerDocuments = querySnapshot.documents
 
@@ -184,7 +205,11 @@ class PlayerRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun updatePlayerImage(uri: Uri, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit): Flow<RootResult<Boolean>> = flow {
+    override suspend fun updatePlayerImage(
+        uri: Uri,
+        onSuccess: (String) -> Unit,
+        onFailure: (Exception) -> Unit
+    ): Flow<RootResult<Boolean>> = flow {
         emit(RootResult.Loading)
         try {
             val storageRef = FirebaseStorage.getInstance().reference
@@ -202,12 +227,10 @@ class PlayerRepositoryImpl @Inject constructor(
                 .addOnFailureListener { exception ->
                     onFailure(exception)
                 }
-        }
-        catch (e:Exception){
+        } catch (e: Exception) {
             emit(RootResult.Error(e.message ?: "Something went wrong"))
         }
     }.flowOn(Dispatchers.IO)
-
 
 
     override suspend fun uploadImage(uri: Uri): Flow<RootResult<String>> = flow {
@@ -222,14 +245,19 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun updateCompetition(competitionId: String, competitionData: CompetitionData): Flow<RootResult<Boolean>> = flow {
+    override suspend fun updateCompetition(
+        competitionId: String,
+        competitionData: CompetitionData
+    ): Flow<RootResult<Boolean>> = flow {
         emit(RootResult.Loading)
         try {
             val currentUser = firebaseAuth.currentUser
             val userId = currentUser?.uid
             if (userId != null) {
                 val competitionInfo = competitionData.toCompetitionDataDto()
-                val competitionRef = firestore.collection("users").document(userId).collection("competitions").document(competitionId)
+                val competitionRef =
+                    firestore.collection("users").document(userId).collection("competitions")
+                        .document(competitionId)
                 competitionRef.set(competitionInfo).await()
                 emit(RootResult.Success(true))
             } else {
@@ -239,14 +267,16 @@ class PlayerRepositoryImpl @Inject constructor(
             emit(RootResult.Error(e.message ?: "Something went wrong"))
         }
     }.flowOn(Dispatchers.IO)
-    
+
     override suspend fun getAllCompetitions(): Flow<RootResult<List<CompetitionData>>> = flow {
         emit(RootResult.Loading)
         try {
             val currentUser = firebaseAuth.currentUser
             val userId = currentUser?.uid
             if (userId != null) {
-                val querySnapshot = firestore.collection("users").document(userId).collection("competitions").get().await()
+                val querySnapshot =
+                    firestore.collection("users").document(userId).collection("competitions").get()
+                        .await()
                 val competitionList = querySnapshot.documents.mapNotNull { document ->
                     val competitionDataDto = document.toObject(CompetitionDataDto::class.java)
                     competitionDataDto?.toCompetitionData()
@@ -260,31 +290,32 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getPlayersByCompetitionType(competitionType: String): Flow<RootResult<List<PlayerData>>> = flow {
-        emit(RootResult.Loading)
-        try {
-            val currentUser = firebaseAuth.currentUser
-            val userId = currentUser?.uid
-            if (userId != null) {
-                val querySnapshot = firestore.collection("users")
-                    .document(userId)
-                    .collection("players")
-                    .whereEqualTo("competitionType", competitionType)
-                    .get()
-                    .await()
+    override suspend fun getPlayersByCompetitionType(competitionType: String): Flow<RootResult<List<PlayerData>>> =
+        flow {
+            emit(RootResult.Loading)
+            try {
+                val currentUser = firebaseAuth.currentUser
+                val userId = currentUser?.uid
+                if (userId != null) {
+                    val querySnapshot = firestore.collection("users")
+                        .document(userId)
+                        .collection("players")
+                        .whereEqualTo("competitionType", competitionType)
+                        .get()
+                        .await()
 
-                val playerList = querySnapshot.documents.mapNotNull { document ->
-                    val playerDataDto = document.toObject(PlayerDataDto::class.java)
-                    playerDataDto?.toPlayerData()
+                    val playerList = querySnapshot.documents.mapNotNull { document ->
+                        val playerDataDto = document.toObject(PlayerDataDto::class.java)
+                        playerDataDto?.toPlayerData()
+                    }
+                    emit(RootResult.Success(playerList))
+                } else {
+                    emit(RootResult.Error("User ID is null"))
                 }
-                emit(RootResult.Success(playerList))
-            } else {
-                emit(RootResult.Error("User ID is null"))
+            } catch (e: Exception) {
+                emit(RootResult.Error(e.message ?: "Something went wrong"))
             }
-        } catch (e: Exception) {
-            emit(RootResult.Error(e.message ?: "Something went wrong"))
-        }
-    }.flowOn(Dispatchers.IO)
+        }.flowOn(Dispatchers.IO)
 
     override suspend fun deleteCurrentUser(): Flow<RootResult<Boolean>> = flow {
         emit(RootResult.Loading)
@@ -316,5 +347,17 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
+
+    override suspend fun uploadImageCompetition(uri: Uri): Result<String> {
+        val storageReference: StorageReference = FirebaseStorage.getInstance().reference
+        return try {
+            val imageRef = storageReference.child("saved_competitions/${UUID.randomUUID()}.jpg")
+            imageRef.putFile(uri).await() // Wait for upload to complete
+            val downloadUrl = imageRef.downloadUrl.await() // Wait for URL retrieval
+            Result.success(downloadUrl.toString())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
 }
