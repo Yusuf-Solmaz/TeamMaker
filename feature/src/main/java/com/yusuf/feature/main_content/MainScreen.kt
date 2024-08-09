@@ -1,6 +1,7 @@
 package com.yusuf.feature.main_content
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,15 +46,22 @@ fun MainScreen(
 ) {
     val deleteUserState by mainContentViewModel.deleteUserState.collectAsState()
     val uiState by loginViewModel.uiState.collectAsState()
+    val isLoggedInState by loginViewModel.loggingState.collectAsState()
 
     var appBarTitle by remember { mutableStateOf<String?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     var dialogAction by remember { mutableStateOf("") }
     var navigationKey by remember { mutableStateOf(0) }
-
     val context = LocalContext.current
 
+   LaunchedEffect(true) {
+       loginViewModel.isLoggedIn()
+
+       Log.i("MainScreen", "isLoggedInState.isAnonymous: ${isLoggedInState.isAnonymous}")
+   }
+
     LaunchedEffect(deleteUserState.transaction) {
+        Log.i("MainScreen", "deleteUserState.transaction: ${deleteUserState.transaction}")
         if (deleteUserState.transaction) {
             goToLogin(
                 loginViewModel = loginViewModel,
@@ -69,7 +77,11 @@ fun MainScreen(
         AlertDialog(
             containerColor = LIGHT_GREEN,
             onDismissRequest = { showDialog = false },
-            title = { Text(if (dialogAction == "Logout") "Logout" else "Delete Account", color = Color.White) },
+            title = {
+                    Text(
+                        text = if (dialogAction == "Logout") "Logout" else "Delete Account",
+                        color = Color.White)
+            },
             text = { Text("Are you sure you want to ${dialogAction.lowercase()}?", color = Color.White) },
             confirmButton = {
                 TextButton(onClick = {
@@ -84,6 +96,9 @@ fun MainScreen(
                             navigationKey++
                         }
                         "Delete Account" -> {
+                            mainContentViewModel.deleteUser()
+                        }
+                        "Forgot Me" ->{
                             mainContentViewModel.deleteUser()
                         }
                     }
@@ -128,7 +143,9 @@ fun MainScreen(
                     actions = {
                         if (title == "Choose Competition Type") {
                             var expanded by remember { mutableStateOf(false) }
-                            IconButton(onClick = { expanded = !expanded }) {
+                            IconButton(onClick = {
+                                expanded = !expanded
+                            }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_vert),
                                     contentDescription = "Settings",
@@ -152,7 +169,10 @@ fun MainScreen(
                                         }
                                     )
                                     DropdownMenuItem(
-                                        text = { Text("Delete Account", color = Color.White) },
+                                        text = {
+                                            Text(
+                                                if (isLoggedInState.isAnonymous) "Forgot Me" else "Delete Account",
+                                            color = Color.White) },
                                         onClick = {
                                             expanded = false
                                             dialogAction = "Delete Account"
