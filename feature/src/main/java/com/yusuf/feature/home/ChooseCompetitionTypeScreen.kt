@@ -129,7 +129,11 @@ fun ChooseCompetitionTypeScreen(
                 mainDataStore.saveGalleryPermission(true)
             }
         } else {
-            Toast.makeText(context, "Gallery permission is required to select an image.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "Gallery permission is required to select an image.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -139,7 +143,11 @@ fun ChooseCompetitionTypeScreen(
 
         // Only request permission if needed (API level below 33)
         if (apiLevel < 33 && !galleryPermissionGranted) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             } else {
                 // Save permission granted status in DataStore
@@ -153,7 +161,11 @@ fun ChooseCompetitionTypeScreen(
     Scaffold(
         floatingActionButton = {
             if (getAllState.result !is RootResult.Loading) {
-                FloatingActionButton(onClick = { openDialog.value = true }, containerColor = APPBAR_GREEN, contentColor = Color.White) {
+                FloatingActionButton(
+                    onClick = { openDialog.value = true },
+                    containerColor = APPBAR_GREEN,
+                    contentColor = Color.White
+                ) {
                     Icon(Icons.Default.Add, contentDescription = "Add Competition")
                 }
             }
@@ -172,7 +184,10 @@ fun ChooseCompetitionTypeScreen(
                                     context.contentResolver,
                                     uri
                                 )
-                                competitionViewModel.uploadImageAndAddCompetition(bitmap, competition.competitionName)
+                                competitionViewModel.uploadImageAndAddCompetition(
+                                    bitmap,
+                                    competition.competitionName
+                                )
                             }
                         },
                         onImagePick = {
@@ -259,10 +274,10 @@ fun ChooseCompetitionTypeScreen(
 
                         ImageSliderScreen()
 
-                        Row (
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                        ){
+                        ) {
                             Text(
                                 textAlign = TextAlign.Start,
                                 text = "Competitions",
@@ -279,7 +294,9 @@ fun ChooseCompetitionTypeScreen(
                         val competitions = state.data ?: emptyList()
 
                         LazyColumn(
-                            modifier = Modifier.padding(top = 8.dp).weight(1f)
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .weight(1f)
                         ) {
                             items(competitions.reversed()) { competition ->
                                 CompetitionCard(
@@ -288,8 +305,13 @@ fun ChooseCompetitionTypeScreen(
                                         val competitionData = competition.toCompetition()
 
                                         if (competitionData != null) {
-                                            sharedPreferencesHelper.competitionName = competition.competitionName
-                                            navController.navigate(NavigationGraph.getOptionsRoute(competitionData))
+                                            sharedPreferencesHelper.competitionName =
+                                                competition.competitionName
+                                            navController.navigate(
+                                                NavigationGraph.getOptionsRoute(
+                                                    competitionData
+                                                )
+                                            )
                                         }
                                     },
                                     onDelete = {
@@ -324,7 +346,10 @@ fun ChooseCompetitionTypeScreen(
                     }
 
                     is RootResult.Success -> {
-                        Log.d("ChooseSportScreen", "Competition added/updated successfully: ${addState.data}")
+                        Log.d(
+                            "ChooseSportScreen",
+                            "Competition added/updated successfully: ${addState.data}"
+                        )
                     }
 
                     is RootResult.Error -> {
@@ -342,133 +367,3 @@ fun ChooseCompetitionTypeScreen(
 
 
 
-@Composable
-fun CompetitionCard(
-    competition: CompetitionData,
-    onClick: () -> Unit,
-    onDelete: () -> Unit,
-    onUpdate: () -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp, start = 10.dp, end = 10.dp)
-    ) {
-        Box (
-            modifier = Modifier.fillMaxSize()
-                .clickable {
-                    onClick()
-                }
-        ){
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
-            var isImageLoading by remember { mutableStateOf(true) }
-
-            SubcomposeAsyncImage(
-                model = competition.competitionImageUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                contentScale = ContentScale.Crop,
-                loading = {
-                    LottieAnimation(
-                        composition,
-                        modifier = Modifier.size(100.dp),
-                        iterations = Int.MAX_VALUE
-                    )
-                },
-                onSuccess = {
-                    isImageLoading = false
-                },
-                onError = {
-                    isImageLoading = false
-                }
-            )
-            if (!isImageLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.3f))
-                )
-
-                Box(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .align(Alignment.Center),
-                    contentAlignment = Alignment.Center
-                ) {
-
-                    Text(
-                        text = competition.competitionName,
-                        color = Color.White,
-                        style = TextStyle(
-                            fontSize = 35.sp,
-                            color = Color.White,
-                            textAlign = TextAlign.Center,
-                            shadow = Shadow(
-                                color = Color(0xFF333333),
-                                offset = androidx.compose.ui.geometry.Offset(4f, 4f),
-                                blurRadius = 10f
-                            )
-                        )
-                    )
-
-                }
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .size(24.dp, 24.dp)
-                        .background(
-                            color = Color.Black.copy(alpha = 0.1f),
-                            shape = RoundedCornerShape(12.dp)
-                        )
-
-                ) {
-                    IconButton(
-                        onClick = { expanded = !expanded },
-                        modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = "Expand",
-                            tint = Color.White,
-                        )
-                    }
-                }
-            }
-        }
-
-        AnimatedVisibility(visible = expanded) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = Color.White),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-
-
-                AuthButtonComponent(
-                    value = "Update",
-                    onClick = onUpdate,
-                    fillMaxWidth = false,
-                    modifier = Modifier.width(80.dp),
-                    heightIn = 37.dp
-                )
-
-                AuthButtonComponent(
-                    value = "Delete",
-                    onClick = onDelete,
-                    fillMaxWidth = false,
-                    modifier = Modifier.width(80.dp),
-                    heightIn = 37.dp,
-                    firstColor = RED,
-                    secondColor = DARK_RED
-                )
-
-            }
-        }
-    }
-}
