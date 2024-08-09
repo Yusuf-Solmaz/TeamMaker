@@ -1,6 +1,8 @@
 package com.yusuf.feature.create_competition.select_player.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.model.firebase.PlayerData
@@ -20,6 +22,13 @@ class TeamBalancerViewModel @Inject constructor(
 ) : ViewModel() {
     private val _teamBalancerUiState = MutableStateFlow(TeamBalancerUIState())
     val teamBalancerUiState: StateFlow<TeamBalancerUIState> get() = _teamBalancerUiState
+
+    private val _imageUrl = mutableStateOf<String?>(null)
+    val imageUrl: State<String?> = _imageUrl
+
+    fun updateImageUrl(url: String) {
+        _imageUrl.value = url
+    }
 
     fun createBalancedTeams(players: List<PlayerData>) {
         _teamBalancerUiState.value = _teamBalancerUiState.value.copy(isLoading = true)
