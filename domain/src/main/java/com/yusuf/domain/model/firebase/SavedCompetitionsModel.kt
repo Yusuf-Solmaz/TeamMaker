@@ -1,5 +1,6 @@
 package com.yusuf.domain.model.firebase
 
+import com.yusuf.domain.model.weather.CurrentWeatherModel
 import java.io.Serializable
 import java.util.UUID
 
@@ -11,5 +12,5 @@ data class SavedCompetitionsModel (
         val competitionTime: String = "",
         val competitionDate: String = "",
         val locationName: String = "",
-        val weather: String = ""
+        val weatherModel: CurrentWeatherModel? = null
 ) : Serializable
