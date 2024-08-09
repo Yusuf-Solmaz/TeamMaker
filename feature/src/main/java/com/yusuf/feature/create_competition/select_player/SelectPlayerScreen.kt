@@ -89,7 +89,7 @@ fun SelectPlayerScreen(
     val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
     val competitionName = sharedPreferencesHelper.competitionName
     val imageUri = remember { mutableStateOf<Uri?>(null) }
-    val storageRef = FirebaseStorage.getInstance().reference
+
 
     LaunchedEffect(true) {
         viewModel.getPlayersByCompetitionType(competitionName.toString())
@@ -186,43 +186,33 @@ fun SelectPlayerScreen(
             }
         }
 
-        Button(
-            onClick = {
-                if (selectedPlayers.isEmpty()) {
-                    Toast.makeText(
-                        context,
-                        "Please select at least one player",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else if (selectedPlayers.size % 2 != 0) {
-                    Toast.makeText(
-                        context,
-                        "The number of selected players must be even",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else if (timePicker.isEmpty()) {
-                    Toast.makeText(context, "Please select a time", Toast.LENGTH_SHORT).show()
-                } else if (datePicker.isEmpty()) {
-                    Log.d("SelectPlayerScreen", "Selected date: $datePicker")
-                    Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
-                } else {
-                    imageUri.value?.let { uri ->
-                        val imageRef = storageRef.child("saved_competitions/${UUID.randomUUID()}.jpg")
-                        val uploadTask = imageRef.putFile(uri)
-                        uploadTask.addOnSuccessListener {
-                            imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                                teamBalancerViewModel.updateImageUrl(downloadUrl.toString())
-                                teamBalancerViewModel.createBalancedTeams(selectedPlayers)
-                            }
-                        }.addOnFailureListener {
-                            Toast.makeText(context, "Image upload failed: ${it.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    } ?: run {
-                        // If no image is selected, just create the teams
+            Button(
+                onClick = {
+                    if (selectedPlayers.isEmpty()) {
+                        Toast.makeText(
+                            context,
+                            "Please select at least one player",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else if (selectedPlayers.size % 2 != 0) {
+                        Toast.makeText(
+                            context,
+                            "The number of selected players must be even",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else if (timePicker.isEmpty()) {
+                        Toast.makeText(context, "Please select a time", Toast.LENGTH_SHORT).show()
+                    } else if (datePicker.isEmpty()) {
+                        Log.d("SelectPlayerScreen", "Selected date: $datePicker")
+                        Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
+                    } else {
+                        imageUri.value?.let { uri ->
+                            teamBalancerViewModel.uploadImage(uri)
+                 }
+                    }.run {
                         teamBalancerViewModel.createBalancedTeams(selectedPlayers)
-             }
-                }
-            },
+                    }
+                },
             modifier = Modifier
                 .width(250.dp)
                 .align(Alignment.CenterHorizontally),
