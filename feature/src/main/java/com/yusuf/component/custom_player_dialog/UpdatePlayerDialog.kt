@@ -53,7 +53,9 @@ import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
 import com.yusuf.theme.APPBAR_GREEN
+import com.yusuf.theme.LIGHT_BLACK
 import com.yusuf.theme.LIGHT_GREEN
+import com.yusuf.theme.RED
 import com.yusuf.theme.YELLOW
 
 @Composable
@@ -90,7 +92,7 @@ fun UpdatePlayerDialog(
     }
 
     AlertDialog(
-        containerColor = LIGHT_GREEN,
+        containerColor = Color.Black,
         onDismissRequest = onDismiss,
         title = { Text("Update Player",
             style = TextStyle(
@@ -166,10 +168,10 @@ fun UpdatePlayerDialog(
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("General Point: $generalSkill", fontSize = 16.sp)
+                        Text("General Point: $generalSkill", fontSize = 16.sp, color = Color.White)
                         Slider(
                             colors = SliderDefaults.colors(
-                                thumbColor = if (isGeneralSkillUsed) APPBAR_GREEN else YELLOW,
+                                thumbColor = if (isGeneralSkillUsed) APPBAR_GREEN else RED,
                                 activeTrackColor = APPBAR_GREEN,
 
                                 ),
@@ -187,10 +189,10 @@ fun UpdatePlayerDialog(
                             DividerTextComponent()
 
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("Speed: $speed", fontSize = 16.sp)
+                            Text("Speed: $speed", fontSize = 16.sp, color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
-                                    thumbColor = if (speed != 0) APPBAR_GREEN else YELLOW,
+                                    thumbColor = if (speed != 0) APPBAR_GREEN else RED,
                                     activeTrackColor = APPBAR_GREEN
                                 ),
                                 value = speed.toFloat(),
@@ -200,10 +202,10 @@ fun UpdatePlayerDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Condition: $condition", fontSize = 16.sp)
+                            Text("Condition: $condition", fontSize = 16.sp, color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
-                                    thumbColor = if (condition != 0) APPBAR_GREEN else YELLOW,
+                                    thumbColor = if (condition != 0) APPBAR_GREEN else RED,
                                     activeTrackColor = APPBAR_GREEN
                                 ),
                                 value = condition.toFloat(),
@@ -213,10 +215,10 @@ fun UpdatePlayerDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Focus: $focus", fontSize = 16.sp)
+                            Text("Focus: $focus", fontSize = 16.sp, color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
-                                    thumbColor = if (focus != 0) APPBAR_GREEN else YELLOW,
+                                    thumbColor = if (focus != 0) APPBAR_GREEN else RED,
                                     activeTrackColor = APPBAR_GREEN
                                 ),
                                 value = focus.toFloat(),
@@ -226,10 +228,10 @@ fun UpdatePlayerDialog(
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Durability: $durability", fontSize = 16.sp)
+                            Text("Durability: $durability", fontSize = 16.sp, color = Color.White)
                             Slider(
                                 colors = SliderDefaults.colors(
-                                    thumbColor = if (durability != 0) APPBAR_GREEN else YELLOW,
+                                    thumbColor = if (durability != 0) APPBAR_GREEN else RED,
                                     activeTrackColor = APPBAR_GREEN
                                 ),
                                 value = durability.toFloat(),
