@@ -28,7 +28,9 @@ fun AuthButtonComponent(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     fillMaxWidth: Boolean = true,
-    heightIn: Dp = 48.dp
+    heightIn: Dp = 48.dp,
+    firstColor: Color = APPBAR_GREEN,
+    secondColor: Color = DARK_GREEN
 ) {
     Button(
         onClick = { onClick() },
@@ -45,8 +47,8 @@ fun AuthButtonComponent(
                 .background(
                     brush = Brush.verticalGradient(
                         listOf(
-                            APPBAR_GREEN,
-                            DARK_GREEN
+                            firstColor,
+                            secondColor
                         )
                     ),
                     shape = RoundedCornerShape(50.dp)
