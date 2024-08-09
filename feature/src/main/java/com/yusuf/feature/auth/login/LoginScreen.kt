@@ -1,6 +1,7 @@
 package com.yusuf.feature.auth.login
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -17,9 +19,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.yusuf.component.auth_components.AuthButtonComponent
@@ -32,6 +39,8 @@ import com.yusuf.component.auth_components.ClickableLoginTextComponent
 import com.yusuf.feature.R
 import com.yusuf.feature.auth.login.viewmodel.LoginViewModel
 import com.yusuf.navigation.NavigationGraph
+import com.yusuf.theme.APPBAR_GREEN
+import com.yusuf.theme.GREEN
 
 @Composable
 fun LoginScreen(
@@ -117,12 +126,26 @@ fun LoginScreen(
                     viewModel.signIn(email, password)
                 })
                 Spacer(modifier = Modifier.height(10.dp))
-                DividerTextComponent()
                 Spacer(modifier = Modifier.height(15.dp))
                 ClickableLoginTextComponent(tryToLogin = false, onTextSelected = {
                     onSignUpClick()
                     navController.navigate(NavigationGraph.REGISTER.route)
                 })
+                DividerTextComponent()
+
+                Text(
+                    text = "Login as Guest",
+                    style = TextStyle(
+                        brush = Brush.linearGradient(
+                            colors = listOf(APPBAR_GREEN, GREEN)
+                        ),
+                        fontSize = 23.sp,
+                        fontFamily = FontFamily(Font(R.font.splash_title_font))
+                    ),
+                    modifier = Modifier.clickable {
+                        viewModel.signInAnonymously()
+                    }
+                )
             }
         }
     }
