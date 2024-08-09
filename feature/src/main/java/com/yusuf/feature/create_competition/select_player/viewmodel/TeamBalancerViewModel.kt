@@ -1,11 +1,13 @@
 package com.yusuf.feature.create_competition.select_player.viewmodel
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.model.firebase.PlayerData
+import com.yusuf.domain.use_cases.firebase_use_cases.image.UploadImageCompetitionUseCaseUseCase
 import com.yusuf.domain.use_cases.team.TeamBalancerUseCase
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.create_competition.select_player.state.TeamBalancerUIState
@@ -18,16 +20,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamBalancerViewModel @Inject constructor(
-    private val teamBalancerUseCase: TeamBalancerUseCase
+    private val teamBalancerUseCase: TeamBalancerUseCase,
+    private val uploadImageCompetitionUseCase: UploadImageCompetitionUseCaseUseCase
 ) : ViewModel() {
     private val _teamBalancerUiState = MutableStateFlow(TeamBalancerUIState())
     val teamBalancerUiState: StateFlow<TeamBalancerUIState> get() = _teamBalancerUiState
 
-    private val _imageUrl = mutableStateOf<String?>(null)
-    val imageUrl: State<String?> = _imageUrl
+    val imageUploadState = mutableStateOf<Result<String>?>(null)
 
-    fun updateImageUrl(url: String) {
-        _imageUrl.value = url
+    fun uploadImage(uri: Uri) {
+        viewModelScope.launch {
+            val result = uploadImageCompetitionUseCase.invoke(uri)
+            imageUploadState.value = result
+        }
     }
 
     fun createBalancedTeams(players: List<PlayerData>) {
