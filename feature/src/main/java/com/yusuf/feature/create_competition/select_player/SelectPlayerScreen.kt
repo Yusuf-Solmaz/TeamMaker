@@ -209,7 +209,8 @@ fun SelectPlayerScreen(
                         imageUri.value?.let { uri ->
                             teamBalancerViewModel.uploadImage(uri)
                  }
-                    }.run {
+                    }
+                        .run {
                         teamBalancerViewModel.createBalancedTeams(selectedPlayers)
                     }
                 },
