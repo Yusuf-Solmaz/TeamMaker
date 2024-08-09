@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -64,6 +65,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.yusuf.component.LoadingLottie
+import com.yusuf.component.auth_components.AuthButtonComponent
 import com.yusuf.domain.model.firebase.CompetitionData
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.R
@@ -74,6 +76,8 @@ import com.yusuf.feature.home.viewmodel.CompetitionViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.DARK_BLUE
 import com.yusuf.theme.APPBAR_GREEN
+import com.yusuf.theme.DARK_RED
+import com.yusuf.theme.RED
 import com.yusuf.utils.SharedPreferencesHelper
 import com.yusuf.utils.default_competition.toCompetition
 
@@ -395,24 +399,26 @@ fun CompetitionCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Button(
+
+
+                AuthButtonComponent(
+                    value = "Update",
                     onClick = onUpdate,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = APPBAR_GREEN,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text("Update")
-                }
-                Button(
+                    fillMaxWidth = false,
+                    modifier = Modifier.width(80.dp),
+                    heightIn = 37.dp
+                )
+
+                AuthButtonComponent(
+                    value = "Delete",
                     onClick = onDelete,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text("Delete")
-                }
+                    fillMaxWidth = false,
+                    modifier = Modifier.width(80.dp),
+                    heightIn = 37.dp,
+                    firstColor = RED,
+                    secondColor = DARK_RED
+                )
+
             }
         }
     }
