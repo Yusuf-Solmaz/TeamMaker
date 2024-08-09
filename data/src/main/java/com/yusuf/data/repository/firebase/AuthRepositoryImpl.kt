@@ -74,4 +74,14 @@ class AuthRepositoryImpl @Inject constructor(
             emit(RootResult.Error(e.message ?: "Something went wrong"))
         }
     }
+
+    override suspend fun signInAnonymously(): Flow<RootResult<FirebaseUser>> = flow {
+        emit(RootResult.Loading)
+        try {
+            val result = firebaseAuth.signInAnonymously().await()
+            emit(RootResult.Success(result.user))
+        } catch (e: Exception) {
+            emit(RootResult.Error(e.message ?: "Something went wrong"))
+        }
+    }.flowOn(Dispatchers.IO)
 }
