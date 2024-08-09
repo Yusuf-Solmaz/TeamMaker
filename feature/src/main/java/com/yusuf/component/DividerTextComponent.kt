@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DividerTextComponent(textColor: Color = Color.LightGray) {
+fun DividerTextComponent(textColor: Color = Color.White) {
     Row(modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically) {
 
@@ -24,7 +24,7 @@ fun DividerTextComponent(textColor: Color = Color.LightGray) {
             thickness = 1.dp, color = Color.Black
         )
 
-        Text(modifier = Modifier.padding(8.dp),text = "or",fontSize = 14.sp, color = textColor)
+        Text(modifier = Modifier.padding(8.dp),text = "OR",fontSize = 14.sp, color = textColor)
 
         HorizontalDivider(
             modifier = Modifier
