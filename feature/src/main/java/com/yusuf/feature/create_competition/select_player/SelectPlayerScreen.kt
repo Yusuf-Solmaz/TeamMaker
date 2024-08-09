@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.yusuf.component.LoadingLottie
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
@@ -101,9 +103,6 @@ fun SelectPlayerScreen(
 
             teamBalancerUIState.teams = null
         }
-        if (teamBalancerUIState.isLoading) {
-            Log.d("SelectPlayerScreen", "Loading teams...")
-        }
         if (teamBalancerUIState.errorMessage != null) {
             Log.d("SelectPlayerScreen", "Teams are not ready yet.")
         }
@@ -116,15 +115,31 @@ fun SelectPlayerScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "Creating teams...",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                style = TextStyle(
-                    color = APPBAR_GREEN,
-                    fontFamily = FontFamily(Font(R.font.onboarding_title1))
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
+                LoadingLottie(R.raw.image_loading)
+            }
+
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Creating teams...",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    style = TextStyle(
+                        color = APPBAR_GREEN,
+                        fontFamily = FontFamily(Font(R.font.onboarding_title1))
+                    )
                 )
-            )
+            }
+
+
         }
     } else {
         Column(Modifier.fillMaxSize()) {
