@@ -35,6 +35,7 @@ import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.theme.GREEN
 import com.yusuf.theme.LIGHT_GREEN
 import com.yusuf.theme.LIGHT_GREEN_V2
+import com.yusuf.theme.RED
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -75,7 +76,7 @@ fun MainScreen(
 
     if (showDialog) {
         AlertDialog(
-            containerColor = LIGHT_GREEN,
+            containerColor = Color.Black,
             onDismissRequest = { showDialog = false },
             title = {
                     Text(
@@ -103,7 +104,7 @@ fun MainScreen(
                         }
                     }
                 }) {
-                    Text("Yes", color = GREEN)
+                    Text("Yes", color = RED)
                 }
             },
             dismissButton = {
@@ -134,7 +135,7 @@ fun MainScreen(
                                 Icon(
                                     painter = painterResource(R.drawable.ic_arrow_left),
                                     contentDescription = "Back",
-                                    tint = APPBAR_GREEN,
+                                    tint = Color.Black,
                                     modifier = Modifier.size(30.dp)
                                 )
                             }
@@ -149,7 +150,7 @@ fun MainScreen(
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_vert),
                                     contentDescription = "Settings",
-                                    tint = APPBAR_GREEN,
+                                    tint = Color.Black,
                                     modifier = Modifier.size(30.dp)
                                 )
                             }
@@ -158,7 +159,7 @@ fun MainScreen(
                                 DropdownMenu(
                                     expanded = expanded,
                                     onDismissRequest = { expanded = false },
-                                    Modifier.background(LIGHT_GREEN_V2)
+                                    Modifier.background(Color.Black)
                                 ) {
 
                                     DropdownMenuItem(
