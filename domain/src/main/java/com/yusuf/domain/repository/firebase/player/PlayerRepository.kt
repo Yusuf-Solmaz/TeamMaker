@@ -20,5 +20,6 @@ interface PlayerRepository {
     suspend fun getPlayersByCompetitionType(competitionType: String): Flow<RootResult<List<PlayerData>>>
     suspend fun updateCompetition(competitionId: String, competitionData: CompetitionData): Flow<RootResult<Boolean>>
     suspend fun deleteCurrentUser(): Flow<RootResult<Boolean>>
+    suspend fun uploadImageCompetition(uri: Uri): Result<String>
 }
 
