@@ -35,6 +35,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -80,6 +81,7 @@ import com.yusuf.navigation.NavigationGraph
 import com.yusuf.navigation.main_datastore.MainDataStore
 import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.theme.DARK_RED
+import com.yusuf.theme.ORANGE
 import com.yusuf.theme.RED
 import com.yusuf.utils.SharedPreferencesHelper
 import com.yusuf.utils.default_competition.toCompetition
@@ -163,7 +165,7 @@ fun ChooseCompetitionTypeScreen(
             if (getAllState.result !is RootResult.Loading) {
                 FloatingActionButton(
                     onClick = { openDialog.value = true },
-                    containerColor = APPBAR_GREEN,
+                    containerColor =  ORANGE,
                     contentColor = Color.White
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Add Competition")
