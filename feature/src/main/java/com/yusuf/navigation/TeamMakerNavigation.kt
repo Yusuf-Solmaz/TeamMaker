@@ -16,6 +16,7 @@
     import com.google.gson.Gson
     import com.yusuf.component.LoadingLottie
     import com.yusuf.domain.model.competition_detail.CompetitionDetail
+    import com.yusuf.domain.model.firebase.SavedCompetitionsModel
     import com.yusuf.feature.R
     import com.yusuf.feature.player_list.PlayerListScreen
     import com.yusuf.feature.auth.forgot_password.ForgotPasswordScreen
@@ -94,7 +95,9 @@
 
                 composable(
                     route = NavigationGraph.COMPETITION_DETAIL.route,
-                    arguments = listOf(navArgument("competitionDetailJson") { type = NavType.StringType })
+                    arguments = listOf(
+                        navArgument("competitionDetailJson") { type = NavType.StringType }
+                    )
                 ) { backStackEntry ->
                     val gson = Gson()
                     val competitionDetailJson = backStackEntry.arguments?.getString("competitionDetailJson")
@@ -102,6 +105,21 @@
                     CompetitionDetailScreen(
                         navController = navController,
                         competitionDetail = competitionDetail
+                    )
+                    onTitleChange("Competition Detail")
+                }
+
+                composable(NavigationGraph.SAVED_COMPETITION_DETAIL.route,
+                    arguments = listOf(
+                        navArgument("savedCompetitionDetailJson") { type = NavType.StringType }
+                    )
+                ){backStackEntry ->
+                    val gson = Gson()
+                    val savedCompetitionDetailJson = backStackEntry.arguments?.getString("savedCompetitionDetailJson")
+                    val savedCompetitionDetail = gson.fromJson(savedCompetitionDetailJson, SavedCompetitionsModel::class.java)
+                    CompetitionDetailScreen(
+                        navController = navController,
+                        savedCompetitionDetail = savedCompetitionDetail
                     )
                     onTitleChange("Competition Detail")
                 }

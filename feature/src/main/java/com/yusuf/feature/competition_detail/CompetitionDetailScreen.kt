@@ -29,11 +29,13 @@ import com.yusuf.domain.model.firebase.SavedCompetitionsModel
 import com.yusuf.feature.competition_detail.viewmodel.CompetitionDetailViewModel
 import com.yusuf.feature.create_competition.location.LocationScreen
 import com.yusuf.feature.competition_detail.weather.Weather
+import com.yusuf.navigation.NavigationGraph
 
 @Composable
 fun CompetitionDetailScreen(
     navController: NavController,
     competitionDetail: CompetitionDetail?=null,
+    savedCompetitionDetail: SavedCompetitionsModel?=null,
     competitionDetailViewModel: CompetitionDetailViewModel = hiltViewModel()
 ) {
 
@@ -93,12 +95,13 @@ fun CompetitionDetailScreen(
             )
             Button(onClick = {
                 competitionDetailViewModel.saveCompetition(savedCompetition)
+                navController.navigate(NavigationGraph.SAVED_COMPETITIONS.route)
             }) {
                 Text(text = "Save Competition")
             }
         }
     } else {
-        Text(text = "No competition detail found")
+        Text(text = savedCompetitionDetail!!.weather)
     }
 }
 

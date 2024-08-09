@@ -1,5 +1,6 @@
 package com.yusuf.domain.model.firebase
 
+import java.io.Serializable
 import java.util.UUID
 
 data class SavedCompetitionsModel (
@@ -11,4 +12,4 @@ data class SavedCompetitionsModel (
         val competitionDate: String = "",
         val locationName: String = "",
         val weather: String = ""
-)
+) : Serializable
