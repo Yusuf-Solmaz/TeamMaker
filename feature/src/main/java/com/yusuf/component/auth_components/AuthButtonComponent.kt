@@ -14,10 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yusuf.feature.R
 import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.theme.DARK_GREEN
 
@@ -28,7 +31,10 @@ fun AuthButtonComponent(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     fillMaxWidth: Boolean = true,
-    heightIn: Dp = 48.dp
+    heightIn: Dp = 48.dp,
+    firstColor: Color = APPBAR_GREEN,
+    secondColor: Color = DARK_GREEN,
+    fontFamily : FontFamily= FontFamily(Font(R.font.oxygen, FontWeight.Normal))
 ) {
     Button(
         onClick = { onClick() },
@@ -45,8 +51,8 @@ fun AuthButtonComponent(
                 .background(
                     brush = Brush.verticalGradient(
                         listOf(
-                            APPBAR_GREEN,
-                            DARK_GREEN
+                            firstColor,
+                            secondColor
                         )
                     ),
                     shape = RoundedCornerShape(50.dp)
@@ -57,6 +63,7 @@ fun AuthButtonComponent(
                 text = value,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = fontFamily
             )
         }
     }

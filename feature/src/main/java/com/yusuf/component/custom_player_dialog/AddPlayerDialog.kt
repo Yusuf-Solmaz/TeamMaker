@@ -1,7 +1,11 @@
 package com.yusuf.component.custom_player_dialog
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,6 +51,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
 import com.yusuf.component.DividerTextComponent
 import com.yusuf.component.TextFieldComponent
@@ -57,6 +62,7 @@ import com.yusuf.theme.LIGHT_GREEN
 import com.yusuf.theme.PurpleGrey80
 import com.yusuf.theme.YELLOW
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddPlayerDialog(
     competitionName: String,
@@ -82,24 +88,39 @@ fun AddPlayerDialog(
         isGeneralSkillUsed = true
     }
 
-    val launcher = rememberLauncherForActivityResult(
+    val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         profilePhotoUri = uri
     }
 
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // Launch image picker after permission is granted
+            imagePickerLauncher.launch("image/*")
+        } else {
+            Toast.makeText(context, "Gallery permission is required to select an image.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val apiLevel = Build.VERSION.SDK_INT
+    val hasGalleryPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+
     AlertDialog(
         containerColor = LIGHT_GREEN,
         onDismissRequest = onDismiss,
-        title = { Text("Add Player",
-            style = TextStyle(
-                color = Color.White,
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.main_title))
+        title = {
+            Text("Add Player",
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.main_title))
+                )
             )
-        )
-                },
+        },
         text = {
             Column(
                 modifier = Modifier
@@ -111,7 +132,18 @@ fun AddPlayerDialog(
                         .size(100.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.surface)
-                        .clickable { launcher.launch("image/*") }
+                        .clickable {
+                            if (apiLevel < 33) {
+                                if (hasGalleryPermission) {
+                                    imagePickerLauncher.launch("image/*")
+                                } else {
+                                    permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                }
+                            } else {
+                                // For API level 33 and above, use the appropriate method if needed
+                                imagePickerLauncher.launch("image/*")
+                            }
+                        }
                         .align(Alignment.CenterHorizontally)
                 ) {
                     if (profilePhotoUri != null) {
@@ -160,14 +192,12 @@ fun AddPlayerDialog(
                             painterResource = painterResource(id = R.drawable.ic_position),
                             focusedLabelColor = Color.White
                         )
-
                         Spacer(modifier = Modifier.height(8.dp))
                         Text("General Skill: $generalSkill", fontSize = 16.sp,color = Color.White)
                         Slider(
                             colors = SliderDefaults.colors(
                                 thumbColor = if (isGeneralSkillUsed) APPBAR_GREEN else YELLOW,
                                 activeTrackColor = APPBAR_GREEN,
-
                             ),
                             value = generalSkill.toFloat(),
                             onValueChange = { generalSkill = it.toInt() },
@@ -175,13 +205,11 @@ fun AddPlayerDialog(
                             steps = 10,
                             modifier = Modifier.fillMaxWidth()
                         )
-
                         if (!isGeneralSkillUsed) {
                             Spacer(modifier = Modifier.height(8.dp))
                             DividerTextComponent(
                                 textColor = Color.White
                             )
-
                             Spacer(modifier = Modifier.height(8.dp))
                             Text("Speed: $speed", fontSize = 16.sp,color = Color.White)
                             Slider(
@@ -277,4 +305,3 @@ fun AddPlayerDialog(
         }
     )
 }
-

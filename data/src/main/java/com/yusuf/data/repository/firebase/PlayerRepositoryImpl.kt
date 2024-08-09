@@ -5,10 +5,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.yusuf.data.mapper.toCompetitionData
-import com.yusuf.data.mapper.toCompetitionDataDto
-import com.yusuf.data.mapper.toPlayerData
-import com.yusuf.data.mapper.toPlayerDataDto
+import com.yusuf.data.mapper.firebase_mapper.toCompetitionData
+import com.yusuf.data.mapper.firebase_mapper.toCompetitionDataDto
+import com.yusuf.data.mapper.firebase_mapper.toPlayerData
+import com.yusuf.data.mapper.firebase_mapper.toPlayerDataDto
 import com.yusuf.data.remote.dto.firebase_dto.CompetitionDataDto
 import com.yusuf.data.remote.dto.firebase_dto.PlayerDataDto
 import com.yusuf.domain.model.firebase.CompetitionData
