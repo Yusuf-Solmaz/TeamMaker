@@ -47,6 +47,7 @@ import com.yusuf.component.custom_player_dialog.UpdatePlayerDialog
 import com.yusuf.component.custom_player_dialog.showTooltipBalloon
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
 import com.yusuf.theme.APPBAR_GREEN
+import com.yusuf.theme.ORANGE
 import com.yusuf.utils.SharedPreferencesHelper
 import kotlin.math.roundToInt
 
@@ -74,7 +75,7 @@ fun PlayerListScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                containerColor = APPBAR_GREEN, contentColor = Color.White,
+                containerColor = ORANGE, contentColor = Color.White,
                 onClick = {
                 showAddPlayerDialog = true
                 if (showTooltip) {
