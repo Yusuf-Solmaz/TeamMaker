@@ -92,7 +92,7 @@ class CompetitionViewModel @Inject constructor(
 
     fun uploadImageAndAddCompetition(bitmap: Bitmap, competitionName: String) {
         viewModelScope.launch {
-            val result = uploadImageUseCase(bitmap, competitionName)
+            val result = uploadImageUseCase(bitmap, "competitions")
             if (result.isSuccess) {
                 val imageUrl = result.getOrNull()
                 val competition = CompetitionData(
