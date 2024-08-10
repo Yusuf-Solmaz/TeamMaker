@@ -339,9 +339,6 @@ fun ChooseCompetitionTypeScreen(
 }
 
 
-
-
-
 @Composable
 fun CompetitionCard(
     competition: CompetitionData,
