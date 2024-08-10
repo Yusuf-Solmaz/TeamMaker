@@ -1,9 +1,13 @@
 import android.location.Location
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,6 +24,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -48,9 +53,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.storage
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
+import com.yusuf.feature.create_competition.ImagePickerComposable
 import com.yusuf.feature.create_competition.select_player.BackCardContent
 import com.yusuf.feature.create_competition.select_player.FrontCardContent
 import com.yusuf.feature.create_competition.select_player.viewmodel.SelectPlayerViewModel
@@ -59,6 +69,7 @@ import com.yusuf.navigation.NavigationGraph
 import com.yusuf.theme.DARK_GREEN
 import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.utils.SharedPreferencesHelper
+import java.util.UUID
 
 @Composable
 fun SelectPlayerScreen(
@@ -77,6 +88,8 @@ fun SelectPlayerScreen(
     val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
     val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
     val competitionName = sharedPreferencesHelper.competitionName
+    val imageUri = remember { mutableStateOf<Uri?>(null) }
+
 
     LaunchedEffect(true) {
         viewModel.getPlayersByCompetitionType(competitionName.toString())
@@ -98,101 +111,80 @@ fun SelectPlayerScreen(
             )
             navController.navigate(route)
         }
-        if (teamBalancerUIState.isLoading) {
-            Log.d("SelectPlayerScreen", "Loading teams...")
-        }
-        if (teamBalancerUIState.errorMessage != null) {
-            Log.d("SelectPlayerScreen", "Teams are not ready yet.")
-        }
     }
 
-    if (teamBalancerUIState.isLoading) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+    Column(Modifier.fillMaxSize()) {
+        ImagePickerComposable(onImageSelected = { uri ->
+            imageUri.value = uri
+        })
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(
-                text = "Creating teams...",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                style = TextStyle(
-                    color = APPBAR_GREEN,
-                    fontFamily = FontFamily(Font(R.font.onboarding_title1))
-                )
-            )
-        }
-    } else {
-        Column(Modifier.fillMaxSize()) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(playerListUiState.playerList!!.size) { index ->
-                    val player = playerListUiState.playerList!![index]
-                    val isSelected = player in selectedPlayers
+            items(playerListUiState.playerList!!.size) { index ->
+                val player = playerListUiState.playerList!![index]
+                val isSelected = player in selectedPlayers
 
-                    var isFlipped by remember { mutableStateOf(false) }
+                var isFlipped by remember { mutableStateOf(false) }
 
-                    Card(
+                Card(
+                    modifier = Modifier
+                        .background(Color.Transparent)
+                        .padding(8.dp)
+                        .border(
+                            width = 2.dp,
+                            color = if (isSelected) APPBAR_GREEN else Color.Transparent,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clickable {
+                            if (isSelected) {
+                                selectedPlayers.remove(player)
+                            } else {
+                                selectedPlayers.add(player)
+                            }
+                        }
+                        .fillMaxWidth()
+                ) {
+                    Box(
                         modifier = Modifier
-                            .background(Color.Transparent)
-                            .padding(8.dp)
-                            .border(
-                                width = 2.dp,
-                                color = if (isSelected) APPBAR_GREEN else Color.Transparent,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .clickable {
-                                if (isSelected) {
-                                    selectedPlayers.remove(player)
-                                } else {
-                                    selectedPlayers.add(player)
-                                }
-                            }
-                            .fillMaxWidth()
+                            .background(Color.White)
                     ) {
-                        Box(
+                        IconButton(
+                            onClick = { isFlipped = !isFlipped },
                             modifier = Modifier
-                                .background(Color.White)
+                                .align(Alignment.TopEnd)
+                                .padding(top = 1.dp, end = 1.dp)
+                                .size(24.dp)
                         ) {
-                            IconButton(
-                                onClick = { isFlipped = !isFlipped },
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(top = 1.dp, end = 1.dp)
-                                    .size(24.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.MoreVert,
-                                    contentDescription = "More options"
-                                )
-                            }
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "More options"
+                            )
+                        }
 
-                            this@Card.AnimatedVisibility(
-                                visible = !isFlipped,
-                                enter = fadeIn(),
-                                exit = fadeOut(),
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                FrontCardContent(player)
-                            }
+                        this@Card.AnimatedVisibility(
+                            visible = !isFlipped,
+                            enter = fadeIn(),
+                            exit = fadeOut(),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            FrontCardContent(player)
+                        }
 
-                            this@Card.AnimatedVisibility(
-                                visible = isFlipped,
-                                enter = fadeIn(),
-                                exit = fadeOut(),
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                BackCardContent(player)
-                            }
+                        this@Card.AnimatedVisibility(
+                            visible = isFlipped,
+                            enter = fadeIn(),
+                            exit = fadeOut(),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            BackCardContent(player)
                         }
                     }
                 }
             }
+        }
 
             Button(
                 onClick = {
@@ -213,39 +205,40 @@ fun SelectPlayerScreen(
                     } else if (datePicker.isEmpty()) {
                         Log.d("SelectPlayerScreen", "Selected date: $datePicker")
                         Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
+                    } else {
+                        imageUri.value?.let { uri ->
+                            teamBalancerViewModel.uploadImage(uri)
+                 }
                     }
-                    else {
+                        .run {
                         teamBalancerViewModel.createBalancedTeams(selectedPlayers)
                     }
                 },
+            modifier = Modifier
+                .width(250.dp)
+                .align(Alignment.CenterHorizontally),
+            colors = ButtonDefaults.buttonColors(Color.White)
+        ) {
+            Box(
                 modifier = Modifier
-                    .width(250.dp)
-                    .align(Alignment.CenterHorizontally),
-                colors = ButtonDefaults.buttonColors(Color.White)
+                    .fillMaxWidth()
+                    .heightIn(34.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            listOf(
+                                APPBAR_GREEN,
+                                DARK_GREEN
+                            )
+                        ), shape = RoundedCornerShape(50.dp)
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(34.dp)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                listOf(
-                                    APPBAR_GREEN,
-                                    DARK_GREEN
-                                )
-                            ), shape = RoundedCornerShape(50.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Continue",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
+                Text(
+                    text = "Continue",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                )
             }
         }
     }
 }
-
-
