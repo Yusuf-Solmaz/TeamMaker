@@ -37,12 +37,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.yusuf.feature.R
+import com.yusuf.theme.APPBAR_GREEN
+import com.yusuf.theme.DARK_GRAY
+import com.yusuf.theme.GREEN
+import com.yusuf.theme.LIGHT_GREEN
+import com.yusuf.theme.LIGHT_RED
 import java.util.Calendar
 import java.util.Locale
 
@@ -62,10 +70,12 @@ fun TimePicker(
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
 
-        Box(Modifier.fillMaxSize()
-            .clickable {
-                showAdvancedExample = true
-            }) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .clickable {
+                    showAdvancedExample = true
+                }) {
 
             Column(
                 modifier = modifier
@@ -90,9 +100,6 @@ fun TimePicker(
                 )
             }
         }
-
-
-
 
         when {
             showAdvancedExample -> AdvancedTimePickerExample(
@@ -128,30 +135,43 @@ fun AdvancedTimePickerExample(
     } else {
         Icons.Filled.Build
     }
-
-    AdvancedTimePickerDialog(
-        onDismiss = { onDismiss() },
-        onConfirm = {
-            val selectedTime = "${timePickerState.hour}:${timePickerState.minute}"
-            onConfirm(selectedTime)
-        },
-        toggle = {
-            IconButton(onClick = { showDial = !showDial }) {
-                Icon(
-                    imageVector = toggleIcon,
-                    contentDescription = "Time picker type toggle",
-                )
-            }
-        },
+    MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(
+            primary = Color.Black,
+            primaryContainer = Color.White,
+            onPrimaryContainer = Color.Black,
+            outline = Color.Black,
+            secondary = Color.Black,
+            onSecondary = Color.White,
+            secondaryContainer = Color.White,
+            onSurface = Color.Black,
+            surfaceVariant = Color.White,
+            outlineVariant = Color.Black
+        )
     ) {
-        if (showDial) {
-            androidx.compose.material3.TimePicker(state = timePickerState)
-        } else {
-            TimeInput(state = timePickerState)
+        AdvancedTimePickerDialog(
+            onDismiss = { onDismiss() },
+            onConfirm = {
+                val selectedTime = "${timePickerState.hour}:${timePickerState.minute}"
+                onConfirm(selectedTime)
+            },
+            toggle = {
+                IconButton(onClick = { showDial = !showDial }) {
+                    Icon(
+                        imageVector = toggleIcon,
+                        contentDescription = "Time picker type toggle",
+                    )
+                }
+            },
+        ) {
+            if (showDial) {
+                androidx.compose.material3.TimePicker(state = timePickerState)
+            } else {
+                TimeInput(state = timePickerState)
+            }
         }
     }
 }
-
 
 @Composable
 fun AdvancedTimePickerDialog(
@@ -171,11 +191,8 @@ fun AdvancedTimePickerDialog(
             modifier =
             Modifier
                 .width(IntrinsicSize.Min)
-                .height(IntrinsicSize.Min)
-                .background(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    color = MaterialTheme.colorScheme.surface
-                ),
+                .height(IntrinsicSize.Min),
+            color = Color.White
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
@@ -186,7 +203,9 @@ fun AdvancedTimePickerDialog(
                         .fillMaxWidth()
                         .padding(bottom = 20.dp),
                     text = title,
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.Black,
+                    fontFamily = FontFamily(Font(R.font.onboarding_title1))
                 )
                 content()
                 Row(
@@ -196,8 +215,8 @@ fun AdvancedTimePickerDialog(
                 ) {
                     toggle()
                     Spacer(modifier = Modifier.weight(1f))
-                    TextButton(onClick = onDismiss) { Text("Cancel") }
-                    TextButton(onClick = onConfirm) { Text("OK") }
+                    TextButton(onClick = onDismiss) { Text("Cancel", color = LIGHT_RED) }
+                    TextButton(onClick = onConfirm) { Text("OK", color = APPBAR_GREEN) }
                 }
             }
         }
