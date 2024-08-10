@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -58,8 +59,7 @@ fun TeamListScreen(
 
     Column(
         Modifier
-            .fillMaxWidth()
-            .height(300.dp)
+            .fillMaxSize()
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -130,7 +130,9 @@ fun TeamListScreen(
             }
             val averageSkill = calculateAverageSkillRating(team)
 
-            Column {
+            Column(
+
+            ) {
                 Text(
                     text = "Average Skill Rating: %.2f".format(averageSkill),
                     style = TextStyle(
@@ -150,9 +152,12 @@ fun TeamListScreen(
 
 @Composable
 fun TeamList(team: List<PlayerData>) {
+    Column(Modifier.fillMaxSize()) {
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
+            .weight(1f)
             .padding(8.dp)
     ) {
         items(team.size) { index ->
@@ -229,6 +234,7 @@ fun TeamList(team: List<PlayerData>) {
                 }
             }
         }
+    }
     }
 }
 

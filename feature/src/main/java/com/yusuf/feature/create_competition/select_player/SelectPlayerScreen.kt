@@ -99,7 +99,6 @@ fun SelectPlayerScreen(
     }
 
     LaunchedEffect(teamBalancerUIState) {
-        Log.d("SelectPlayerScreen", "Team balancer UI state changed: $teamBalancerUIState")
         if (teamBalancerUIState.teams != null) {
             Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
 
@@ -117,22 +116,14 @@ fun SelectPlayerScreen(
 
             teamBalancerUIState.teams = null
         }
-        if (teamBalancerUIState.errorMessage != null) {
-            Log.d("SelectPlayerScreen", "Teams are not ready yet.")
-
-        }
     }
 
     Column(Modifier.fillMaxSize()) {
         ImagePickerComposable(onImageSelected = { uri ->
             imageUri.value = uri
         })
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+
+        if (teamBalancerUIState.isLoading) {
 
             Row(
                 Modifier.fillMaxWidth(),
@@ -157,23 +148,19 @@ fun SelectPlayerScreen(
                     )
                 )
             }
-
-
         }
-    } else {
-        Column(Modifier.fillMaxSize()) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                
+        else{
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
 
             items(playerListUiState.playerList!!.size) { index ->
+
                 val player = playerListUiState.playerList!![index]
                 val isSelected = player in selectedPlayers
-
 
                 var isFlipped by remember { mutableStateOf(false) }
 
@@ -234,28 +221,27 @@ fun SelectPlayerScreen(
             }
         }
 
-            Button(
-                onClick = {
-                    if (selectedPlayers.isEmpty()) {
-                        Toast.makeText(
-                            context,
-                            "Please select at least one player",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else if (timePicker.isEmpty()) {
-                        Toast.makeText(context, "Please select a time", Toast.LENGTH_SHORT).show()
-                    } else if (datePicker.isEmpty()) {
-                        Log.d("SelectPlayerScreen", "Selected date: $datePicker")
-                        Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
-                    } else {
-                        imageUri.value?.let { uri ->
-                            teamBalancerViewModel.uploadImage(uri)
-                 }
+        Button(
+            onClick = {
+                if (selectedPlayers.isEmpty() || selectedPlayers.size == 1) {
+                    Toast.makeText(
+                        context,
+                        "The number of selected players should be greater then one player.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (timePicker.isEmpty() || datePicker.isEmpty()) {
+                    Toast.makeText(context,
+                        if (timePicker.isEmpty()) "Please select a time" else "Please select a date"
+                        , Toast.LENGTH_SHORT).show()
+                }  else {
+                    imageUri.value?.let { uri ->
+                        teamBalancerViewModel.uploadImage(uri)
                     }
-                        .run {
+                }
+                    .run {
                         teamBalancerViewModel.createBalancedTeams(selectedPlayers)
                     }
-                },
+            },
             modifier = Modifier
                 .width(250.dp)
                 .align(Alignment.CenterHorizontally),
@@ -281,6 +267,7 @@ fun SelectPlayerScreen(
                     fontWeight = FontWeight.Bold,
                 )
             }
+        }
         }
     }
 }

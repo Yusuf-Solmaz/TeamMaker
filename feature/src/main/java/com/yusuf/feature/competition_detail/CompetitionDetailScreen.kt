@@ -119,7 +119,6 @@ fun CompetitionDetailScreen(
                     ?: savedCompetitionDetail?.secondTeam!!
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
 
         if (competitionDetail != null) {
             val savedCompetition = SavedCompetitionsModel(
