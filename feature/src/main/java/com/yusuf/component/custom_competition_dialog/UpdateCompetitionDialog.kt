@@ -59,8 +59,7 @@ fun UpdateCompetitionDialog(
     onDismiss: () -> Unit,
     onUpdateCompetition: (CompetitionData) -> Unit,
     onImagePick: () -> Unit,
-    selectedImageUri: Uri?,
-    context: Context
+    selectedImageUri: Uri?
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedCompetition by remember { mutableStateOf<Competition?>(null) }

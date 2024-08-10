@@ -210,8 +210,7 @@ fun ChooseCompetitionTypeScreen(
                                     permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                                 }
                             },
-                            selectedImageUri = selectedImageUri.value,
-                            context = context
+                            selectedImageUri = selectedImageUri.value
                         )
                     }
                 }

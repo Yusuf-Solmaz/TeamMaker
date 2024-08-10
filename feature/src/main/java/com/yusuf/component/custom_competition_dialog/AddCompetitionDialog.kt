@@ -2,6 +2,7 @@ package com.yusuf.component.custom_competition_dialog
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,7 +67,16 @@ fun AddCompetitionDialog(
     var expanded by remember { mutableStateOf(false) }
     var selectedCompetition by remember { mutableStateOf<Competition?>(null) }
     var customCompetitionName by remember { mutableStateOf("") }
+    var selectedImageUriDialog by remember { mutableStateOf(selectedImageUri) }
 
+    Log.d("AddCompetitionDialog1", "selectedImageUri: $selectedImageUri")
+
+    LaunchedEffect(selectedImageUri) {
+        Log.d("AddCompetitionDialog", "selectedImageUri: $selectedImageUri")
+        if (selectedImageUri != null) {
+            selectedImageUriDialog = null
+        }
+    }
 
     AlertDialog(
         containerColor = LIGHT_GREEN,
@@ -94,7 +105,7 @@ fun AddCompetitionDialog(
                         .clickable { onImagePick() }
                         .align(Alignment.CenterHorizontally)
                 ) {
-                    selectedImageUri?.let { uri ->
+                    selectedImageUriDialog?.let { uri ->
                         Image(
                             painter = rememberAsyncImagePainter(uri),
                             contentDescription = null,
@@ -181,12 +192,12 @@ fun AddCompetitionDialog(
         },
         confirmButton = {
             Button(onClick = {
-                if (selectedImageUri == null) {
-                    if (selectedCompetition == null ||  customCompetitionName.isBlank()) {
-                        Toast.makeText(context, "Please choose at least one competition", Toast.LENGTH_SHORT).show()
-                        return@Button
-                    }
+                if (selectedImageUriDialog == null) {
                     Toast.makeText(context, "Please choose an image.", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+                if (selectedCompetition == null &&  customCompetitionName.isBlank()) {
+                    Toast.makeText(context, "Please choose at least one competition", Toast.LENGTH_SHORT).show()
                     return@Button
                 }
 
