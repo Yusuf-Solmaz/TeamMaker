@@ -51,8 +51,6 @@ fun OptionsScreen(
     navController: NavController,
     competition: Competition
 ) {
-
-
     Log.d("OptionsScreen", "Competition: $competition")
 
     Column(

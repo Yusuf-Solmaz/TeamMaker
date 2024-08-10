@@ -230,7 +230,7 @@ fun ShowConfirmationDialog(
                 },
                 modifier = Modifier.width(60.dp),
                 fillMaxWidth = false,
-                heightIn = 40.dp,
+                heightIn = 35.dp,
                 firstColor = RED,
                 secondColor = DARK_RED
             )
@@ -243,7 +243,7 @@ fun ShowConfirmationDialog(
                 },
                 modifier = Modifier.width(60.dp),
                 fillMaxWidth = false,
-                heightIn = 40.dp
+                heightIn = 35.dp
             )
         },
         modifier = Modifier,

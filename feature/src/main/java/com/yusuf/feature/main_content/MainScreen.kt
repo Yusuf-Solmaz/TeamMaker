@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,15 +27,18 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.yusuf.component.LoadingLottie
+import com.yusuf.component.auth_components.AuthButtonComponent
 import com.yusuf.feature.R
 import com.yusuf.feature.auth.login.viewmodel.LoginViewModel
 import com.yusuf.feature.main_content.viewmodel.MainContentViewModel
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.navigation.TeamMakerNavigation
 import com.yusuf.theme.APPBAR_GREEN
+import com.yusuf.theme.DARK_RED
 import com.yusuf.theme.GREEN
 import com.yusuf.theme.LIGHT_GREEN
 import com.yusuf.theme.LIGHT_GREEN_V2
+import com.yusuf.theme.RED
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -54,11 +58,11 @@ fun MainScreen(
     var navigationKey by remember { mutableStateOf(0) }
     val context = LocalContext.current
 
-   LaunchedEffect(true) {
-       loginViewModel.isLoggedIn()
+    LaunchedEffect(true) {
+        loginViewModel.isLoggedIn()
 
-       Log.i("MainScreen", "isLoggedInState.isAnonymous: ${isLoggedInState.isAnonymous}")
-   }
+        Log.i("MainScreen", "isLoggedInState.isAnonymous: ${isLoggedInState.isAnonymous}")
+    }
 
     LaunchedEffect(deleteUserState.transaction) {
         Log.i("MainScreen", "deleteUserState.transaction: ${deleteUserState.transaction}")
@@ -75,41 +79,59 @@ fun MainScreen(
 
     if (showDialog) {
         AlertDialog(
-            containerColor = LIGHT_GREEN,
+            containerColor = Color.White,
             onDismissRequest = { showDialog = false },
             title = {
-                    Text(
-                        text = if (dialogAction == "Logout") "Logout" else "Delete Account",
-                        color = Color.White)
+                Text(
+                    text = if (dialogAction == "Logout") "Logout" else "Delete Account",
+                    color = Color.Black
+                )
             },
-            text = { Text("Are you sure you want to ${dialogAction.lowercase()}?", color = Color.White) },
+            text = {
+                Text(
+                    "Are you sure you want to ${dialogAction.lowercase()}?",
+                    color = Color.Black
+                )
+            },
             confirmButton = {
-                TextButton(onClick = {
-                    showDialog = false
-                    when (dialogAction) {
-                        "Logout" -> {
-                            goToLogin(
-                                loginViewModel = loginViewModel,
-                                navHostController = navController
-                            )
-                            appBarTitle = null
-                            navigationKey++
+                AuthButtonComponent(
+                    value = "Yes",
+                    onClick = {
+                        showDialog = false
+                        when (dialogAction) {
+                            "Logout" -> {
+                                goToLogin(
+                                    loginViewModel = loginViewModel,
+                                    navHostController = navController
+                                )
+                                appBarTitle = null
+                                navigationKey++
+                            }
+
+                            "Delete Account" -> {
+                                mainContentViewModel.deleteUser()
+                            }
+
+                            "Forgot Me" -> {
+                                mainContentViewModel.deleteUser()
+                            }
                         }
-                        "Delete Account" -> {
-                            mainContentViewModel.deleteUser()
-                        }
-                        "Forgot Me" ->{
-                            mainContentViewModel.deleteUser()
-                        }
-                    }
-                }) {
-                    Text("Yes", color = GREEN)
-                }
+                    },
+                    modifier = Modifier.width(60.dp),
+                    fillMaxWidth = false,
+                    heightIn = 35.dp,
+                    firstColor = RED,
+                    secondColor = DARK_RED
+                )
             },
             dismissButton = {
-                TextButton(onClick = { showDialog = false }) {
-                    Text("No", color = GREEN)
-                }
+                AuthButtonComponent(
+                    value = "No",
+                    onClick = { showDialog = false },
+                    modifier = Modifier.width(60.dp),
+                    fillMaxWidth = false,
+                    heightIn = 35.dp
+                )
             }
         )
     }
@@ -125,7 +147,12 @@ fun MainScreen(
                                 color = APPBAR_GREEN,
                                 fontSize = 25.sp
                             ),
-                            fontFamily = FontFamily(Font(R.font.onboarding_title1, FontWeight.Normal))
+                            fontFamily = FontFamily(
+                                Font(
+                                    R.font.onboarding_title1,
+                                    FontWeight.Normal
+                                )
+                            )
                         )
                     },
                     navigationIcon = {
@@ -154,15 +181,20 @@ fun MainScreen(
                                 )
                             }
                             MaterialTheme(
-                                shapes = MaterialTheme.shapes.copy(extraSmall = RoundedCornerShape(16.dp))){
+                                shapes = MaterialTheme.shapes.copy(
+                                    extraSmall = RoundedCornerShape(
+                                        16.dp
+                                    )
+                                )
+                            ) {
                                 DropdownMenu(
                                     expanded = expanded,
                                     onDismissRequest = { expanded = false },
-                                    Modifier.background(LIGHT_GREEN_V2)
+                                    Modifier.background(Color.White)
                                 ) {
 
                                     DropdownMenuItem(
-                                        text = { Text("Saved Competitions", color = Color.White) },
+                                        text = { Text("Saved Competitions", color = Color.Black) },
                                         onClick = {
                                             expanded = false
                                             navController.navigate(NavigationGraph.SAVED_COMPETITIONS.route)
@@ -172,7 +204,9 @@ fun MainScreen(
                                         text = {
                                             Text(
                                                 if (isLoggedInState.isAnonymous) "Forgot Me" else "Delete Account",
-                                            color = Color.White) },
+                                                color = RED
+                                            )
+                                        },
                                         onClick = {
                                             expanded = false
                                             dialogAction = "Delete Account"
@@ -180,7 +214,7 @@ fun MainScreen(
                                         }
                                     )
                                     DropdownMenuItem(
-                                        text = { Text("Logout", color = Color.White) },
+                                        text = { Text("Logout", color = Color.Black) },
                                         onClick = {
                                             expanded = false
                                             dialogAction = "Logout"
