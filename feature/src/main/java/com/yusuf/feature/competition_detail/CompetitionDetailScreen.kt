@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.domain.model.firebase.SavedCompetitionsModel
 import com.yusuf.domain.model.weather.CurrentWeatherModel
@@ -90,7 +91,13 @@ fun CompetitionDetailScreen(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Log.d("MatchDetailScreen", "CompetitionDetail: $competitionDetail")
+
+                AsyncImage(
+                    model = competitionDetail?.imageUrl
+                        ?: savedCompetitionDetail?.imageUrl,
+                    contentDescription = "Competition Image",
+                    modifier = Modifier.size(100.dp)
+                )
             }
             Spacer(modifier = Modifier.height(2.dp))
 
@@ -124,7 +131,7 @@ fun CompetitionDetailScreen(
             val savedCompetition = SavedCompetitionsModel(
                 firstTeam = competitionDetail.firstBalancedTeam,
                 secondTeam = competitionDetail.secondBalancedTeam,
-                imageUrl = "",
+                imageUrl = competitionDetail.imageUrl!!,
                 competitionTime = competitionDetail.selectedTime,
                 competitionDate = competitionDetail.selectedDate,
                 locationName = competitionDetail.locationName!!,
