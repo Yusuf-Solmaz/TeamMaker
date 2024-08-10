@@ -19,3 +19,6 @@ val YELLOW = Color(0xFFEFF396)
 
 val RED = Color(0xFFEF0C0C)
 val DARK_RED = Color(0xFF8C0303)
+val CANCEL_RED = Color(0xFFF87474)
+val GRAY = Color(0xFFCECECE)
+val DARK_GRAY= Color(0xFF575757)
