@@ -121,6 +121,7 @@ fun SelectPlayerScreen(
                     imageUrl = imageUrl
                 )
             )
+            navController.previousBackStackEntry?.savedStateHandle?.set("reset", true)
             navController.navigate(route)
 
             teamBalancerUIState.teams = null
@@ -241,11 +242,15 @@ fun SelectPlayerScreen(
                         "The number of selected players should be greater then one player.",
                         Toast.LENGTH_SHORT
                     ).show()
-                } else if (timePicker.isEmpty() || datePicker.isEmpty()) {
+                    return@Button
+                }
+                else if (timePicker.isEmpty() || datePicker.isEmpty()) {
                     Toast.makeText(context,
                         if (timePicker.isEmpty()) "Please select a time" else "Please select a date"
                         , Toast.LENGTH_SHORT).show()
-                }  else {
+                    return@Button
+                }
+                else {
                     imageUri.value?.let { uri ->
                         teamBalancerViewModel.uploadImage(uri)
                     }

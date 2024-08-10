@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +38,17 @@ fun CreateCompetitionScreen(navController: NavController) {
     var selectedDate by remember { mutableStateOf("")}
     var selectedLocation by remember { mutableStateOf<Location?>(null) }
     var selectedLocationName by remember { mutableStateOf("") }
+
+
+    LaunchedEffect(Unit) {
+        navController.currentBackStackEntry?.savedStateHandle?.let { handle ->
+            if (handle.contains("reset")) {
+                selectedTime = ""
+                selectedDate = ""
+                handle.remove<Boolean>("reset")
+            }
+        }
+    }
 
     Column(
         modifier = Modifier

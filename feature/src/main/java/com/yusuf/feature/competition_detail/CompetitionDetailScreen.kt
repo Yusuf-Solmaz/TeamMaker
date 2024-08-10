@@ -92,12 +92,15 @@ fun CompetitionDetailScreen(
                     fontWeight = FontWeight.Bold
                 )
 
-                AsyncImage(
-                    model = competitionDetail?.imageUrl
-                        ?: savedCompetitionDetail?.imageUrl,
-                    contentDescription = "Competition Image",
-                    modifier = Modifier.size(100.dp)
-                )
+                if(competitionDetail?.imageUrl != null || savedCompetitionDetail?.imageUrl != null){
+                    AsyncImage(
+                        model = competitionDetail?.imageUrl
+                            ?: savedCompetitionDetail?.imageUrl,
+                        contentDescription = "Competition Image",
+                        modifier = Modifier.size(100.dp)
+                    )
+                }
+
             }
             Spacer(modifier = Modifier.height(2.dp))
 
@@ -131,7 +134,7 @@ fun CompetitionDetailScreen(
             val savedCompetition = SavedCompetitionsModel(
                 firstTeam = competitionDetail.firstBalancedTeam,
                 secondTeam = competitionDetail.secondBalancedTeam,
-                imageUrl = competitionDetail.imageUrl!!,
+                imageUrl = competitionDetail.imageUrl ?: "",
                 competitionTime = competitionDetail.selectedTime,
                 competitionDate = competitionDetail.selectedDate,
                 locationName = competitionDetail.locationName!!,
