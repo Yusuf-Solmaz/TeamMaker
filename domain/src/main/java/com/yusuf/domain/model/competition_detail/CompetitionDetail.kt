@@ -11,5 +11,6 @@ data class CompetitionDetail(
     val firstBalancedTeam: List<PlayerData>? = null,
     val secondBalancedTeam: List<PlayerData>? = null,
     val location: Location? = null,
-    val locationName: String? = null
+    val locationName: String? = null,
+    val imageUrl: String? = null
 ) : Serializable

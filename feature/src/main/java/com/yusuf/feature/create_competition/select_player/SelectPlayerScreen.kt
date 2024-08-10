@@ -86,16 +86,24 @@ fun SelectPlayerScreen(
     val viewModel: SelectPlayerViewModel = hiltViewModel()
     val playerListUiState by viewModel.playerListUIState.collectAsState()
     val teamBalancerUIState by teamBalancerViewModel.teamBalancerUiState.collectAsState()
+    val teamImageUIState by teamBalancerViewModel.teamImageUIState.collectAsState()
 
     val context = LocalContext.current
     val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
     val selectedPlayers = remember { mutableStateListOf<PlayerData>() }
     val competitionName = sharedPreferencesHelper.competitionName
     val imageUri = remember { mutableStateOf<Uri?>(null) }
-
+    var imageUrl by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(true) {
         viewModel.getPlayersByCompetitionType(competitionName.toString())
+    }
+
+    LaunchedEffect(teamImageUIState) {
+        if (teamImageUIState.imageUri != null) {
+            imageUrl = teamImageUIState.imageUri
+            Log.d("SelectPlayerScreenURLL", "Image URL: $imageUrl")
+        }
     }
 
     LaunchedEffect(teamBalancerUIState) {
@@ -109,7 +117,8 @@ fun SelectPlayerScreen(
                     firstBalancedTeam = teamBalancerUIState.teams!!.first,
                     secondBalancedTeam = teamBalancerUIState.teams!!.second,
                     location = location,
-                    locationName = locationName
+                    locationName = locationName,
+                    imageUrl = imageUrl
                 )
             )
             navController.navigate(route)
@@ -121,7 +130,10 @@ fun SelectPlayerScreen(
     Column(Modifier.fillMaxSize()) {
         ImagePickerComposable(onImageSelected = { uri ->
             imageUri.value = uri
+
         })
+
+
 
         if (teamBalancerUIState.isLoading) {
 

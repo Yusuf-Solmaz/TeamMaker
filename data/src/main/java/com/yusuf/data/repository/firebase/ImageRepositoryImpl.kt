@@ -19,7 +19,7 @@ class ImageRepositoryImpl @Inject constructor(
         competitionName: String
     ): Result<String> {
         return try {
-            val storageRef = storage.reference.child("competitions/${UUID.randomUUID()}.jpg")
+            val storageRef = storage.reference.child("$competitionName/${UUID.randomUUID()}.jpg")
             val baos = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val data = baos.toByteArray()

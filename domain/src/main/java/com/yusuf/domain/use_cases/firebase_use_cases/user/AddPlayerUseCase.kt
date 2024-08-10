@@ -10,6 +10,7 @@ class AddPlayerUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         playerData: PlayerData,
-        imageUri: Uri
-    ) = playerRepository.addPlayer(playerData,imageUri)
+        imageUri: Uri,
+        imagePathString: String
+    ) = playerRepository.addPlayer(playerData,imageUri,imagePathString)
 }

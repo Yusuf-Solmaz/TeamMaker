@@ -1,16 +1,21 @@
 package com.yusuf.feature.create_competition.select_player.viewmodel
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yusuf.domain.model.firebase.CompetitionData
 import com.yusuf.domain.model.firebase.PlayerData
-import com.yusuf.domain.use_cases.firebase_use_cases.image.UploadImageCompetitionUseCaseUseCase
+import com.yusuf.domain.use_cases.firebase_use_cases.image.AddImageUseCase
+
+
 import com.yusuf.domain.use_cases.team.TeamBalancerUseCase
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.create_competition.select_player.state.TeamBalancerUIState
+import com.yusuf.feature.create_competition.select_player.state.TeamImageUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,50 +26,88 @@ import javax.inject.Inject
 @HiltViewModel
 class TeamBalancerViewModel @Inject constructor(
     private val teamBalancerUseCase: TeamBalancerUseCase,
-    private val uploadImageCompetitionUseCase: UploadImageCompetitionUseCaseUseCase
+    private val uploadImageUseCase: AddImageUseCase
 ) : ViewModel() {
+
     private val _teamBalancerUiState = MutableStateFlow(TeamBalancerUIState())
     val teamBalancerUiState: StateFlow<TeamBalancerUIState> get() = _teamBalancerUiState
 
-    val imageUploadState = mutableStateOf<Result<String>?>(null)
+    private val _teamImageUIState = MutableStateFlow(TeamImageUIState())
+    val teamImageUIState: StateFlow<TeamImageUIState> get() = _teamImageUIState
 
     fun uploadImage(uri: Uri) {
-        viewModelScope.launch {
-            val result = uploadImageCompetitionUseCase.invoke(uri)
-            imageUploadState.value = result
-        }
-    }
-
-    fun createBalancedTeams(players: List<PlayerData>) {
         _teamBalancerUiState.value = _teamBalancerUiState.value.copy(isLoading = true)
         viewModelScope.launch {
-            delay(2000)
-            teamBalancerUseCase(players).collect { result ->
+            uploadImageUseCase(uri, "saved_competitions").collect { result ->
                 when (result) {
                     is RootResult.Success -> {
-                        _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
-                            teams = result.data,
+                        _teamImageUIState.value = _teamImageUIState.value.copy(
+                            imageUri = result.data,
                             isLoading = false,
-                            errorMessage = null
+                            error = null
                         )
-                        Log.d("SharedViewModel", "Teams set: ${_teamBalancerUiState.value.teams}")
                     }
+
                     is RootResult.Error -> {
-                        _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
-                            teams = null,
+                        _teamImageUIState.value = _teamImageUIState.value.copy(
+                            imageUri = null,
                             isLoading = false,
-                            errorMessage = result.message
+                            error = result.message
                         )
-                        Log.e("SharedViewModel", "Error creating balanced teams: ${result.message}")
                     }
-                    is RootResult.Loading -> {
-                        _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
-                            isLoading = true
+
+                    RootResult.Loading -> {
+                        _teamImageUIState.value = _teamImageUIState.value.copy(
+                            isLoading = true,
+                            error = null,
+                            imageUri = null
                         )
-                        Log.d("SharedViewModel", "Loading creating balanced teams...")
+
                     }
                 }
             }
         }
     }
-}
+
+
+        fun createBalancedTeams(players: List<PlayerData>) {
+            _teamBalancerUiState.value = _teamBalancerUiState.value.copy(isLoading = true)
+            viewModelScope.launch {
+                delay(2000)
+                teamBalancerUseCase(players).collect { result ->
+                    when (result) {
+                        is RootResult.Success -> {
+                            _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
+                                teams = result.data,
+                                isLoading = false,
+                                errorMessage = null
+                            )
+                            Log.d(
+                                "SharedViewModel",
+                                "Teams set: ${_teamBalancerUiState.value.teams}"
+                            )
+                        }
+
+                        is RootResult.Error -> {
+                            _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
+                                teams = null,
+                                isLoading = false,
+                                errorMessage = result.message
+                            )
+                            Log.e(
+                                "SharedViewModel",
+                                "Error creating balanced teams: ${result.message}"
+                            )
+                        }
+
+                        is RootResult.Loading -> {
+                            _teamBalancerUiState.value = _teamBalancerUiState.value.copy(
+                                isLoading = true
+                            )
+                            Log.d("SharedViewModel", "Loading creating balanced teams...")
+                        }
+                    }
+                }
+            }
+        }
+    }

@@ -192,7 +192,7 @@ class PlayerListViewModel @Inject constructor(
         fun addPlayer(playerData: PlayerData, imageUri: Uri) {
             _playerUiState.value = _playerUiState.value.copy(isLoading = true)
             viewModelScope.launch {
-                addPlayerUseCase(playerData, imageUri).collect { result ->
+                addPlayerUseCase(playerData, imageUri,"profile_images").collect { result ->
                     when (result) {
                         is RootResult.Loading -> {
                             Log.d("AddPlayerViewModel", "Loading")

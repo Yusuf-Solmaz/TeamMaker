@@ -100,8 +100,10 @@
                     )
                 ) { backStackEntry ->
                     val gson = Gson()
-                    val competitionDetailJson = backStackEntry.arguments?.getString("competitionDetailJson")
-                    val competitionDetail = gson.fromJson(competitionDetailJson, CompetitionDetail::class.java)
+                    val competitionDetailJson =
+                        backStackEntry.arguments?.getString("competitionDetailJson")
+                    val competitionDetail =
+                        gson.fromJson(competitionDetailJson, CompetitionDetail::class.java)
                     CompetitionDetailScreen(
                         navController = navController,
                         competitionDetail = competitionDetail
@@ -113,10 +115,14 @@
                     arguments = listOf(
                         navArgument("savedCompetitionDetailJson") { type = NavType.StringType }
                     )
-                ){backStackEntry ->
+                ) { backStackEntry ->
                     val gson = Gson()
-                    val savedCompetitionDetailJson = backStackEntry.arguments?.getString("savedCompetitionDetailJson")
-                    val savedCompetitionDetail = gson.fromJson(savedCompetitionDetailJson, SavedCompetitionsModel::class.java)
+                    val savedCompetitionDetailJson =
+                        backStackEntry.arguments?.getString("savedCompetitionDetailJson")
+                    val savedCompetitionDetail = gson.fromJson(
+                        savedCompetitionDetailJson,
+                        SavedCompetitionsModel::class.java
+                    )
                     CompetitionDetailScreen(
                         navController = navController,
                         savedCompetitionDetail = savedCompetitionDetail
