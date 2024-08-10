@@ -215,16 +215,16 @@ fun AddCompetitionDialog(
             AuthButtonComponent(
                 value = "Save", onClick = {
                     if (selectedImageUri == null) {
-                        if (selectedCompetition == null || customCompetitionName.isBlank()) {
-                            Toast.makeText(
-                                context,
-                                "Please choose at least one competition",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            return@AuthButtonComponent
-                        }
                         Toast.makeText(context, "Please choose an image.", Toast.LENGTH_SHORT)
                             .show()
+                        return@AuthButtonComponent
+                    }
+                    if (selectedCompetition == null && customCompetitionName.isBlank()) {
+                        Toast.makeText(
+                            context,
+                            "Please choose at least one competition",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         return@AuthButtonComponent
                     }
 
