@@ -152,7 +152,8 @@ fun TeamListScreen(
 fun TeamList(team: List<PlayerData>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(8.dp)
     ) {
         items(team.size) { index ->
             val player = team[index]
