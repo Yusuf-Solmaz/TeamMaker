@@ -17,27 +17,24 @@ class TeamBalancerRepositoryImpl @Inject constructor() : TeamBalancerRepository 
             if (players.isEmpty()) {
                 throw IllegalArgumentException("Number of players must be greater than zero")
             }
-            if (players.size % 2 != 0) {
-                throw IllegalArgumentException("Number of players must be even")
-            }
+
             val teamSize = players.size / 2
             val sortedPlayers = players.sortedByDescending { it.totalSkillRating }
             val teamFirst = mutableListOf<PlayerData>()
             val teamSecond = mutableListOf<PlayerData>()
 
             for (player in sortedPlayers) {
-                // && teamFirst.size < teamSize is used to make sure two teams have the same size
                 if (teamFirst.sumOf { it.totalSkillRating } < teamSecond.sumOf { it.totalSkillRating } && teamFirst.size < teamSize) {
                     teamFirst.add(player)
-                } else {
+                } else if (teamSecond.size < teamSize || players.size % 2 != 0) {
                     teamSecond.add(player)
+                } else {
+                    teamFirst.add(player)
                 }
             }
             emit(RootResult.Success(teamFirst to teamSecond))
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             emit(RootResult.Error(e.message ?: "Something went wrong"))
         }
-        // IO dispatcher is used because this operation is CPU bound and doesn't require main thread
     }.flowOn(Dispatchers.IO)
-
 }

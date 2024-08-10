@@ -14,6 +14,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -53,10 +54,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.yusuf.component.LoadingLottie
 import coil.compose.rememberAsyncImagePainter
 import com.google.firebase.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
+
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
@@ -96,6 +99,7 @@ fun SelectPlayerScreen(
     }
 
     LaunchedEffect(teamBalancerUIState) {
+        Log.d("SelectPlayerScreen", "Team balancer UI state changed: $teamBalancerUIState")
         if (teamBalancerUIState.teams != null) {
             Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
 
@@ -110,6 +114,12 @@ fun SelectPlayerScreen(
                 )
             )
             navController.navigate(route)
+
+            teamBalancerUIState.teams = null
+        }
+        if (teamBalancerUIState.errorMessage != null) {
+            Log.d("SelectPlayerScreen", "Teams are not ready yet.")
+
         }
     }
 
@@ -123,9 +133,47 @@ fun SelectPlayerScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
+                LoadingLottie(R.raw.image_loading)
+            }
+
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Creating teams...",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    style = TextStyle(
+                        color = APPBAR_GREEN,
+                        fontFamily = FontFamily(Font(R.font.onboarding_title1))
+                    )
+                )
+            }
+
+
+        }
+    } else {
+        Column(Modifier.fillMaxSize()) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                
+
             items(playerListUiState.playerList!!.size) { index ->
                 val player = playerListUiState.playerList!![index]
                 val isSelected = player in selectedPlayers
+
 
                 var isFlipped by remember { mutableStateOf(false) }
 
@@ -192,12 +240,6 @@ fun SelectPlayerScreen(
                         Toast.makeText(
                             context,
                             "Please select at least one player",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else if (selectedPlayers.size % 2 != 0) {
-                        Toast.makeText(
-                            context,
-                            "The number of selected players must be even",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else if (timePicker.isEmpty()) {
