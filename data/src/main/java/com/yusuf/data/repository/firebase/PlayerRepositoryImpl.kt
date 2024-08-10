@@ -1,6 +1,7 @@
 package com.yusuf.data.repository.firebase
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -65,14 +66,17 @@ class PlayerRepositoryImpl @Inject constructor(
 
     override suspend fun addPlayer(
         playerData: PlayerData,
-        imageUri: Uri
+        imageUri: Uri,
+        imagePathString: String
     ): Flow<RootResult<Boolean>> = flow {
         emit(RootResult.Loading)
         try {
             val currentUser = firebaseAuth.currentUser
             val userId = currentUser?.uid
             if (userId != null) {
-                uploadImage(imageUri).collect { result ->
+                uploadImage(imageUri, imagePathString).collect { result ->
+
+                    Log.d("PlayerRepositoryImpl", "Image upload result: $result")
                     when (result) {
                         is RootResult.Loading -> {
 
@@ -233,10 +237,10 @@ class PlayerRepositoryImpl @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
 
-    override suspend fun uploadImage(uri: Uri): Flow<RootResult<String>> = flow {
+    override suspend fun uploadImage(uri: Uri,imagePathString: String): Flow<RootResult<String>> = flow {
         emit(RootResult.Loading)
         try {
-            val storageRef = storage.reference.child("profile_images/${UUID.randomUUID()}.jpg")
+            val storageRef = storage.reference.child("$imagePathString/${UUID.randomUUID()}.jpg")
             val uploadTask = storageRef.putFile(uri).await()
             val downloadUrl = storageRef.downloadUrl.await()
             emit(RootResult.Success(downloadUrl.toString()))
@@ -346,18 +350,5 @@ class PlayerRepositoryImpl @Inject constructor(
             emit(RootResult.Error(e.message ?: "Something went wrong"))
         }
     }.flowOn(Dispatchers.IO)
-
-
-    override suspend fun uploadImageCompetition(uri: Uri): Result<String> {
-        val storageReference: StorageReference = FirebaseStorage.getInstance().reference
-        return try {
-            val imageRef = storageReference.child("saved_competitions/${UUID.randomUUID()}.jpg")
-            imageRef.putFile(uri).await() // Wait for upload to complete
-            val downloadUrl = imageRef.downloadUrl.await() // Wait for URL retrieval
-            Result.success(downloadUrl.toString())
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
 
 }
