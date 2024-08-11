@@ -1,5 +1,6 @@
 package com.yusuf.feature.create_competition.date_time
 
+import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -114,6 +115,7 @@ fun TimePicker(
     }
 }
 
+@SuppressLint("DefaultLocale")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdvancedTimePickerExample(
@@ -152,9 +154,12 @@ fun AdvancedTimePickerExample(
         AdvancedTimePickerDialog(
             onDismiss = { onDismiss() },
             onConfirm = {
-                val selectedTime = "${timePickerState.hour}:${timePickerState.minute}"
+                val hour = timePickerState.hour
+                val minute = String.format("%02d", timePickerState.minute)
+                val selectedTime = "$hour:$minute"
                 onConfirm(selectedTime)
             },
+
             toggle = {
                 IconButton(onClick = { showDial = !showDial }) {
                     Icon(
