@@ -1,5 +1,6 @@
 package com.yusuf.feature.competition_detail
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ import com.yusuf.feature.competition_detail.weather.Weather
 import com.yusuf.feature.competition_detail.weather.WeatherCard
 import com.yusuf.navigation.NavigationGraph
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun CompetitionDetailScreen(
     navController: NavController,
@@ -130,16 +132,17 @@ fun CompetitionDetailScreen(
                 )
             }
 
-            if (competitionDetail != null) {
-                val savedCompetition = SavedCompetitionsModel(
-                    firstTeam = competitionDetail.firstBalancedTeam,
-                    secondTeam = competitionDetail.secondBalancedTeam,
-                    imageUrl = competitionDetail.imageUrl ?: "",
-                    competitionTime = competitionDetail.selectedTime,
-                    competitionDate = competitionDetail.selectedDate,
-                    locationName = competitionDetail.locationName!!,
-                    weatherModel = sentWeatherModel
-                )
+        if (competitionDetail != null) {
+            val savedCompetition = SavedCompetitionsModel(
+                firstTeam = competitionDetail.firstBalancedTeam,
+                secondTeam = competitionDetail.secondBalancedTeam,
+                imageUrl = competitionDetail.imageUrl ?: "",
+                competitionTime = competitionDetail.selectedTime,
+                competitionDate = competitionDetail.selectedDate,
+                locationName = competitionDetail.locationName!!,
+                weatherModel = sentWeatherModel,
+                competitionName = competitionDetail.competitionName ?: "Default Name" // Ensure competitionName is provided
+            )
                 AuthButtonComponent(
                     value = "Save Competition",
                     onClick = {
