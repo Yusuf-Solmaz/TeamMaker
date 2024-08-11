@@ -5,13 +5,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yusuf.domain.model.firebase.CompetitionData
-import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.use_cases.firebase_use_cases.image.ImageUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.AddCompetitionUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.DeleteCompetitionUseCase
