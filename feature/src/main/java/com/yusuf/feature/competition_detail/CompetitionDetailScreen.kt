@@ -1,6 +1,5 @@
 package com.yusuf.feature.competition_detail
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,36 +10,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.yusuf.component.auth_components.AuthButtonComponent
 import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.domain.model.firebase.SavedCompetitionsModel
 import com.yusuf.domain.model.weather.CurrentWeatherModel
-import com.yusuf.domain.model.weather.MainModel
-import com.yusuf.domain.model.weather.WeatherModel
-import com.yusuf.feature.R
 import com.yusuf.feature.competition_detail.viewmodel.CompetitionDetailViewModel
 import com.yusuf.feature.competition_detail.weather.Weather
 import com.yusuf.feature.competition_detail.weather.WeatherCard
@@ -54,7 +41,6 @@ fun CompetitionDetailScreen(
     competitionDetailViewModel: CompetitionDetailViewModel = hiltViewModel()
 ) {
 
-    val saveCompetitionState by competitionDetailViewModel.competitionDetailState.collectAsState()
     var sentWeatherModel by remember {
         mutableStateOf(
             CurrentWeatherModel(
@@ -92,7 +78,7 @@ fun CompetitionDetailScreen(
                     fontWeight = FontWeight.Bold
                 )
 
-                if(competitionDetail?.imageUrl != null || savedCompetitionDetail?.imageUrl != null){
+                if (competitionDetail?.imageUrl != null || savedCompetitionDetail?.imageUrl != null) {
                     AsyncImage(
                         model = competitionDetail?.imageUrl
                             ?: savedCompetitionDetail?.imageUrl,
@@ -140,12 +126,16 @@ fun CompetitionDetailScreen(
                 locationName = competitionDetail.locationName!!,
                 weatherModel = sentWeatherModel
             )
-            Button(onClick = {
-                competitionDetailViewModel.saveCompetition(savedCompetition)
-                navController.navigate(NavigationGraph.SAVED_COMPETITIONS.route)
-            }) {
-                Text(text = "Save Competition")
-            }
+            AuthButtonComponent(
+                value = "Save Competition",
+                onClick = {
+                    competitionDetailViewModel.saveCompetition(savedCompetition)
+                    navController.navigate(NavigationGraph.SAVED_COMPETITIONS.route)
+                },
+                modifier = Modifier.width(210.dp),
+                fillMaxWidth = false,
+                heightIn = 36.dp
+            )
         }
     }
 }
