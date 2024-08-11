@@ -1,5 +1,6 @@
 package com.yusuf.feature.splash_screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -28,7 +30,11 @@ fun SplashScreen() {
             .fillMaxSize()
             .background(Color.White), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
 
-        LoadingLottie(R.raw.splash_screen_anim)
+        Image(
+            painter = painterResource(id = R.drawable.ic_splash),
+            contentDescription = "Logo",
+            modifier = Modifier.height(200.dp)
+        )
 
         Spacer(modifier = Modifier.height(40.dp))
 

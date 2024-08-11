@@ -36,7 +36,7 @@ class MainViewModel @Inject constructor(
                 startDestination = if (loadOnBoardingScreen) {
                     NavigationGraph.ONBOARDING_SCREEN.route
                 } else {
-                    NavigationGraph.LOGIN.route
+                    NavigationGraph.IS_LOGGED_IN.route
                 }
                 delay(2500)
                 isLoading = false

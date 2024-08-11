@@ -49,15 +49,10 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val loggingState by viewModel.loggingState.collectAsState()
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
-
-    LaunchedEffect(true) {
-        viewModel.isLoggedIn()
-    }
 
     LaunchedEffect(uiState.error) {
         uiState.error?.let { errorMessage ->
@@ -75,18 +70,8 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(loggingState.transaction) {
-        if (loggingState.transaction) {
-            navController.navigate(NavigationGraph.CHOOSE_COMPETITION_TYPE.route) {
-                popUpTo(NavigationGraph.CHOOSE_COMPETITION_TYPE.route) {
-                    inclusive = true
-                }
-            }
-        }
-    }
 
-
-    if (uiState.isLoading || loggingState.isLoading) {
+    if (uiState.isLoading) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
