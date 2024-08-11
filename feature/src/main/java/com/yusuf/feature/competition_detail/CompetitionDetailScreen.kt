@@ -82,7 +82,7 @@ fun CompetitionDetailScreen(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
-            }
+
 
                 if (competitionDetail?.imageUrl != null || savedCompetitionDetail?.imageUrl != null) {
                     Card(
@@ -100,7 +100,7 @@ fun CompetitionDetailScreen(
                                 .clip(CircleShape)
                         )
                     }
-
+                }
                 }
                 Spacer(modifier = Modifier.height(2.dp))
 
