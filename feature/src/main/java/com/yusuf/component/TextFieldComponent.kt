@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.yusuf.theme.GRAY
 
 @Composable
 fun TextFieldComponent(
@@ -26,7 +27,9 @@ fun TextFieldComponent(
     onValueChange: (String) -> Unit,
     painterResource: Painter,
     focusedLabelColor: Color = Color.Gray,
-    unfocusedLabelColor: Color = Color.LightGray
+    unfocusedLabelColor: Color = Color.LightGray,
+    focusedBorderColor: Color = Color.Gray,
+    unfocusedBorderColor: Color = Color.LightGray
 ) {
     var textValue by remember { mutableStateOf(stateValue) }
 
@@ -37,10 +40,10 @@ fun TextFieldComponent(
         label = { Text(text = label) },
         value = textValue,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Color.LightGray,
-            unfocusedBorderColor = Color.Gray,
             focusedLabelColor = focusedLabelColor,
             unfocusedLabelColor = unfocusedLabelColor,
+            focusedBorderColor = focusedBorderColor,
+            unfocusedBorderColor = unfocusedBorderColor,
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White
         ),

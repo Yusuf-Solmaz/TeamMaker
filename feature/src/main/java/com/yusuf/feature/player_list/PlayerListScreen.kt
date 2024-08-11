@@ -208,7 +208,6 @@ fun PlayerListScreen(
 }
 
 
-
 @OptIn(ExperimentalWearMaterialApi::class)
 @Composable
 fun PlayerListItem(
