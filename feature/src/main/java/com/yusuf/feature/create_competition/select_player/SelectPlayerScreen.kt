@@ -100,7 +100,7 @@ fun SelectPlayerScreen(
         if (teamBalancerUIState.teams != null) {
             Log.d("SelectPlayerScreen", "Teams are ready: ${teamBalancerUIState.teams}")
 
-            val route = NavigationGraph.getCompetitionDetailsRoute(
+            val route = competitionName?.let {
                 CompetitionDetail(
                     selectedTime = timePicker,
                     selectedDate = datePicker,
@@ -108,11 +108,18 @@ fun SelectPlayerScreen(
                     secondBalancedTeam = teamBalancerUIState.teams!!.second,
                     location = location,
                     locationName = locationName,
-                    imageUrl = imageUrl
+                    imageUrl = imageUrl,
+                    competitionName = it
                 )
-            )
+            }?.let {
+                NavigationGraph.getCompetitionDetailsRoute(
+                    it
+                )
+            }
             navController.previousBackStackEntry?.savedStateHandle?.set("reset", true)
-            navController.navigate(route)
+            if (route != null) {
+                navController.navigate(route)
+            }
 
             teamBalancerUIState.teams = null
         }
