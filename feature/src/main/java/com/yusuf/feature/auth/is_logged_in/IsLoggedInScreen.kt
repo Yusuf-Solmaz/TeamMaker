@@ -26,6 +26,7 @@ fun IsLoggedIn(navController: NavController,viewModel: LoginViewModel= hiltViewM
     }
 
     LaunchedEffect(loggingState.transaction) {
+        //if user logged in
         if (loggingState.transaction) {
             navController.navigate(NavigationGraph.CHOOSE_COMPETITION_TYPE.route){
                 popUpTo(NavigationGraph.CHOOSE_COMPETITION_TYPE.route){
