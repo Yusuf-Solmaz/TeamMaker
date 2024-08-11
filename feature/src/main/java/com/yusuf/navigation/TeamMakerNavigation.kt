@@ -20,6 +20,7 @@
     import com.yusuf.feature.R
     import com.yusuf.feature.player_list.PlayerListScreen
     import com.yusuf.feature.auth.forgot_password.ForgotPasswordScreen
+    import com.yusuf.feature.auth.is_logged_in.IsLoggedIn
     import com.yusuf.feature.create_competition.CreateCompetitionScreen
     import com.yusuf.feature.home.ChooseCompetitionTypeScreen
     import com.yusuf.feature.auth.login.LoginScreen
@@ -51,18 +52,23 @@
 
         if (mainViewModel.isSplashScreenVisible) {
             SplashScreen()
-        } else if (mainViewModel.isLoading) {
+        }
+        else if (mainViewModel.isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 LoadingLottie(resId = R.raw.loading_anim)
             }
-        } else {
+        }
+        else {
             NavHost(
                 navController = navController,
                 startDestination = mainViewModel.startDestination
             ) {
+                composable(NavigationGraph.IS_LOGGED_IN.route) {
+                    IsLoggedIn(navController)
+                }
                 composable(NavigationGraph.ONBOARDING_SCREEN.route) {
                     OnBoardingScreen(mainViewModel, navController)
                 }

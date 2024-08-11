@@ -148,9 +148,9 @@ class LoginViewModel @Inject constructor(
 
 
     fun isLoggedIn() {
+        _loggingState.value = _loggingState.value.copy(isLoading = true)
         viewModelScope.launch {
             isLoggedInUseCase().collect { isLoggedIn ->
-                _loggingState.value = _loggingState.value.copy(isLoading = true)
                 when (isLoggedIn) {
                     is RootResult.Success -> {
 

@@ -51,8 +51,6 @@ fun OptionsScreen(
     navController: NavController,
     competition: Competition
 ) {
-
-
     Log.d("OptionsScreen", "Competition: $competition")
 
     Column(
@@ -64,7 +62,7 @@ fun OptionsScreen(
     ) {
 
         OptionsCard(
-            text = "Add Player",
+            text = "Players",
             navController = navController,
             imageResourceId = if (competition.competitionFirstImage != 0) competition.competitionFirstImage else R.drawable.players,
             route = NavigationGraph.PLAYER_LIST.route
@@ -95,7 +93,8 @@ fun OptionsCard(
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .clickable {
                     navController.navigate(route)
                 }
@@ -116,44 +115,42 @@ fun OptionsCard(
                     contentScale = ContentScale.FillBounds
                 )
 
-                Column (
+                Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
-                ){
-
+                ) {
                     Box(
                         modifier = Modifier.size(width = 180.dp, height = 50.dp),
                     )
                     {
-
-                    Button(
-                        onClick = { navController.navigate(route) },
-                        modifier = Modifier.fillMaxSize(),
-                        colors = ButtonDefaults.buttonColors(Color.White)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                    brush = Brush.verticalGradient(
-                                        listOf(
-                                            APPBAR_GREEN,
-                                            DARK_GREEN
-                                        )
-                                    ),
-                                    shape = RoundedCornerShape(50.dp)
-                                ),
-                            contentAlignment = Alignment.Center
+                        Button(
+                            onClick = { navController.navigate(route) },
+                            modifier = Modifier.fillMaxSize(),
+                            colors = ButtonDefaults.buttonColors(Color.White)
                         ) {
-                            Text(
-                                text = text,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(
+                                        brush = Brush.verticalGradient(
+                                            listOf(
+                                                APPBAR_GREEN,
+                                                DARK_GREEN
+                                            )
+                                        ),
+                                        shape = RoundedCornerShape(50.dp)
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = text,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
                         }
                     }
-                }
                 }
             }
         }

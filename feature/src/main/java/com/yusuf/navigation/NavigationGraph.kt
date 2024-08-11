@@ -7,6 +7,7 @@ import com.yusuf.domain.model.firebase.SavedCompetitionsModel
 import com.yusuf.utils.default_competition.Competition
 
 enum class NavigationGraph(val route: String) {
+        IS_LOGGED_IN("is_logged_in"),
         ONBOARDING_SCREEN("onboarding_screen"),
         CHOOSE_COMPETITION_TYPE("choose_competition_type"),
         OPTIONS("options/{competitionJson}"),

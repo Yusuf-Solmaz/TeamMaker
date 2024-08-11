@@ -121,10 +121,7 @@ fun SelectPlayerScreen(
     Column(Modifier.fillMaxSize()) {
         ImagePickerComposable(onImageSelected = { uri ->
             imageUri.value = uri
-
         })
-
-
 
         if (teamBalancerUIState.isLoading) {
 
@@ -132,7 +129,7 @@ fun SelectPlayerScreen(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
-            ){
+            ) {
                 LoadingLottie(R.raw.image_loading)
             }
 
@@ -151,130 +148,129 @@ fun SelectPlayerScreen(
                     )
                 )
             }
-        }
-        else{
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        } else {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
 
-            items(playerListUiState.playerList!!.size) { index ->
+                items(playerListUiState.playerList!!.size) { index ->
 
-                val player = playerListUiState.playerList!![index]
-                val isSelected = player in selectedPlayers
+                    val player = playerListUiState.playerList!![index]
+                    val isSelected = player in selectedPlayers
 
-                var isFlipped by remember { mutableStateOf(false) }
+                    var isFlipped by remember { mutableStateOf(false) }
 
-                Card(
-                    modifier = Modifier
-                        .background(Color.Transparent)
-                        .padding(8.dp)
-                        .border(
-                            width = 2.dp,
-                            color = if (isSelected) APPBAR_GREEN else Color.Transparent,
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .clickable {
-                            if (isSelected) {
-                                selectedPlayers.remove(player)
-                            } else {
-                                selectedPlayers.add(player)
+                    Card(
+                        modifier = Modifier
+                            .background(Color.Transparent)
+                            .padding(8.dp)
+                            .border(
+                                width = 2.dp,
+                                color = if (isSelected) APPBAR_GREEN else Color.Transparent,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clickable {
+                                if (isSelected) {
+                                    selectedPlayers.remove(player)
+                                } else {
+                                    selectedPlayers.add(player)
+                                }
+                            }
+                            .fillMaxWidth()
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .background(Color.White)
+                        ) {
+                            IconButton(
+                                onClick = { isFlipped = !isFlipped },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(top = 1.dp, end = 1.dp)
+                                    .size(24.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = "More options"
+                                )
+                            }
+
+                            this@Card.AnimatedVisibility(
+                                visible = !isFlipped,
+                                enter = fadeIn(),
+                                exit = fadeOut(),
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                FrontCardContent(player)
+                            }
+
+                            this@Card.AnimatedVisibility(
+                                visible = isFlipped,
+                                enter = fadeIn(),
+                                exit = fadeOut(),
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                BackCardContent(player)
                             }
                         }
-                        .fillMaxWidth()
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .background(Color.White)
-                    ) {
-                        IconButton(
-                            onClick = { isFlipped = !isFlipped },
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(top = 1.dp, end = 1.dp)
-                                .size(24.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = "More options"
-                            )
-                        }
-
-                        this@Card.AnimatedVisibility(
-                            visible = !isFlipped,
-                            enter = fadeIn(),
-                            exit = fadeOut(),
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            FrontCardContent(player)
-                        }
-
-                        this@Card.AnimatedVisibility(
-                            visible = isFlipped,
-                            enter = fadeIn(),
-                            exit = fadeOut(),
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            BackCardContent(player)
-                        }
                     }
                 }
             }
-        }
 
-        Button(
-            onClick = {
-                if (selectedPlayers.isEmpty() || selectedPlayers.size == 1) {
-                    Toast.makeText(
-                        context,
-                        "The number of selected players should be greater then one player.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@Button
-                }
-                else if (timePicker.isEmpty() || datePicker.isEmpty()) {
-                    Toast.makeText(context,
-                        if (timePicker.isEmpty()) "Please select a time" else "Please select a date"
-                        , Toast.LENGTH_SHORT).show()
-                    return@Button
-                }
-                else {
-                    imageUri.value?.let { uri ->
-                        teamBalancerViewModel.uploadImage(uri)
+            Button(
+                onClick = {
+                    if (selectedPlayers.isEmpty() || selectedPlayers.size == 1) {
+                        Toast.makeText(
+                            context,
+                            "The number of selected players should be greater then one player.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@Button
+                    } else if (timePicker.isEmpty() || datePicker.isEmpty()) {
+                        Toast.makeText(
+                            context,
+                            if (timePicker.isEmpty()) "Please select a time" else "Please select a date",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@Button
+                    } else {
+                        imageUri.value?.let { uri ->
+                            teamBalancerViewModel.uploadImage(uri)
+                        }
                     }
-                }
-                    .run {
-                        teamBalancerViewModel.createBalancedTeams(selectedPlayers)
-                    }
-            },
-            modifier = Modifier
-                .width(250.dp)
-                .align(Alignment.CenterHorizontally),
-            colors = ButtonDefaults.buttonColors(Color.White)
-        ) {
-            Box(
+                        .run {
+                            teamBalancerViewModel.createBalancedTeams(selectedPlayers)
+                        }
+                },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(34.dp)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            listOf(
-                                APPBAR_GREEN,
-                                DARK_GREEN
-                            )
-                        ), shape = RoundedCornerShape(50.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                    .width(250.dp)
+                    .align(Alignment.CenterHorizontally),
+                colors = ButtonDefaults.buttonColors(Color.White)
             ) {
-                Text(
-                    text = "Continue",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(34.dp)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                listOf(
+                                    APPBAR_GREEN,
+                                    DARK_GREEN
+                                )
+                            ), shape = RoundedCornerShape(50.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Continue",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
             }
-        }
         }
     }
 }
