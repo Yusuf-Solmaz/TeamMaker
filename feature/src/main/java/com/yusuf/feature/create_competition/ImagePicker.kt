@@ -8,9 +8,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +27,7 @@ import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun ImagePickerComposable(
+    modifier: Modifier = Modifier,
     onImageSelected: (Uri?) -> Unit
 ) {
     val imageUri = remember { mutableStateOf<Uri?>(null) }
@@ -39,37 +44,46 @@ fun ImagePickerComposable(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
+        Card(
             modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-                .background(color = Color.Gray.copy(alpha = 0.3f))
+                .size(width = 200.dp, height = 80.dp)
+                .padding(8.dp)
                 .clickable { launcher.launch("image/*") }
+                .background(Color.White),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp)
         ) {
             if (imageUri.value != null) {
                 Image(
                     painter = rememberAsyncImagePainter(model = imageUri.value),
                     contentDescription = "Selected Image",
                     modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center
                 )
             } else {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Select Image",
-                    modifier = Modifier.size(50.dp),
-                    tint = Color.White
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White), // Icon background
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Select Image",
+                        modifier = Modifier.size(50.dp),
+                        tint = Color.Black
+                    )
+                }
             }
         }
     }
 }
 
     @Preview
-    @Composable
-    fun ImagePickerComposablePreview() {
-        ImagePickerComposable(onImageSelected = {})
-    }
+        @Composable
+        fun ImagePickerComposablePreview() {
+            ImagePickerComposable(onImageSelected = {})
+        }
