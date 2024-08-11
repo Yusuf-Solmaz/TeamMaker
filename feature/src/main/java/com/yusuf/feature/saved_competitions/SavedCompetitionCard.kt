@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -29,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -37,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.yusuf.domain.model.firebase.SavedCompetitionsModel
+import com.yusuf.feature.R
 import com.yusuf.navigation.NavigationGraph
 
 @Composable
@@ -53,18 +58,7 @@ fun CompetitionCard(
             .padding(padding)
             .fillMaxWidth()
             .clickable {
-                val route = NavigationGraph.getSavedCompetitionDetailsRoute(
-                    SavedCompetitionsModel(
-                        competitionId = competition.competitionId,
-                        firstTeam = competition.firstTeam,
-                        secondTeam = competition.secondTeam,
-                        imageUrl = competition.imageUrl,
-                        competitionTime = competition.competitionTime,
-                        competitionDate = competition.competitionDate,
-                        locationName = competition.locationName,
-                        weatherModel = competition.weatherModel
-                    )
-                )
+                val route = NavigationGraph.getSavedCompetitionDetailsRoute(competition)
                 navController.navigate(route)
             },
         shape = RoundedCornerShape(12.dp),
@@ -85,7 +79,6 @@ fun CompetitionCard(
                     .size(100.dp)
                     .padding(8.dp)
                     .clip(CircleShape),
-
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(8.dp)
             ) {
@@ -107,22 +100,74 @@ fun CompetitionCard(
                     .padding(8.dp)
             ) {
                 Text(
-                    text = competition.competitionTime,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
+                    text = competition.competitionName,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+
                 Spacer(modifier = Modifier.height(4.dp))
 
-                Text(
-                    text = competition.competitionDate,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.LocationOn,
+                        contentDescription = "Location Icon",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Location: ${competition.locationName}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_watch_later_24),
+                        contentDescription = "Time Icon",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Time: ${competition.competitionTime}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "Date Icon",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Date: ${competition.competitionDate}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
+
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -130,7 +175,7 @@ fun CompetitionCard(
                 horizontalAlignment = Alignment.End
             ) {
                 Icon(
-                    tint = Color.Black,
+                    tint = Color.Red,
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete",
                     modifier = Modifier
@@ -139,6 +184,7 @@ fun CompetitionCard(
                             shouldShowItemDeletionDialog = true
                         }
                 )
+
                 if (shouldShowItemDeletionDialog) {
                     ShowConfirmationDialog({
                         shouldShowItemDeletionDialog = it
