@@ -74,6 +74,7 @@ fun CompetitionCard(
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Image Section
             Card(
                 modifier = Modifier
                     .size(100.dp)
@@ -94,10 +95,11 @@ fun CompetitionCard(
 
             Spacer(modifier = Modifier.width(16.dp))
 
+            // Text Section
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(8.dp)
+                    .padding(end = 8.dp)  // Remove extra padding to align with other elements
             ) {
                 Text(
                     text = competition.competitionName,
@@ -109,6 +111,7 @@ fun CompetitionCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
+                // Location
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -129,6 +132,7 @@ fun CompetitionCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
+                // Time
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -149,6 +153,7 @@ fun CompetitionCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
+                // Date
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -168,6 +173,7 @@ fun CompetitionCard(
                 }
             }
 
+            // Delete Icon
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -196,3 +202,4 @@ fun CompetitionCard(
         }
     }
 }
+
