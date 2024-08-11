@@ -12,7 +12,8 @@ fun SavedCompetitionsDto.toSavedCompetitions(): SavedCompetitionsModel {
         competitionTime = competitionTime,
         competitionDate = competitionDate,
         locationName = locationName,
-        weatherModel = weatherModel
+        weatherModel = weatherModel,
+        competitionName = competitionName
     )
 }
 
@@ -25,6 +26,7 @@ fun SavedCompetitionsModel.toSavedCompetitionsDto(): SavedCompetitionsDto {
         competitionTime = competitionTime,
         competitionDate = competitionDate,
         locationName = locationName,
-        weatherModel = weatherModel
+        weatherModel = weatherModel,
+        competitionName = competitionName
     )
 }
