@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,13 +30,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -129,7 +125,11 @@ fun ChooseCompetitionTypeScreen(
                 mainDataStore.saveGalleryPermission(true)
             }
         } else {
-            Toast.makeText(context, "Gallery permission is required to select an image.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "Gallery permission is required to select an image.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -139,7 +139,11 @@ fun ChooseCompetitionTypeScreen(
 
         // Only request permission if needed (API level below 33)
         if (apiLevel < 33 && !galleryPermissionGranted) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             } else {
                 // Save permission granted status in DataStore
@@ -153,7 +157,11 @@ fun ChooseCompetitionTypeScreen(
     Scaffold(
         floatingActionButton = {
             if (getAllState.result !is RootResult.Loading) {
-                FloatingActionButton(onClick = { openDialog.value = true }, containerColor = APPBAR_GREEN, contentColor = Color.White) {
+                FloatingActionButton(
+                    onClick = { openDialog.value = true },
+                    containerColor = APPBAR_GREEN,
+                    contentColor = Color.White
+                ) {
                     Icon(Icons.Default.Add, contentDescription = "Add Competition")
                 }
             }
@@ -167,13 +175,10 @@ fun ChooseCompetitionTypeScreen(
                     AddCompetitionDialog(
                         onDismiss = { openDialog.value = false },
                         onSave = { competition ->
-                            selectedImageUri.value?.let { uri ->
-                                val bitmap = MediaStore.Images.Media.getBitmap(
-                                    context.contentResolver,
-                                    uri
-                                )
-                                competitionViewModel.uploadImageAndAddCompetition(bitmap, competition.competitionName)
-                            }
+                            competitionViewModel.uploadImageAndAddCompetition(
+                                selectedImageUri.value!!,
+                                competition.competitionName
+                            )
                         },
                         onImagePick = {
                             if (apiLevel >= 33 || galleryPermissionGranted) {
@@ -258,10 +263,10 @@ fun ChooseCompetitionTypeScreen(
 
                         ImageSliderScreen()
 
-                        Row (
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                        ){
+                        ) {
                             Text(
                                 textAlign = TextAlign.Start,
                                 text = "Competitions",
@@ -278,7 +283,9 @@ fun ChooseCompetitionTypeScreen(
                         val competitions = state.data ?: emptyList()
 
                         LazyColumn(
-                            modifier = Modifier.padding(top = 8.dp).weight(1f)
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .weight(1f)
                         ) {
                             items(competitions.reversed()) { competition ->
                                 CompetitionCard(
@@ -287,8 +294,13 @@ fun ChooseCompetitionTypeScreen(
                                         val competitionData = competition.toCompetition()
 
                                         if (competitionData != null) {
-                                            sharedPreferencesHelper.competitionName = competition.competitionName
-                                            navController.navigate(NavigationGraph.getOptionsRoute(competitionData))
+                                            sharedPreferencesHelper.competitionName =
+                                                competition.competitionName
+                                            navController.navigate(
+                                                NavigationGraph.getOptionsRoute(
+                                                    competitionData
+                                                )
+                                            )
                                         }
                                     },
                                     onDelete = {
@@ -323,7 +335,10 @@ fun ChooseCompetitionTypeScreen(
                     }
 
                     is RootResult.Success -> {
-                        Log.d("ChooseSportScreen", "Competition added/updated successfully: ${addState.data}")
+                        Log.d(
+                            "ChooseSportScreen",
+                            "Competition added/updated successfully: ${addState.data}"
+                        )
                     }
 
                     is RootResult.Error -> {
@@ -352,12 +367,13 @@ fun CompetitionCard(
             .fillMaxWidth()
             .padding(top = 10.dp, start = 10.dp, end = 10.dp)
     ) {
-        Box (
-            modifier = Modifier.fillMaxSize()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
                 .clickable {
                     onClick()
                 }
-        ){
+        ) {
             val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
             var isImageLoading by remember { mutableStateOf(true) }
 

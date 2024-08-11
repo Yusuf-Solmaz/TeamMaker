@@ -63,7 +63,6 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-
     override suspend fun addPlayer(
         playerData: PlayerData,
         imageUri: Uri,
@@ -79,7 +78,7 @@ class PlayerRepositoryImpl @Inject constructor(
                     Log.d("PlayerRepositoryImpl", "Image upload result: $result")
                     when (result) {
                         is RootResult.Loading -> {
-
+                            emit(RootResult.Loading)
                         }
 
                         is RootResult.Success -> {
@@ -208,7 +207,6 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }
 
-
     override suspend fun updatePlayerImage(
         uri: Uri,
         onSuccess: (String) -> Unit,
@@ -236,18 +234,19 @@ class PlayerRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-
-    override suspend fun uploadImage(uri: Uri,imagePathString: String): Flow<RootResult<String>> = flow {
-        emit(RootResult.Loading)
-        try {
-            val storageRef = storage.reference.child("$imagePathString/${UUID.randomUUID()}.jpg")
-            val uploadTask = storageRef.putFile(uri).await()
-            val downloadUrl = storageRef.downloadUrl.await()
-            emit(RootResult.Success(downloadUrl.toString()))
-        } catch (e: Exception) {
-            emit(RootResult.Error(e.message ?: "Image upload failed"))
-        }
-    }.flowOn(Dispatchers.IO)
+    override suspend fun uploadImage(uri: Uri, imagePathString: String): Flow<RootResult<String>> =
+        flow {
+            emit(RootResult.Loading)
+            try {
+                val storageRef =
+                    storage.reference.child("$imagePathString/${UUID.randomUUID()}.jpg")
+                val uploadTask = storageRef.putFile(uri).await()
+                val downloadUrl = storageRef.downloadUrl.await()
+                emit(RootResult.Success(downloadUrl.toString()))
+            } catch (e: Exception) {
+                emit(RootResult.Error(e.message ?: "Image upload failed"))
+            }
+        }.flowOn(Dispatchers.IO)
 
     override suspend fun updateCompetition(
         competitionId: String,
@@ -330,10 +329,8 @@ class PlayerRepositoryImpl @Inject constructor(
 
                 val userDocRef = firestore.collection("users").document(userId)
 
-
                 val playerCollection = userDocRef.collection("players").get().await()
                 playerCollection.documents.forEach { it.reference.delete().await() }
-
 
                 val competitionCollection = userDocRef.collection("competitions").get().await()
                 competitionCollection.documents.forEach { it.reference.delete().await() }
@@ -350,5 +347,4 @@ class PlayerRepositoryImpl @Inject constructor(
             emit(RootResult.Error(e.message ?: "Something went wrong"))
         }
     }.flowOn(Dispatchers.IO)
-
 }
