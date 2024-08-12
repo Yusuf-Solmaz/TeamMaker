@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -60,7 +62,7 @@ fun Weather(
     ) {
         when {
             currentWeatherState.isLoading -> {
-                LoadingLottie(R.raw.loading_anim)
+                WeatherCard(loading = true)
             }
             currentWeatherState.currentWeather != null -> {
                 weatherName(currentWeatherState.currentWeather!!)
@@ -85,8 +87,7 @@ fun Weather(
 }
 
 @Composable
-fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
-    val lottieAnimationResource = weatherModel.weatherModel?.firstOrNull()?.getLottieAnimationResource() ?: R.raw.broken_clouds_anim
+fun WeatherCard(weatherModel: CurrentWeatherModel? =null, locationName: String? = null,loading: Boolean = false) {
 
     Card(
         modifier = Modifier
@@ -97,6 +98,13 @@ fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
+        if (loading){
+            Row(modifier = Modifier.fillMaxWidth(),verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                LoadingLottie(R.raw.image_loading, height = 120.dp)
+            }
+        }
+        else{
+            val lottieAnimationResource = weatherModel!!.weatherModel?.firstOrNull()?.getLottieAnimationResource() ?: R.raw.broken_clouds_anim
         Row(
             modifier = Modifier
                 .padding(16.dp),
@@ -105,11 +113,10 @@ fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
         ) {
             // Static Lottie animation for weather icon
             val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(lottieAnimationResource))
-            val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
             LottieAnimation(
                 composition = composition,
-                progress = progress,
-                modifier = Modifier.size(80.dp)
+                iterations = LottieConstants.IterateForever,
+                modifier =  Modifier.size(80.dp)
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -120,7 +127,7 @@ fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = locationName,
+                    text = locationName!!,
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.splash_title_font)),
                         fontSize = 16.sp,
@@ -151,6 +158,7 @@ fun WeatherCard(weatherModel: CurrentWeatherModel, locationName: String) {
                     )
                 )
             }
+        }
         }
     }
 }

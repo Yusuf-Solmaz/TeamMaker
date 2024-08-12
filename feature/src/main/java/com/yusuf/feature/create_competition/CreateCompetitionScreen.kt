@@ -94,8 +94,6 @@ fun CreateCompetitionScreen(navController: NavController) {
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
         SelectPlayerScreen(navController, timePicker = selectedTime, datePicker = selectedDate, location = selectedLocation, locationName = selectedLocationName)
     }
 }

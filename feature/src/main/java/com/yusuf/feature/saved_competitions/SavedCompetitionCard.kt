@@ -1,6 +1,8 @@
 package com.yusuf.feature.saved_competitions
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -33,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -40,6 +45,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.yusuf.domain.model.firebase.SavedCompetitionsModel
 import com.yusuf.feature.R
 import com.yusuf.navigation.NavigationGraph
@@ -52,6 +62,7 @@ fun CompetitionCard(
     padding: Dp = 8.dp,
 ) {
     var shouldShowItemDeletionDialog by remember { mutableStateOf(false) }
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_loading))
 
     Card(
         modifier = Modifier
@@ -74,26 +85,40 @@ fun CompetitionCard(
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Image Section
-            Card(
+            Column(
                 modifier = Modifier
-                    .size(100.dp)
-                    .padding(8.dp)
-                    .clip(CircleShape),
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp)
+                    .fillMaxHeight()
+                    .wrapContentWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AsyncImage(
-                    model = competition.imageUrl,
-                    contentDescription = "Competition Image",
+                Card(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(16.dp)),
-                    contentScale = ContentScale.Crop
-                )
+                        .size(100.dp)
+                        .padding(8.dp)
+                        .clip(CircleShape),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(8.dp)
+                ) {
+                    SubcomposeAsyncImage(
+                        model = competition.imageUrl.ifEmpty { R.drawable.no_image },
+                        contentDescription = "Competition Image",
+                        modifier = Modifier
+                            .background(Color.White)
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.Crop,
+                        loading = {
+                            LottieAnimation(
+                                composition,
+                                modifier = Modifier.size(100.dp),
+                                iterations = LottieConstants.IterateForever
+                            )
+                        }
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
 
             // Text Section
             Column(
@@ -101,13 +126,22 @@ fun CompetitionCard(
                     .weight(1f)
                     .padding(end = 8.dp)  // Remove extra padding to align with other elements
             ) {
-                Text(
-                    text = competition.competitionName,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+
+                Row(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(start = 24.dp)
+                ) {
+
+                    Text(
+                        text = competition.competitionName,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
 
                 Spacer(modifier = Modifier.height(4.dp))
 

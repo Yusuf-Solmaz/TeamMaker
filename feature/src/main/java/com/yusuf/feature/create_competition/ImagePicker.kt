@@ -46,44 +46,49 @@ fun ImagePickerComposable(
     ) {
         Card(
             modifier = Modifier
-                .size(width = 200.dp, height = 80.dp)
+                .size(width = 200.dp, height = 120.dp)
                 .padding(8.dp)
-                .clickable { launcher.launch("image/*") }
                 .background(Color.White),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp)
         ) {
-            if (imageUri.value != null) {
-                Image(
-                    painter = rememberAsyncImagePainter(model = imageUri.value),
-                    contentDescription = "Selected Image",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(16.dp)),
-                    contentScale = ContentScale.Crop,
-                    alignment = Alignment.Center
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.White), // Icon background
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Select Image",
-                        modifier = Modifier.size(50.dp),
-                        tint = Color.Black
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { launcher.launch("image/*") }
+            ) {
+                if (imageUri.value != null) {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = imageUri.value),
+                        contentDescription = "Selected Image",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center
                     )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White), // Icon background
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Select Image",
+                            modifier = Modifier.size(50.dp),
+                            tint = Color.Black
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-    @Preview
-        @Composable
-        fun ImagePickerComposablePreview() {
-            ImagePickerComposable(onImageSelected = {})
-        }
+@Preview
+@Composable
+fun ImagePickerComposablePreview() {
+    ImagePickerComposable(onImageSelected = {})
+}
