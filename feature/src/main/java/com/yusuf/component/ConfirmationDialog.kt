@@ -1,4 +1,4 @@
-package com.yusuf.feature.saved_competitions
+package com.yusuf.component
 
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
@@ -12,7 +12,7 @@ import com.yusuf.theme.DARK_RED
 import com.yusuf.theme.RED
 
 @Composable
-fun ShowConfirmationDialog(
+fun ConfirmationDialog(
     onDismiss: (Boolean) -> Unit,
     onConfirm: () -> Unit
 ) {

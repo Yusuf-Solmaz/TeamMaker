@@ -1,4 +1,4 @@
-package com.yusuf.feature.saved_competitions
+package com.yusuf.feature.saved_competitions.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

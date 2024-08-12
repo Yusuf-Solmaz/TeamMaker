@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.yusuf.component.ConfirmationDialog
 import com.yusuf.domain.model.firebase.SavedCompetitionsModel
 import com.yusuf.navigation.NavigationGraph
 
@@ -140,7 +141,7 @@ fun CompetitionCard(
                         }
                 )
                 if (shouldShowItemDeletionDialog) {
-                    ShowConfirmationDialog({
+                    ConfirmationDialog({
                         shouldShowItemDeletionDialog = it
                     }, {
                         onDeleteClick(competition)
