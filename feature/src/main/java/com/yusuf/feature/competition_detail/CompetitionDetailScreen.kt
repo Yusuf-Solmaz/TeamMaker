@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -74,7 +73,8 @@ fun CompetitionDetailScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                if (competitionDetail?.imageUrl != null || savedCompetitionDetail?.imageUrl != null) {
+                val imageUrl = competitionDetail?.imageUrl ?: savedCompetitionDetail?.imageUrl
+                if (!imageUrl.isNullOrEmpty()) {
                     Card(
                         modifier = Modifier
                             .size(width = 200.dp, height = 120.dp)
@@ -84,7 +84,7 @@ fun CompetitionDetailScreen(
                         elevation = CardDefaults.cardElevation(8.dp)
                     ) {
                         AsyncImage(
-                            model = competitionDetail?.imageUrl ?: savedCompetitionDetail?.imageUrl,
+                            model = imageUrl,
                             contentDescription = "Competition Image",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -121,19 +121,22 @@ fun CompetitionDetailScreen(
             Spacer(modifier = Modifier.height(2.dp))
 
             if (competitionDetail != null) {
-                Weather(
-                    location = competitionDetail.location!!,
-                    locationName = competitionDetail.locationName!!
-                ) { weather ->
-                    sentWeatherModel = weather
+                if (competitionDetail.location != null && competitionDetail.locationName != null){
+                    Weather(
+                        location = competitionDetail.location!!,
+                        locationName = competitionDetail.locationName!!
+                    ) { weather ->
+                        sentWeatherModel = weather
+                    }
                 }
             } else if (savedCompetitionDetail != null) {
-                savedCompetitionDetail.weatherModel?.let {
-                    WeatherCard(
-                        weatherModel = it,
-                        locationName = savedCompetitionDetail.locationName
-                    )
+                if (savedCompetitionDetail.weatherModel != null && savedCompetitionDetail.locationName != ""){
+                        WeatherCard(
+                            weatherModel = savedCompetitionDetail.weatherModel!!,
+                            locationName = savedCompetitionDetail.locationName
+                        )
                 }
+
             }
 
             Spacer(modifier = Modifier.height(16.dp))
