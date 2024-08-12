@@ -6,7 +6,6 @@ import com.yusuf.data.repository.LocationRepositoryImpl
 import com.yusuf.data.repository.team.TeamBalancerRepositoryImpl
 import com.yusuf.domain.repository.LocationRepository
 import com.yusuf.domain.repository.team.TeamBalancerRepository
-import com.yusuf.domain.use_cases.location.GetLocationUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,14 +28,6 @@ object AppModule {
         context: Context
     ): LocationRepository {
         return LocationRepositoryImpl(context)
-    }
-
-    @Provides
-    @Singleton
-    fun provideLocationUseCase(
-        locationRepository: LocationRepository
-    ): GetLocationUseCase {
-        return GetLocationUseCase(locationRepository)
     }
 
     @Provides

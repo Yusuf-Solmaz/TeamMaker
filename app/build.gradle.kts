@@ -86,16 +86,5 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter)
-
-    // Firebase
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.storage)
-
-    // Location Service
-    implementation(libs.play.services.location)
 
 }
