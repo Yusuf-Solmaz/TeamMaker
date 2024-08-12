@@ -60,6 +60,36 @@ With Team Maker, you can register, log in, and customize your experience by addi
 |-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|
 |<img src="/Screenshots/Screenshot_options_page.png" width="220"/> | <img src="/Screenshots/Screenshot_players_page.png" width="220"/> | <img src="/Screenshots/Screenshot_add_player_page.png" width="260"/> | <img src="/Screenshots/Screenshot_create_competition_page.png" width="150"/> | <img src="/Screenshots/Screenshot_competition_detail_page.png" width="120"/> | <img src="/Screenshots/Screenshot_saved_competition_page.png" width="130"/>| <img src="/Screenshots/Screenshot_delete_dialog.png" width="120"/>
 
+<!-- Open-Source Libraries -->
+## Open-Source Libraries
+* [Dependency Injection (Hilt)](https://developer.android.com/training/dependency-injection/hilt-android)
+* [Navigation](https://developer.android.com/develop/ui/compose/navigation)
+* [Coroutines](https://developer.android.com/kotlin/coroutines?hl=tr)
+* [Flow](https://developer.android.com/kotlin/flow)
+* [Jetpack Compose](https://developer.android.com/develop/ui/compose)
+* [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
+* [MVVM](https://developer.android.com/topic/libraries/architecture/viewmodel#implement)
+* [Retrofit](https://square.github.io/retrofit/) A type-safe HTTP client for Android and Java
+* [OkHttp](https://square.github.io/okhttp/) An HTTP client that efficiently make network requests
+* [Firebase](https://firebase.google.com/) - Used for authentication, crashlytics, analytics,
+  firestore and .
+  * [Firebase Authentication](https://firebase.google.com/docs/auth) Firebase Authentication
+      provides backend services, easy-to-use SDKs, and ready-made UI libraries to authenticate users
+      to your app.
+    * [Firebase Firestore](https://firebase.google.com/docs/firestore) Cloud Firestore is a
+      flexible, scalable database for mobile, web, and server development from Firebase and Google
+      Cloud.
+    * [Firebase Crashlytics](https://firebase.google.com/docs/crashlytics) Firebase Crashlytics is a
+      lightweight, realtime crash reporter that helps you track, prioritize, and fix stability
+      issues that erode your app quality.
+    * [Firebase Performance]
+    * [Firebase Analytics](https://firebase.google.com/docs/analytics) Firebase Analytics is a free
+      app measurement solution that provides insight on app usage and user engagement.
+    
+    
+* [SharedPreferences](https://developer.android.com/training/data-storage/shared-preferences) Store
+  private primitive data in key-value pairs.
+  
 <!-- Architecture -->
 ## Architecture
 This Android app uses the MVVM (Model-View-ViewModel) pattern and Clean Architecture principles, organized into four main modules for better scalability and maintainability.
@@ -83,7 +113,7 @@ Clean Architecture & Multi Module
 The application integrates with the following APIs and services:
 * OpenWeather API: Provides weather data and forecasts. More information can be found [here](https://openweathermap.org/api).
 * Restful API: Utilized for data communication and integration to get weather data.
-* Retrofit: A type-safe HTTP client for Android and Java, used for interacting with RESTful APIs.
+* Retrofit: A type-safe HTTP client for Android, used for interacting with RESTful APIs.
 * OkHttp: An HTTP client used for making network requests and handling responses efficiently.
 * Firebase: Used for various backend services, including:
   * Authentication: User sign-in and management.
