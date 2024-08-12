@@ -1,5 +1,7 @@
 package com.yusuf.feature.competition_detail
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -22,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,7 +42,7 @@ import com.yusuf.feature.competition_detail.weather.Weather
 import com.yusuf.feature.competition_detail.weather.WeatherCard
 import com.yusuf.navigation.NavigationGraph
 
-@Composable
+@SuppressLint("SuspiciousIndentation")@Composable
 fun CompetitionDetailScreen(
     navController: NavController,
     competitionDetail: CompetitionDetail? = null,
@@ -66,29 +70,17 @@ fun CompetitionDetailScreen(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                horizontalArrangement = Arrangement.Start,
                 modifier = Modifier.fillMaxWidth()
             ) {
-
-                Text(
-                    text = competitionDetail?.selectedTime
-                        ?: savedCompetitionDetail?.competitionTime!!,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = competitionDetail?.selectedDate
-                        ?: savedCompetitionDetail?.competitionDate!!,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
 
                 if (competitionDetail?.imageUrl != null || savedCompetitionDetail?.imageUrl != null) {
                     Card(
                         modifier = Modifier
-                            .size(120.dp)
-                            .clip(CircleShape),
+                            .size(width = 200.dp, height = 120.dp)
+                            .padding(8.dp)
+                            .background(Color.White),
+                        shape = RoundedCornerShape(16.dp),
                         elevation = CardDefaults.cardElevation(8.dp)
                     ) {
                         AsyncImage(
@@ -96,66 +88,88 @@ fun CompetitionDetailScreen(
                             contentDescription = "Competition Image",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .size(120.dp)
-                                .clip(CircleShape)
-                        )
-                    }
-                }
-                }
-                Spacer(modifier = Modifier.height(2.dp))
-
-                if (competitionDetail != null) {
-                    Weather(
-                        location = competitionDetail.location!!,
-                        locationName = competitionDetail.locationName!!
-                    ) { weather ->
-                        sentWeatherModel = weather
-                    }
-                } else if (savedCompetitionDetail != null) {
-                    savedCompetitionDetail.weatherModel?.let {
-                        WeatherCard(
-                            weatherModel = it,
-                            locationName = savedCompetitionDetail.locationName
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(16.dp)),
+                            alignment = Alignment.Center
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
 
-                TeamListScreen(
-                    firstTeam = competitionDetail?.firstBalancedTeam
-                        ?: savedCompetitionDetail?.firstTeam!!,
-                    secondTeam = competitionDetail?.secondBalancedTeam
-                        ?: savedCompetitionDetail?.secondTeam!!
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.
+                    fillMaxWidth()
+                ) {
+                    Text(
+                        text = competitionDetail?.selectedDate
+                            ?: savedCompetitionDetail?.competitionDate!!,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp)) // Add some space between date and time
+                    Text(
+                        text = competitionDetail?.selectedTime
+                            ?: savedCompetitionDetail?.competitionTime!!,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.height(2.dp))
 
             if (competitionDetail != null) {
-                val savedCompetition = SavedCompetitionsModel(
-                    firstTeam = competitionDetail.firstBalancedTeam,
-                    secondTeam = competitionDetail.secondBalancedTeam,
-                    imageUrl = competitionDetail.imageUrl ?: "",
-                    competitionTime = competitionDetail.selectedTime,
-                    competitionDate = competitionDetail.selectedDate,
-                    locationName = competitionDetail.locationName!!,
-                    weatherModel = sentWeatherModel
-                )
-                AuthButtonComponent(
-                    value = "Save Competition",
-                    onClick = {
-                        competitionDetailViewModel.saveCompetition(savedCompetition)
-                        navController.navigate(NavigationGraph.SAVED_COMPETITIONS.route)
-                    },
-                    modifier = Modifier.width(210.dp),
-                    fillMaxWidth = false,
-                    heightIn = 36.dp
-                )
+                Weather(
+                    location = competitionDetail.location!!,
+                    locationName = competitionDetail.locationName!!
+                ) { weather ->
+                    sentWeatherModel = weather
+                }
+            } else if (savedCompetitionDetail != null) {
+                savedCompetitionDetail.weatherModel?.let {
+                    WeatherCard(
+                        weatherModel = it,
+                        locationName = savedCompetitionDetail.locationName
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TeamListScreen(
+                firstTeam = competitionDetail?.firstBalancedTeam
+                    ?: savedCompetitionDetail?.firstTeam!!,
+                secondTeam = competitionDetail?.secondBalancedTeam
+                    ?: savedCompetitionDetail?.secondTeam!!
+            )
+        }
+
+        if (competitionDetail != null) {
+            val savedCompetition = SavedCompetitionsModel(
+                firstTeam = competitionDetail.firstBalancedTeam,
+                secondTeam = competitionDetail.secondBalancedTeam,
+                imageUrl = competitionDetail.imageUrl ?: "",
+                competitionTime = competitionDetail.selectedTime,
+                competitionDate = competitionDetail.selectedDate,
+                locationName = competitionDetail.locationName!!,
+                weatherModel = sentWeatherModel,
+                competitionName = competitionDetail.competitionName
+            )
+            AuthButtonComponent(
+                value = "Save Competition",
+                onClick = {
+                    competitionDetailViewModel.saveCompetition(savedCompetition)
+                    navController.navigate(NavigationGraph.SAVED_COMPETITIONS.route)
+                },
+                modifier = Modifier.width(210.dp),
+                fillMaxWidth = false,
+                heightIn = 36.dp
+            )
         }
     }
-
-
-
+}
 
 
 

@@ -149,7 +149,7 @@ fun LocationCard(
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
             .size(width = 200.dp, height = 80.dp)
-            .padding(8.dp),
+            .padding(top = 8.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ){
         Column(

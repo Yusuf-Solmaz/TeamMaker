@@ -9,15 +9,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerColors
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,10 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.yusuf.component.auth_components.AuthButtonComponent
 import com.yusuf.theme.APPBAR_GREEN
-import com.yusuf.theme.CANCEL_RED
-import com.yusuf.theme.DARK_RED
 import com.yusuf.theme.LIGHT_RED
 import java.time.Instant
 import java.time.LocalDate
@@ -75,7 +69,7 @@ fun DatePickerWithDialog(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(8.dp),
 
-    ) {
+        ) {
         Box(
             Modifier
                 .fillMaxSize()
@@ -106,18 +100,21 @@ fun DatePickerWithDialog(
                         onDismissRequest = { showDialog = false },
                         confirmButton = {
                             TextButton(onClick = {
-                                    showDialog = false
-                                    millisToLocalDate?.let { onDateSelected(it.toString()) }
-                                }) { Text("OK" , color = APPBAR_GREEN)
+                                showDialog = false
+                                millisToLocalDate?.let {
+                                    val formattedDate = DateUtils().dateToString(it)
+                                    onDateSelected(formattedDate) // Pass the formatted date
+                                }
+                            }) { Text("OK", color = APPBAR_GREEN)
                             }
                         },
                         dismissButton = {
-                            TextButton(onClick = { showDialog = false }) { Text("Cancel" , color = LIGHT_RED)
+                            TextButton(onClick = { showDialog = false }) { Text("Cancel", color = LIGHT_RED)
                             }
                         },
-                       colors = DatePickerDefaults.colors(
-                           containerColor = Color.White
-                       )
+                        colors = DatePickerDefaults.colors(
+                            containerColor = Color.White
+                        )
                     ) {
                         DatePicker(
                             state = dateState,

@@ -12,5 +12,6 @@ data class SavedCompetitionsModel (
         val competitionTime: String = "",
         val competitionDate: String = "",
         val locationName: String = "",
-        val weatherModel: CurrentWeatherModel? = null
+        val weatherModel: CurrentWeatherModel? = null,
+        val competitionName: String
 ) : Serializable
