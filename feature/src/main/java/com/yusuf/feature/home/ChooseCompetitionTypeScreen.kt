@@ -63,6 +63,7 @@ import coil.compose.SubcomposeAsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.yusuf.component.ConfirmationDialog
 import com.yusuf.component.LoadingLottie
 import com.yusuf.component.auth_components.AuthButtonComponent
 import com.yusuf.domain.model.firebase.CompetitionData
@@ -361,6 +362,7 @@ fun CompetitionCard(
     onUpdate: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    var deleteDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -460,7 +462,15 @@ fun CompetitionCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-
+                AuthButtonComponent(
+                    value = "Delete",
+                    onClick = { deleteDialog = true },
+                    fillMaxWidth = false,
+                    modifier = Modifier.width(80.dp),
+                    heightIn = 37.dp,
+                    firstColor = RED,
+                    secondColor = DARK_RED
+                )
 
                 AuthButtonComponent(
                     value = "Update",
@@ -469,18 +479,16 @@ fun CompetitionCard(
                     modifier = Modifier.width(80.dp),
                     heightIn = 37.dp
                 )
-
-                AuthButtonComponent(
-                    value = "Delete",
-                    onClick = onDelete,
-                    fillMaxWidth = false,
-                    modifier = Modifier.width(80.dp),
-                    heightIn = 37.dp,
-                    firstColor = RED,
-                    secondColor = DARK_RED
-                )
-
             }
+        }
+        if (deleteDialog) {
+            ConfirmationDialog(
+                onDismiss = { deleteDialog = it },
+                onConfirm = {
+                    onDelete()
+                    deleteDialog = false
+                }
+            )
         }
     }
 }

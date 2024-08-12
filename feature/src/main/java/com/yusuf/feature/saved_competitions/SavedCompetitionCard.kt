@@ -50,6 +50,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.yusuf.component.ConfirmationDialog
 import com.yusuf.domain.model.firebase.SavedCompetitionsModel
 import com.yusuf.feature.R
 import com.yusuf.navigation.NavigationGraph
@@ -226,7 +227,7 @@ fun CompetitionCard(
                 )
 
                 if (shouldShowItemDeletionDialog) {
-                    ShowConfirmationDialog({
+                    ConfirmationDialog({
                         shouldShowItemDeletionDialog = it
                     }, {
                         onDeleteClick(competition)

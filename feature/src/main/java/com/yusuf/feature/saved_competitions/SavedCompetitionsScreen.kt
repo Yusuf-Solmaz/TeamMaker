@@ -20,8 +20,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,6 +28,7 @@ import com.yusuf.component.LoadingLottie
 import com.yusuf.feature.R
 import com.yusuf.feature.saved_competitions.state.GetSavedCompetitionsUIState
 import com.yusuf.utils.SharedPreferencesHelper
+import com.yusuf.feature.saved_competitions.viewmodel.SavedCompetitionsViewModel
 
 @Composable
 fun SavedCompetitionsScreen(
