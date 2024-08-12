@@ -60,6 +60,7 @@ fun TeamListScreen(
     Column(
         Modifier
             .fillMaxSize()
+            .padding(horizontal = 8.dp)
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
