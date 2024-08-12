@@ -71,7 +71,7 @@ fun ImagePickerComposable(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color.White), // Icon background
+                            .background(Color.White),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
