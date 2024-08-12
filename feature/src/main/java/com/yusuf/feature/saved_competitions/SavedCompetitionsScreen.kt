@@ -32,6 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -74,7 +77,12 @@ fun SavedCompetitionsScreen(
             }
             // if the list is empty firebase will return empty list
             state.savedCompetitions!!.isEmpty() -> {
-                Text(text = "No saved competitions")
+                Text(
+                    text = "You don't have any saved competitions yet.",
+                    modifier = Modifier.padding(bottom = 10.dp),
+                    fontFamily = FontFamily(Font(R.font.onboarding_title1, FontWeight.Normal)),
+                    style = TextStyle(fontSize = 20.sp)
+                )
             }
 
             else -> {
