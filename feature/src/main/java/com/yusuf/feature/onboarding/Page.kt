@@ -17,7 +17,7 @@ fun getOnboardingPages(context: Context): List<Page> {
         Page(
             title = context.getString(R.string.onboarding_title_2),
             description = context.getString(R.string.onboarding_description_2),
-            lottieFile = R.raw.onboarding_anim_2
+            lottieFile = R.raw.onboarding_anim_3
         ),
         Page(
             title = context.getString(R.string.onboarding_title_3),
