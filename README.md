@@ -27,7 +27,7 @@ Team Maker
     <li><a href="#demo">Demo</a></li>
     <li><a href="#open-source-libraries">Open-Source Libraries</a></li>
     <li><a href="#architecture">Architecture</a></li>
-    <li><a href="#api-and-services">API & Services</a></li>
+    <li><a href="#api-and-services">API and Services</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#licence">Licence</a></li>
   </ol>
@@ -78,8 +78,8 @@ Clean Architecture & Multi Module
   
 ![image](https://github.com/user-attachments/assets/eb3bf886-2376-4cb6-9234-ece71d036a68)
 
-<!-- API & Services -->
-## API & Services
+<!-- API and Services -->
+## API and Services
 The application integrates with the following APIs and services:
 * OpenWeather API: Provides weather data and forecasts. More information can be found [here](https://openweathermap.org/api).
 * Restful API: Utilized for data communication and integration to get weather data.
