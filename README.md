@@ -3,8 +3,8 @@ Team Maker
 </h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Jetpack_Compose-7c6fe1?style=flat&logo=jetpackcompose&logoColor=%234285F4">
   <img src="https://img.shields.io/badge/-Kotlin-7c6fe1?style=flat&logo=kotlin&logoColor=white">
+  <img src="https://img.shields.io/badge/Jetpack_Compose-4285f4?style=flat&logo=jetpackcompose&logoColor=white">
   
   Team Maker is an application designed to streamline the creation of balanced teams with fair skill distribution for various sports. Whether you're setting up a competitive event or organizing a casual game, Team Maker provides an intuitive platform to manage teams and competitions effectively.
 </p>
