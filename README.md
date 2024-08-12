@@ -27,7 +27,7 @@ Team Maker
     <li><a href="#demo">Demo</a></li>
     <li><a href="#open-source-libraries">Open-Source Libraries</a></li>
     <li><a href="#architecture">Architecture</a></li>
-    <li><a href="#api">API</a></li>
+    <li><a href="#api">API & Services</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#licence">Licence</a></li>
   </ol>
@@ -84,6 +84,7 @@ The application integrates with the following APIs and services:
 * OpenWeather API: Provides weather data and forecasts. More information can be found [here](https://openweathermap.org/api).
 * Restful API: Utilized for data communication and integration to get weather data.
 * Retrofit: A type-safe HTTP client for Android and Java, used for interacting with RESTful APIs.
+* OkHttp: An HTTP client used for making network requests and handling responses efficiently.
 * Firebase: Used for various backend services, including:
   * Authentication: User sign-in and management.
   * Firestore Database: Real-time database for storing and syncing app data.
