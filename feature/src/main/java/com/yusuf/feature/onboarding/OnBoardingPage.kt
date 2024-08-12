@@ -34,7 +34,7 @@ fun OnboardingPage(page: Page) {
                 color = APPBAR_GREEN
             ),
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .padding(horizontal = 20.dp, vertical = 2.dp)
         )
         Text(
             text = page.description,
