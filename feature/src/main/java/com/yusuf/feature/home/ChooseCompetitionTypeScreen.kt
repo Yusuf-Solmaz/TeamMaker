@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,11 +32,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -78,6 +82,7 @@ import com.yusuf.navigation.main_datastore.MainDataStore
 import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.theme.DARK_RED
 import com.yusuf.theme.RED
+import com.yusuf.theme.SKIN
 import com.yusuf.utils.SharedPreferencesHelper
 import com.yusuf.utils.default_competition.toCompetition
 import kotlinx.coroutines.CoroutineScope
@@ -85,6 +90,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ChooseCompetitionTypeScreen(
@@ -98,6 +104,8 @@ fun ChooseCompetitionTypeScreen(
     val selectedCompetition = remember { mutableStateOf<CompetitionData?>(null) }
     var competitionDatatoUpdate by remember { mutableStateOf<CompetitionData?>(null) }
 
+    var searchQuery by remember { mutableStateOf("") }
+
     val context = LocalContext.current
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
     val mainDataStore = remember { MainDataStore(context) }
@@ -109,19 +117,16 @@ fun ChooseCompetitionTypeScreen(
         (context as? Activity)?.finish()
     }
 
-    // Initialize image picker launcher
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         selectedImageUri.value = uri
     }
 
-    // Initialize permission launcher
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            // Save permission granted status in DataStore
             CoroutineScope(Dispatchers.IO).launch {
                 mainDataStore.saveGalleryPermission(true)
             }
@@ -138,7 +143,6 @@ fun ChooseCompetitionTypeScreen(
     LaunchedEffect(Unit) {
         competitionViewModel.getAllCompetitions()
 
-        // Only request permission if needed (API level below 33)
         if (apiLevel < 33 && !galleryPermissionGranted) {
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -147,7 +151,6 @@ fun ChooseCompetitionTypeScreen(
             ) {
                 permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             } else {
-                // Save permission granted status in DataStore
                 CoroutineScope(Dispatchers.IO).launch {
                     mainDataStore.saveGalleryPermission(true)
                 }
@@ -185,7 +188,6 @@ fun ChooseCompetitionTypeScreen(
                             if (apiLevel >= 33 || galleryPermissionGranted) {
                                 imagePickerLauncher.launch("image/*")
                             } else {
-                                // Request permission if not granted
                                 permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                             }
                         },
@@ -212,7 +214,6 @@ fun ChooseCompetitionTypeScreen(
                                 if (apiLevel >= 33 || galleryPermissionGranted) {
                                     imagePickerLauncher.launch("image/*")
                                 } else {
-                                    // Request permission if not granted
                                     permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                                 }
                             },
@@ -267,11 +268,12 @@ fun ChooseCompetitionTypeScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 textAlign = TextAlign.Start,
                                 text = "Competitions",
-                                modifier = Modifier.padding(top = 10.dp, start = 10.dp),
                                 style = TextStyle(
                                     color = APPBAR_GREEN,
                                     fontSize = 25.sp,
@@ -279,9 +281,25 @@ fun ChooseCompetitionTypeScreen(
                                     fontFamily = FontFamily(Font(R.font.main_title))
                                 )
                             )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            TextField(
+                                value = searchQuery,
+                                onValueChange = { searchQuery = it },
+                                placeholder = { Text("Search Competition") },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true,
+                                shape = RoundedCornerShape(8.dp),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor =SKIN,
+                                    focusedIndicatorColor = APPBAR_GREEN,
+                                    unfocusedIndicatorColor = Color.Black
+                                )
+                            )
                         }
 
-                        val competitions = state.data ?: emptyList()
+                        val competitions = state.data?.filter {
+                            it.competitionName.contains(searchQuery, ignoreCase = true)
+                        } ?: emptyList()
 
                         LazyColumn(
                             modifier = Modifier
@@ -352,6 +370,7 @@ fun ChooseCompetitionTypeScreen(
         }
     )
 }
+
 
 
 @Composable
