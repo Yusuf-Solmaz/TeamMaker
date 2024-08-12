@@ -6,6 +6,7 @@ import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,6 +47,7 @@ import com.yusuf.component.custom_player_dialog.AddPlayerDialog
 import com.yusuf.component.custom_player_dialog.UpdatePlayerDialog
 import com.yusuf.component.custom_player_dialog.showTooltipBalloon
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
+import com.yusuf.component.ConfirmationDialog
 import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.utils.SharedPreferencesHelper
 import kotlin.math.roundToInt
@@ -76,11 +78,11 @@ fun PlayerListScreen(
             FloatingActionButton(
                 containerColor = APPBAR_GREEN, contentColor = Color.White,
                 onClick = {
-                showAddPlayerDialog = true
-                if (showTooltip) {
-                    viewModel.saveShowTooltip(false)
-                }
-            }) {
+                    showAddPlayerDialog = true
+                    if (showTooltip) {
+                        viewModel.saveShowTooltip(false)
+                    }
+                }) {
                 Text(text = "Add Player")
             }
         },
@@ -98,6 +100,7 @@ fun PlayerListScreen(
                             LoadingLottie(R.raw.loading_anim)
                         }
                     }
+
                     playerListUiState.error != null -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -106,6 +109,7 @@ fun PlayerListScreen(
                             Text(text = "Error: ${playerListUiState.error}")
                         }
                     }
+
                     playerListUiState.playerList != null -> {
                         if (playerListUiState.playerList?.isEmpty() == true) {
                             Column(
@@ -116,12 +120,22 @@ fun PlayerListScreen(
                                 Text(
                                     text = "You don't have any players yet.",
                                     modifier = Modifier.padding(bottom = 10.dp),
-                                    fontFamily = FontFamily(Font(R.font.onboarding_title1, FontWeight.Normal)),
+                                    fontFamily = FontFamily(
+                                        Font(
+                                            R.font.onboarding_title1,
+                                            FontWeight.Normal
+                                        )
+                                    ),
                                     style = TextStyle(fontSize = 20.sp)
                                 )
                                 Text(
                                     text = "Start adding now.",
-                                    fontFamily = FontFamily(Font(R.font.onboarding_title1, FontWeight.Normal)),
+                                    fontFamily = FontFamily(
+                                        Font(
+                                            R.font.onboarding_title1,
+                                            FontWeight.Normal
+                                        )
+                                    ),
                                     style = TextStyle(fontSize = 20.sp)
                                 )
                             }
@@ -197,7 +211,11 @@ fun PlayerListScreen(
             factory = { context ->
                 View(context).apply {
                     post {
-                        showTooltipBalloon(context, this, "You can slide right to edit or left to delete players") {
+                        showTooltipBalloon(
+                            context,
+                            this,
+                            "You can slide right to edit or left to delete players"
+                        ) {
                             viewModel.saveShowTooltip(false)
                         }
                     }
@@ -218,6 +236,7 @@ fun PlayerListItem(
     val swipeableState = rememberSwipeableState(initialValue = 0)
     val sizePx = with(LocalDensity.current) { 100.dp.toPx() }
     val anchors = mapOf(0f to 0, sizePx to 1, -sizePx to -1)
+    var deleteDialog by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -267,14 +286,26 @@ fun PlayerListItem(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape)
-                       .background(MaterialTheme.colorScheme.error.copy(alpha = 0.1f))
+                        .background(MaterialTheme.colorScheme.error.copy(alpha = 0.1f))
                         .align(Alignment.Center)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Delete",
-                        tint = MaterialTheme.colorScheme.error
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable {
+                                deleteDialog = true
+                            }
                     )
+                    if (deleteDialog) {
+                        ConfirmationDialog({
+                            deleteDialog = it
+                        }, {
+                            onDelete(playerData.id)
+                        })
+                    }
                 }
             }
         }

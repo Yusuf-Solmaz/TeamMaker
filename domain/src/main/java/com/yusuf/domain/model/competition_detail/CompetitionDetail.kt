@@ -1,7 +1,6 @@
 package com.yusuf.domain.model.competition_detail
 
 import android.location.Location
-import android.widget.TimePicker
 import com.yusuf.domain.model.firebase.PlayerData
 import java.io.Serializable
 
@@ -12,5 +11,6 @@ data class CompetitionDetail(
     val secondBalancedTeam: List<PlayerData>? = null,
     val location: Location? = null,
     val locationName: String? = null,
-    val imageUrl: String? = null
+    val imageUrl: String? = null,
+    val competitionName: String
 ) : Serializable
