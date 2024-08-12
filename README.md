@@ -60,6 +60,23 @@ With Team Maker, you can register, log in, and customize your experience by addi
 |-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|
 |<img src="/Screenshots/Screenshot_options_page.png" width="220"/> | <img src="/Screenshots/Screenshot_players_page.png" width="220"/> | <img src="/Screenshots/Screenshot_add_player_page.png" width="260"/> | <img src="/Screenshots/Screenshot_create_competition_page.png" width="150"/> | <img src="/Screenshots/Screenshot_competition_detail_page.png" width="120"/> | <img src="/Screenshots/Screenshot_saved_competition_page.png" width="130"/>| <img src="/Screenshots/Screenshot_delete_dialog.png" width="120"/>
 
+<!-- Architecture -->
+## Architecture
+This Android app uses the MVVM (Model-View-ViewModel) pattern and Clean Architecture principles, organized into four main modules for better scalability and maintainability.
+
+MVVM
+
+- Model: Manages data and business logic, separate from the UI.
+- View: Displays the data and interacts with the user.
+- ViewModel: Connects the View and Model, handling UI-related logic and state management.
+
+Clean Architecture & Multi Module
+- App Module: The core module that integrates all other modules and provides the main entry point of the application.
+- Data Module: Handles data sources, such as APIs and databases, and provides data to the Domain Layer.
+- Domain Module: Contains the core business logic and use cases, which are independent of external frameworks.
+- Feature Module: Encapsulates the app's features, allowing for modular development and testing of individual functionalities.
+  
+![image](https://github.com/user-attachments/assets/eb3bf886-2376-4cb6-9234-ece71d036a68)
 
 
 
