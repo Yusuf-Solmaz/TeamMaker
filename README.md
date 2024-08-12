@@ -78,7 +78,30 @@ Clean Architecture & Multi Module
   
 ![image](https://github.com/user-attachments/assets/eb3bf886-2376-4cb6-9234-ece71d036a68)
 
+<!-- API -->
+## API & Services
+The application integrates with the following APIs and services:
+* OpenWeather API: Provides weather data and forecasts. More information can be found [here](https://openweathermap.org/api).
+* Restful API: Utilized for data communication and integration to get weather data.
+* Retrofit: A type-safe HTTP client for Android and Java, used for interacting with RESTful APIs.
+* Firebase: Used for various backend services, including:
+  * Authentication: User sign-in and management.
+  * Firestore Database: Real-time database for storing and syncing app data.
+  * Storage: File storage and retrieval.
+  * Crashlytics: Real-time crash reporting and diagnostics.
+  * Performance Monitoring: Monitoring and optimizing app performance.
+  * Analytics: Data collection and insights on app usage.
+Google Services:
+Google Play Services (com.google.android.gms): Used for location services, allowing the app to access and manage location data.
 
+<!-- CONTACT -->
+## Contact
+
+Bengisu Şahin - bengisusaahin@gmail.com
+
+Talha Çalışır - talha5797@gmail.com
+
+Yusuf Mücahit Solmaz - yusufmucahitsolmaz@gmail.com
 
 
 
