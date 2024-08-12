@@ -314,7 +314,7 @@ fun PlayerListItem(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = "Player Name:${playerData.firstName} ${playerData.lastName}",
+                        text = "${playerData.firstName} ${playerData.lastName}",
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
