@@ -50,3 +50,19 @@ Team Maker
 
 With Team Maker, you can register, log in, and customize your experience by adding games and participants. Build balanced teams, track your competitions, and ensure a fair and enjoyable gaming experience. Start organizing your sports events and creating balanced teams with Team Maker!
 
+<!-- Screenshots -->
+## Screenshots
+| On Boarding Page First          | Sign Up                      | Sign In                     | Reset Password          | Choose Competition        | Update Competition        | Add Competition  
+|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|
+| <img src="/Screenshots/Screenshot_onboarding_page_first.png" width="180"/> | <img src="/Screenshots/Screenshot_create_an_account_page.png" width="230"/> |<img src="/Screenshots/Screenshot_login_page.png" width="230"/> | <img src="/Screenshots/Screenshot_reset_password_screen.png" width="180"/> | <img src="/Screenshots/Screenshot_choose_competition_type.png" width="160"/> | <img src="/Screenshots/Screenshot_update_competition.png" width="160"/> | <img src="/Screenshots/Screenshot_add_competition.png" width="160"/> 
+
+| Options                  | Players                   | Add Player Dialog             | Create Competition        | Competition Detail    | Saved Competition | Delete Saved Competition
+|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|
+|<img src="/Screenshots/Screenshot_options_page.png" width="220"/> | <img src="/Screenshots/Screenshot_players_page.png" width="220"/> | <img src="/Screenshots/Screenshot_add_player_page.png" width="220"/> | <img src="/Screenshots/Screenshot_create_competition_page.png" width="150"/> | <img src="/Screenshots/Screenshot_competition_detail_page.png" width="130"/> | <img src="/Screenshots/Screenshot_saved_competition_page.png" width="150"/>| <img src="/Screenshots/Screenshot_delete_dialog.png" width="120"/>
+
+
+
+
+
+
+
