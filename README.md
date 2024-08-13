@@ -144,6 +144,8 @@ Talha Çalışır - talha5797@gmail.com
 
 Yusuf Mücahit Solmaz - yusufmucahitsolmaz@gmail.com
 
-
+<!-- LICENCE -->
+## Licence
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 
