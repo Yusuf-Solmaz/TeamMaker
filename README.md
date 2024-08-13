@@ -8,6 +8,22 @@ Team Maker
   
   Team Maker is an application designed to streamline the creation of balanced teams with fair skill distribution for various sports. Whether you're setting up a competitive event or organizing a casual game, Team Maker provides an intuitive platform to manage teams and competitions effectively.
 </p>
+<table>
+  <tr>
+    <td colspan="2" align="center">
+      <img src="https://github.com/user-attachments/assets/a37dbf22-920d-4b4f-99b0-2f7d828a77e8" alt="Image 1">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/0b2c53bc-29f7-4ec9-a7b5-c18a85cff872" alt="Image 2">
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/2c7b071b-2ebe-4b9d-9741-13f047982da6" alt="Image 3">
+    </td>
+  </tr>
+</table>
+
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
@@ -16,17 +32,17 @@ Team Maker
     <li>
       <a href="#key-features">Key Features</a>
     </li>
+    <li><a href="#screenshots">Screenshots</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#open-source-libraries">Open-Source Libraries</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#api-and-services">API and Services</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#configuration-steps">Configuration Steps</a></li>
       </ul>
     </li>
-    <li><a href="#screenshots">Screenshots</a></li>
-    <li><a href="#demo">Demo</a></li>
-    <li><a href="#open-source-libraries">Open-Source Libraries</a></li>
-    <li><a href="#architecture">Architecture</a></li>
-    <li><a href="#api-and-services">API and Services</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#licence">Licence</a></li>
   </ol>
