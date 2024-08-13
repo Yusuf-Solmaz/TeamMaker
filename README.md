@@ -68,8 +68,10 @@ git clone https://github.com/Yusuf-Solmaz/TeamMaker
 API_KEY=YOUR_API_KEY_HERE
 ```
 3. Build and run the app on an emulator or a physical device.
-----------------OR----------------
-* You can download application apk [here](https://drive.google.com/file/d/1HBI3oGsVa8FhTK1ZWQVRXkq3W8uqYREe/view?usp=sharing)
+
+----------------------------------------------------------------
+
+* Or you can download the APK of the application [here](https://drive.google.com/file/d/1HBI3oGsVa8FhTK1ZWQVRXkq3W8uqYREe/view?usp=sharing)
 
   
 <!-- Screenshots -->
