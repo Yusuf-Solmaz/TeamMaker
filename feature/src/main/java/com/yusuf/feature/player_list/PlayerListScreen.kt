@@ -208,11 +208,11 @@ fun PlayerListScreen(
 
     if (showTooltip) {
         AndroidView(
-            factory = { context ->
-                View(context).apply {
+            factory = { contextF ->
+                View(contextF).apply {
                     post {
                         showTooltipBalloon(
-                            context,
+                            contextF,
                             this,
                             "You can slide right to edit or left to delete players"
                         ) {

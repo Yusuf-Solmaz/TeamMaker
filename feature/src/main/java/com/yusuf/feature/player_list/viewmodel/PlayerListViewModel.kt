@@ -2,8 +2,6 @@ package com.yusuf.feature.player_list.viewmodel
 
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -11,14 +9,12 @@ import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.domain.use_cases.firebase_use_cases.image.UpdatePlayerImageUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.AddPlayerUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.DeletePlayerByIdUseCase
-import com.yusuf.domain.use_cases.firebase_use_cases.user.GetAllPlayersUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.GetPlayersByCompetitionTypeUseCase
 import com.yusuf.domain.use_cases.firebase_use_cases.user.UpdatePlayerByIdUseCase
 import com.yusuf.domain.util.RootResult
 import com.yusuf.feature.player_list.state.AddPlayerUIState
 import com.yusuf.feature.player_list.state.PlayerUiState
 import com.yusuf.navigation.main_datastore.MainDataStore
-import com.yusuf.utils.SharedPreferencesHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +26,6 @@ class PlayerListViewModel @Inject constructor(
     private val addPlayerUseCase: AddPlayerUseCase,
     private val deletePlayerByIdUseCase: DeletePlayerByIdUseCase,
     private val updatePlayerByIdUseCase: UpdatePlayerByIdUseCase,
-    private val getAllPlayersUseCase: GetAllPlayersUseCase,
     private val updatePlayerImageUseCase: UpdatePlayerImageUseCase,
     private val getPlayersByCompetitionTypeUseCase: GetPlayersByCompetitionTypeUseCase,
     private val mainDataStore: MainDataStore

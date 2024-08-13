@@ -84,7 +84,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ChooseCompetitionTypeScreen(
@@ -203,8 +202,7 @@ fun ChooseCompetitionTypeScreen(
                                 competitionViewModel.updateCompetition(
                                     competitionData.competitionId,
                                     competitionData,
-                                    selectedImageUri.value,
-                                    context
+                                    selectedImageUri.value
                                 )
                                 openUpdateDialog.value = false
                             },
@@ -294,15 +292,13 @@ fun ChooseCompetitionTypeScreen(
                                     onClick = {
                                         val competitionData = competition.toCompetition()
 
-                                        if (competitionData != null) {
-                                            sharedPreferencesHelper.competitionName =
-                                                competition.competitionName
-                                            navController.navigate(
-                                                NavigationGraph.getOptionsRoute(
-                                                    competitionData
-                                                )
+                                        sharedPreferencesHelper.competitionName =
+                                            competition.competitionName
+                                        navController.navigate(
+                                            NavigationGraph.getOptionsRoute(
+                                                competitionData
                                             )
-                                        }
+                                        )
                                     },
                                     onDelete = {
                                         Log.d(

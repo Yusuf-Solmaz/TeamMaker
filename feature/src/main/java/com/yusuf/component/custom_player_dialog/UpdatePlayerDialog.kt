@@ -23,15 +23,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,13 +53,11 @@ import com.yusuf.component.auth_components.AuthButtonComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.player_list.viewmodel.PlayerListViewModel
-import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.theme.CANCEL_RED
 import com.yusuf.theme.DARK_BLUE
 import com.yusuf.theme.DARK_RED
 import com.yusuf.theme.LIGHT_GREEN
 import com.yusuf.theme.LIGHT_RED
-import com.yusuf.theme.YELLOW
 
 @Composable
 fun UpdatePlayerDialog(
@@ -75,18 +71,14 @@ fun UpdatePlayerDialog(
     var firstName by remember { mutableStateOf(playerData.firstName) }
     var lastName by remember { mutableStateOf(playerData.lastName) }
     var position by remember { mutableStateOf(playerData.position) }
-    var speed by remember { mutableStateOf(playerData.speed) }
-    var focus by remember { mutableStateOf(playerData.focus) }
-    var condition by remember { mutableStateOf(playerData.condition) }
-    var durability by remember { mutableStateOf(playerData.durability) }
-    var generalSkill by remember { mutableStateOf(playerData.generalSkill) }
+    var speed by remember { mutableIntStateOf(playerData.speed) }
+    var focus by remember { mutableIntStateOf(playerData.focus) }
+    var condition by remember { mutableIntStateOf(playerData.condition) }
+    var durability by remember { mutableIntStateOf(playerData.durability) }
+    var generalSkill by remember { mutableIntStateOf(playerData.generalSkill) }
     var isGeneralSkillUsed by remember { mutableStateOf(false) }
 
-    if (generalSkill == 0) {
-        isGeneralSkillUsed = false
-    } else {
-        isGeneralSkillUsed = true
-    }
+    isGeneralSkillUsed = generalSkill != 0
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()

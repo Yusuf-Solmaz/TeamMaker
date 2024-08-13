@@ -21,7 +21,7 @@ val predefinedCompetitions = listOf(
         Competition("Dodgeball", R.drawable.dodgeball_1, R.drawable.dodgeball_team)
 )
 
-fun CompetitionData.toCompetition(): Competition? {
+fun CompetitionData.toCompetition(): Competition {
         return predefinedCompetitions.find { it.competitionName == this.competitionName }?.let {
                 Competition(
                         competitionName = it.competitionName,

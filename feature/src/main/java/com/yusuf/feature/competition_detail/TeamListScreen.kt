@@ -21,7 +21,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -71,7 +71,7 @@ fun TeamListScreen(
                 contentColor = MaterialTheme.colorScheme.primary,
                 divider = {},
                 indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
+                    SecondaryIndicator(
                         Modifier
                             .tabIndicatorOffset(tabPositions[pagerState.currentPage])
                             .height(2.dp),
@@ -131,9 +131,7 @@ fun TeamListScreen(
             }
             val averageSkill = calculateAverageSkillRating(team)
 
-            Column(
-
-            ) {
+            Column{
                 Text(
                     text = "Average Skill Rating: %.2f".format(averageSkill),
                     style = TextStyle(

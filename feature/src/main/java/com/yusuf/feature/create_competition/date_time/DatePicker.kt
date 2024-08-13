@@ -50,7 +50,7 @@ fun DatePickerWithDialog(
     onDateSelected: (String) -> Unit,
 ) {
     val dateState = rememberDatePickerState()
-    var millisToLocalDate = dateState.selectedDateMillis?.let {
+    val millisToLocalDate = dateState.selectedDateMillis?.let {
         DateUtils().convertMillisToLocalDate(it)
     }
 
