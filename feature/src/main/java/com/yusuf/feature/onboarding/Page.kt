@@ -1,3 +1,5 @@
+package com.yusuf.feature.onboarding
+
 import android.content.Context
 import com.yusuf.feature.R
 

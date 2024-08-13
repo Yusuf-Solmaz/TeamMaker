@@ -35,9 +35,6 @@ import com.yusuf.navigation.NavigationGraph
 import com.yusuf.navigation.TeamMakerNavigation
 import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.theme.DARK_RED
-import com.yusuf.theme.GREEN
-import com.yusuf.theme.LIGHT_GREEN
-import com.yusuf.theme.LIGHT_GREEN_V2
 import com.yusuf.theme.RED
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +52,7 @@ fun MainScreen(
     var appBarTitle by remember { mutableStateOf<String?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     var dialogAction by remember { mutableStateOf("") }
-    var navigationKey by remember { mutableStateOf(0) }
+    var navigationKey by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
 
     LaunchedEffect(true) {
@@ -157,7 +154,13 @@ fun MainScreen(
                     },
                     navigationIcon = {
                         if (title != "Choose Competition Type") {
-                            IconButton(onClick = { navController.navigateUp() }) {
+                            IconButton(onClick = {
+                                if (title == "Saved Competitions") {
+                                    navController.navigate(NavigationGraph.CHOOSE_COMPETITION_TYPE.route)
+                                } else {
+                                    navController.navigateUp()
+                                }
+                            }) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_arrow_left),
                                     contentDescription = "Back",

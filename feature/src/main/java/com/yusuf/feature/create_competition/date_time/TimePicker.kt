@@ -48,9 +48,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.yusuf.feature.R
 import com.yusuf.theme.APPBAR_GREEN
-import com.yusuf.theme.DARK_GRAY
-import com.yusuf.theme.GREEN
-import com.yusuf.theme.LIGHT_GREEN
 import com.yusuf.theme.LIGHT_RED
 import java.util.Calendar
 import java.util.Locale
@@ -62,7 +59,6 @@ fun TimePicker(
 ) {
     var showAdvancedExample by remember { mutableStateOf(false) }
     var selectedTime: String? by remember { mutableStateOf(null) }
-    val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
 
     Card(
         modifier = Modifier

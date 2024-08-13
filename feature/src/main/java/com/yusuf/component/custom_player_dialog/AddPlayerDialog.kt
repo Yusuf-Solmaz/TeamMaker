@@ -1,7 +1,6 @@
 package com.yusuf.component.custom_player_dialog
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -24,21 +23,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderColors
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -61,17 +55,12 @@ import com.yusuf.component.TextFieldComponent
 import com.yusuf.component.auth_components.AuthButtonComponent
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
-import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.theme.CANCEL_RED
 import com.yusuf.theme.DARK_BLUE
 import com.yusuf.theme.DARK_RED
 import com.yusuf.theme.LIGHT_GREEN
 import com.yusuf.theme.LIGHT_RED
-import com.yusuf.theme.PurpleGrey80
-import com.yusuf.theme.RED
-import com.yusuf.theme.YELLOW
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddPlayerDialog(
     competitionName: String,
@@ -84,18 +73,14 @@ fun AddPlayerDialog(
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var position by remember { mutableStateOf("") }
-    var speed by remember { mutableStateOf(0) }
-    var focus by remember { mutableStateOf(0) }
-    var condition by remember { mutableStateOf(0) }
-    var durability by remember { mutableStateOf(0) }
-    var generalSkill by remember { mutableStateOf(0) }
+    var speed by remember { mutableIntStateOf(0) }
+    var focus by remember { mutableIntStateOf(0) }
+    var condition by remember { mutableIntStateOf(0) }
+    var durability by remember { mutableIntStateOf(0) }
+    var generalSkill by remember { mutableIntStateOf(0) }
     var isGeneralSkillUsed by remember { mutableStateOf(false) }
 
-    if (generalSkill == 0) {
-        isGeneralSkillUsed = false
-    } else {
-        isGeneralSkillUsed = true
-    }
+    isGeneralSkillUsed = generalSkill != 0
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()

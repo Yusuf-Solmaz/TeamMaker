@@ -18,7 +18,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.yusuf.component.LoadingLottie
 import com.yusuf.feature.R
 import com.yusuf.theme.APPBAR_GREEN
 

@@ -1,8 +1,6 @@
 package com.yusuf.component.custom_competition_dialog
 
-import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,12 +19,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -51,7 +46,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.yusuf.component.auth_components.AuthButtonComponent
 import com.yusuf.domain.model.firebase.CompetitionData
 import com.yusuf.feature.R
-import com.yusuf.theme.APPBAR_GREEN
 import com.yusuf.theme.CANCEL_RED
 import com.yusuf.theme.DARK_BLUE
 import com.yusuf.theme.DARK_RED

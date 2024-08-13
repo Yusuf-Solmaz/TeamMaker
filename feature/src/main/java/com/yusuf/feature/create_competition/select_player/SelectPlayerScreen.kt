@@ -1,3 +1,5 @@
+package com.yusuf.feature.create_competition.select_player
+
 import android.location.Location
 import android.net.Uri
 import android.util.Log
@@ -56,8 +58,6 @@ import com.yusuf.domain.model.competition_detail.CompetitionDetail
 import com.yusuf.domain.model.firebase.PlayerData
 import com.yusuf.feature.R
 import com.yusuf.feature.create_competition.ImagePickerComposable
-import com.yusuf.feature.create_competition.select_player.BackCardContent
-import com.yusuf.feature.create_competition.select_player.FrontCardContent
 import com.yusuf.feature.create_competition.select_player.viewmodel.SelectPlayerViewModel
 import com.yusuf.feature.create_competition.select_player.viewmodel.TeamBalancerViewModel
 import com.yusuf.navigation.NavigationGraph

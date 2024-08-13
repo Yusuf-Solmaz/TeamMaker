@@ -1,6 +1,5 @@
 package com.yusuf.feature.home.viewmodel
 
-import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -127,8 +126,7 @@ class CompetitionViewModel @Inject constructor(
     fun updateCompetition(
         competitionId: String,
         competitionData: CompetitionData,
-        imageUri: Uri?,
-        context: Context
+        imageUri: Uri?
     ) {
         _addDeleteState.value = AddDeleteState(isLoading = true, result = Loading)
         viewModelScope.launch {

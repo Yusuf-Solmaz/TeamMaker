@@ -21,7 +21,6 @@ import com.yusuf.component.NextBackButton
 import com.yusuf.component.PageIndicator
 import com.yusuf.navigation.NavigationGraph
 import com.yusuf.navigation.main_viewmodel.MainViewModel
-import getOnboardingPages
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
