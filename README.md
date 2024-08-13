@@ -97,7 +97,7 @@ With Team Maker, you can register, log in, and customize your experience by addi
 
 
 
-https://github.com/user-attachments/assets/f7964863-176e-4bf9-a67e-0a88f2fa5443
+https://github.com/user-attachments/assets/617e756c-7909-444a-855b-13bff5ca1f2b
 
 
 
