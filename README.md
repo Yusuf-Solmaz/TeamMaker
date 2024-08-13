@@ -5,22 +5,39 @@ Team Maker
 <p align="center">
   <img src="https://img.shields.io/badge/-Kotlin-7c6fe1?style=flat&logo=kotlin&logoColor=white">
   <img src="https://img.shields.io/badge/Jetpack_Compose-4285f4?style=flat&logo=jetpackcompose&logoColor=white">
+</p>
+
+<div align="center">
+  <table style="border-collapse: collapse; width: auto; text-align: center;">
+    <tr>
+      <td style="border: 1px solid #ccc; padding: 10px; border-radius: 8px; background-color: #f9f9f9; vertical-align: middle;">
+        <img src="https://github.com/user-attachments/assets/2de5ded5-8784-4533-921c-8dec983739a3" alt="Team Maker Logo" width="30" style="vertical-align: middle;">
+      </td>
+      <td style="border: 1px solid #ccc; padding: 10px; border-radius: 8px; background-color: #f9f9f9; vertical-align: middle;">
+        <span style="font-size: 1.2em; font-weight: bold;">Dynamic Trio</span>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div align="center">
+  
+  [![Contributors][contributors-shield]][contributors-url]
+  [![Forks][forks-shield]][forks-url]
+  [![Stargazers][stars-shield]][stars-url]
+  [![Issues][issues-shield]][issues-url]
+
+</div>
+
+  We are the Dynamic Trio three Android developers working together to create powerful and user-friendly mobile apps.
   
   Team Maker is an application designed to streamline the creation of balanced teams with fair skill distribution for various sports. Whether you're setting up a competitive event or organizing a casual game, Team Maker provides an intuitive platform to manage teams and competitions effectively.
-</p>
+
 <table>
   <tr>
-    <td colspan="2" align="center">
-      <img src="https://github.com/user-attachments/assets/a37dbf22-920d-4b4f-99b0-2f7d828a77e8" alt="Image 1">
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://github.com/user-attachments/assets/0b2c53bc-29f7-4ec9-a7b5-c18a85cff872" alt="Image 2">
-    </td>
-    <td align="center">
-      <img src="https://github.com/user-attachments/assets/2c7b071b-2ebe-4b9d-9741-13f047982da6" alt="Image 3">
-    </td>
+      <td><img src="https://github.com/user-attachments/assets/a37dbf22-920d-4b4f-99b0-2f7d828a77e8" alt="Image 1"></td>
+      <td><img src="https://github.com/user-attachments/assets/0b2c53bc-29f7-4ec9-a7b5-c18a85cff872" alt="Image 2"></td>
+      <td><img src="https://github.com/user-attachments/assets/2c7b071b-2ebe-4b9d-9741-13f047982da6" alt="Image 3"></td>
   </tr>
 </table>
 
@@ -64,31 +81,6 @@ Team Maker
 * Weather Information: Get weather forecasts based on the location of your competition to better plan your events.
 
 With Team Maker, you can register, log in, and customize your experience by adding games and participants. Build balanced teams, track your competitions, and ensure a fair and enjoyable gaming experience. Start organizing your sports events and creating balanced teams with Team Maker!
-
-## Getting Started
-  * If You Want to Run the App on Android Studio:
-
-1. Clone this repository to your preferred directory using the following command:
-
-```
-git clone https://github.com/Yusuf-Solmaz/TeamMaker
-```
-2. Open the cloned project in Android Studio.
-
-    ### Configuration Steps
-
-1. Create `secrets.properties` file in the project directory.
-
-2. Add the following line with your API key to `secrets.properties`:
-```
-API_KEY=YOUR_API_KEY_HERE
-```
-3. Build and run the app on an emulator or a physical device.
-
-----------------------------------------------------------------
-
-* Or you can download the APK of the application [here](https://drive.google.com/file/d/1HBI3oGsVa8FhTK1ZWQVRXkq3W8uqYREe/view?usp=sharing)
-
   
 <!-- Screenshots -->
 ## Screenshots
@@ -175,17 +167,79 @@ The application integrates with the following APIs and services:
   * Analytics: Data collection and insights on app usage.
 * Google Services: Used for location services, allowing the app to access and manage location data. [More detail](https://developers.google.com/android/reference/com/google/android/gms/common/package-summary)
 
-<!-- CONTACT -->
+<!-- GETTING STARTED -->
+## Getting Started
+  * If You Want to Run the App on Android Studio:
+
+1. Clone this repository to your preferred directory using the following command:
+
+```
+git clone https://github.com/Yusuf-Solmaz/TeamMaker
+```
+2. Open the cloned project in Android Studio.
+
+    ### Configuration Steps
+
+1. Create `secrets.properties` file in the project directory.
+
+2. Add the following line with your API key to `secrets.properties`:
+```
+API_KEY=YOUR_API_KEY_HERE
+```
+3. Build and run the app on an emulator or a physical device.
+
+----------------------------------------------------------------
+
+* Or you can download the APK of the application [here](https://drive.google.com/file/d/1HBI3oGsVa8FhTK1ZWQVRXkq3W8uqYREe/view?usp=sharing)
+  
+<!-- Contact Section -->
 ## Contact
 
-Bengisu Şahin - bengisusaahin@gmail.com
-
-Talha Çalışır - talha5797@gmail.com
-
-Yusuf Mücahit Solmaz - yusufmucahitsolmaz@gmail.com
+<table style="border-collapse: collapse; width: 100%;">
+  <tr>
+    <td style="padding-right: 10px;">Bengisu Şahin - <a href="mailto:bengisusaahin@gmail.com">bengisusaahin@gmail.com</a></td>
+    <td>
+      <a href="https://www.linkedin.com/in/bengisu-sahin/" target="_blank">
+        <img src="https://img.shields.io/badge/linkedin-%231E77B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" alt="linkedin" style="vertical-align: middle;" />
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-right: 10px;">Talha Çalışır - <a href="mailto:talha5797@gmail.com">talha5797@gmail.com</a></td>
+    <td>
+      <a href="https://www.linkedin.com/in/talhatlc/" target="_blank">
+        <img src="https://img.shields.io/badge/linkedin-%231E77B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" alt="linkedin" style="vertical-align: middle;" />
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-right: 10px;">Yusuf Mücahit Solmaz - <a href="mailto:yusufmucahitsolmaz@gmail.com">yusufmucahitsolmaz@gmail.com</a></td>
+    <td>
+      <a href="https://www.linkedin.com/in/yusuf-mucahit-solmaz/" target="_blank">
+        <img src="https://img.shields.io/badge/linkedin-%231E77B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" alt="linkedin" style="vertical-align: middle;" />
+      </a>
+    </td>
+  </tr>
+</table>
 
 <!-- LICENCE -->
 ## Licence
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/Yusuf-Solmaz/TeamMaker.svg?style=for-the-badge
+[contributors-url]: https://github.com/Yusuf-Solmaz/TeamMaker/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Yusuf-Solmaz/TeamMaker.svg?style=for-the-badge
+[forks-url]: https://github.com/Yusuf-Solmaz/TeamMaker/network/members
+[stars-shield]: https://img.shields.io/github/stars/Yusuf-Solmaz/TeamMaker.svg?style=for-the-badge
+[stars-url]: https://github.com/Yusuf-Solmaz/TeamMaker/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Yusuf-Solmaz/TeamMaker.svg?style=for-the-badge
+[issues-url]: https://github.com/Yusuf-Solmaz/TeamMaker/issues
+[license-shield]: https://img.shields.io/github/license/Yusuf-Solmaz/TeamMaker.svg?style=for-the-badge
+[license-url]: https://github.com/Yusuf-Solmaz/TeamMaker/blob/master/LICENSE.txt
 
+<!-- [linkedin-shield]: https://img.shields.io/badge/linkedin-%231E77B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white alt=linkedin style="margin-bottom: 5px;"
+[linkedin-url]: https://www.linkedin.com/in/bengisu-sahin/
+[linkedinT-url]: https://www.linkedin.com/in/talhatlc/
+[linkedinY-url]: https://www.linkedin.com/in/yusuf-mucahit-solmaz/--!>
