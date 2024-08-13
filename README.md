@@ -62,33 +62,44 @@ With Team Maker, you can register, log in, and customize your experience by addi
 
 <!-- Open-Source Libraries -->
 ## Open-Source Libraries
-* [Dependency Injection (Hilt)](https://developer.android.com/training/dependency-injection/hilt-android)
-* [Navigation](https://developer.android.com/develop/ui/compose/navigation)
-* [Coroutines](https://developer.android.com/kotlin/coroutines?hl=tr)
-* [Flow](https://developer.android.com/kotlin/flow)
-* [Jetpack Compose](https://developer.android.com/develop/ui/compose)
-* [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
-* [MVVM](https://developer.android.com/topic/libraries/architecture/viewmodel#implement)
-* [Retrofit](https://square.github.io/retrofit/) A type-safe HTTP client for Android and Java
-* [OkHttp](https://square.github.io/okhttp/) An HTTP client that efficiently make network requests
-* [Firebase](https://firebase.google.com/) - Used for authentication, crashlytics, analytics,
-  firestore and .
-  * [Firebase Authentication](https://firebase.google.com/docs/auth) Firebase Authentication
+* Minimum SDK level 26
+* [Dependency Injection (Hilt) (2.51.1)](https://developer.android.com/training/dependency-injection/hilt-android) - Used for dependency injection, simplifying the management of application components.
+* [Jetpack Compose (1.9.1)](https://developer.android.com/develop/ui/compose) - A modern toolkit for building native UI in Android.
+* [Navigation (1.2.0)](https://developer.android.com/develop/ui/compose/navigation) - Handles in-app navigation in a type-safe manner.
+* [Compose Lifecycle (2.8.4)](https://developer.android.com/develop/ui/compose/lifecycle) - Manages lifecycle-aware components in Jetpack Compose.
+* [Coroutines](https://developer.android.com/kotlin/coroutines?hl=tr) - Provides a simple way to manage background threads, making asynchronous programming easier and more efficient.
+* [Flow](https://developer.android.com/kotlin/flow) - A reactive streams API in Kotlin used for managing data streams asynchronously.
+* [DataStore (1.1.1)](https://developer.android.com/topic/libraries/architecture/datastore) - Handles data storage and persistence, replacing SharedPreferences for more complex data structures.
+* [MVVM](https://developer.android.com/topic/libraries/architecture/viewmodel#implement) - A design pattern used to separate concerns, making the application more modular, testable, and maintainable.
+  * [Lifecycle (2.8.4)](https://developer.android.com/topic/libraries/architecture/lifecycle) - Manages Android lifecycle-aware components.
+  * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) - Stores
+      UI-related data that isn't destroyed on UI changes.
+  * [UseCases](https://developer.android.com/topic/architecture/domain-layer) - Located domain
+      layer that sits between the UI layer and the data layer.
+  * [Repository](https://developer.android.com/topic/architecture/data-layer) - Located in the data
+      layer that contains application data and business logic.
+* [Retrofit (2.11.0)](https://square.github.io/retrofit/) A type-safe HTTP client for Android and Java
+* [OkHttp (5.0.0-alpha.14)](https://square.github.io/okhttp/) An HTTP client that efficiently makes network requests
+* [Gson (2.11.0)](https://mvnrepository.com/artifact/com.google.code.gson/gson) - A library for serializing and deserializing JSON data.
+* [Firebase](https://firebase.google.com/) - A suite of tools used for backend services including authentication, Firestore database, storage, crash reporting, analytics, and performance monitoring.
+    * [Firebase Authentication (23.0.0)](https://firebase.google.com/docs/auth) Firebase Authentication
       provides backend services, easy-to-use SDKs, and ready-made UI libraries to authenticate users
       to your app.
-    * [Firebase Firestore](https://firebase.google.com/docs/firestore) Cloud Firestore is a
+    * [Firebase Firestore (25.0.0)](https://firebase.google.com/docs/firestore) Cloud Firestore is a
       flexible, scalable database for mobile, web, and server development from Firebase and Google
       Cloud.
-    * [Firebase Crashlytics](https://firebase.google.com/docs/crashlytics) Firebase Crashlytics is a
-      lightweight, realtime crash reporter that helps you track, prioritize, and fix stability
+    * [Firebase Storage (21.0.0)](https://firebase.google.com/docs/storage?hl=en)
+    * [Firebase Crashlytics (19.0.3)](https://firebase.google.com/docs/crashlytics) Firebase Crashlytics is a
+      lightweight, real-time crash reporter that helps you track, prioritize, and fix stability
       issues that erode your app quality.
-    * [Firebase Performance]
-    * [Firebase Analytics](https://firebase.google.com/docs/analytics) Firebase Analytics is a free
+    * [Firebase Performance (21.0.1)](https://firebase.google.com/docs/perf-mon?hl=en)
+    * [Firebase Analytics (22.0.2)](https://firebase.google.com/docs/analytics) Firebase Analytics is a free
       app measurement solution that provides insight on app usage and user engagement.
-    
-    
+* [Location (21.3.0)](https://developers.google.com/android/guides/setup?hl=en) - Used for obtaining device location data.
 * [SharedPreferences](https://developer.android.com/training/data-storage/shared-preferences) Store
-  private primitive data in key-value pairs.
+  private primitive data in key-value pairs. Standard Android library with no specific version (comes with the Android SDK).
+* [Lottie Animation (6.3.0)](https://lottiefiles.com/blog/working-with-lottie-animations/getting-started-with-lottie-animations-in-android-app) - Used to display animations in the app.
+* [Coil (2.6.0)](https://coil-kt.github.io/coil/compose/) - An image loading library for Android backed by Kotlin Coroutines.
   
 <!-- Architecture -->
 ## Architecture
@@ -122,8 +133,7 @@ The application integrates with the following APIs and services:
   * Crashlytics: Real-time crash reporting and diagnostics.
   * Performance Monitoring: Monitoring and optimizing app performance.
   * Analytics: Data collection and insights on app usage.
-Google Services:
-Google Play Services (com.google.android.gms): Used for location services, allowing the app to access and manage location data.
+* Google Services: Used for location services, allowing the app to access and manage location data. [More detail](https://developers.google.com/android/reference/com/google/android/gms/common/package-summary)
 
 <!-- CONTACT -->
 ## Contact
