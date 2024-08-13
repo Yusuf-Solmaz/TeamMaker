@@ -1,5 +1,6 @@
 package com.yusuf.feature.saved_competitions
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,8 @@ import com.yusuf.component.LoadingLottie
 import com.yusuf.feature.R
 import com.yusuf.feature.saved_competitions.state.GetSavedCompetitionsUIState
 import com.yusuf.feature.saved_competitions.viewmodel.SavedCompetitionsViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun SavedCompetitionsScreen(
@@ -58,12 +61,18 @@ fun SavedCompetitionsScreen(
             }
 
             else -> {
+                val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+
+                val sortedCompetitions = state.savedCompetitions?.sortedBy { competition ->
+                    dateFormat.parse(competition.competitionDate)}
+
+                Log.d("SavedCompetitionsScreen", "Saved Competitions: ${state.savedCompetitions!![0].competitionDate}")
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f),
                 ) {
-                    items(state.savedCompetitions ?: emptyList()) { competition ->
+                    items(sortedCompetitions ?: emptyList()) { competition ->
                         CompetitionCard(
                             competition = competition,
                             onDeleteClick = {
