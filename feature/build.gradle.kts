@@ -84,6 +84,6 @@ dependencies {
     // Datastore
     implementation(libs.androidx.datastore.preferences)
 
-    implementation ("com.google.code.gson:gson:2.11.0")
-    implementation ("com.github.skydoves:balloon-compose:1.5.2")
+    implementation (libs.gson)
+    implementation (libs.balloon.compose)
 }

@@ -1,5 +1,6 @@
 [versions]
-agp = "8.5.1"
+agp = "8.5.2"
+balloonCompose = "1.5.2"
 kotlin = "1.9.23"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -29,7 +30,7 @@ ksp = "1.9.23-1.0.20"
 okhttp = "5.0.0-alpha.14"
 playServicesLocation = "21.3.0"
 retrofit = "2.11.0"
-gson = "2.10.1"
+gson = "2.11.0"
 retrofit-converter = "2.11.0"
 okhttp-logging-interceptor= "4.12.0"
 
@@ -53,6 +54,7 @@ googleFirebaseFirebasePerf = "1.4.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+balloon-compose = { module = "com.github.skydoves:balloon-compose", version.ref = "balloonCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
