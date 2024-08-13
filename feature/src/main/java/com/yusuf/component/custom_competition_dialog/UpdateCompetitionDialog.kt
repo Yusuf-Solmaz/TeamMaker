@@ -1,6 +1,7 @@
 package com.yusuf.component.custom_competition_dialog
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -36,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -64,6 +66,7 @@ fun UpdateCompetitionDialog(
     var expanded by remember { mutableStateOf(false) }
     var selectedCompetition by remember { mutableStateOf<Competition?>(null) }
     var customCompetitionName by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     LaunchedEffect(competitionData) {
         selectedCompetition =
@@ -209,6 +212,21 @@ fun UpdateCompetitionDialog(
         confirmButton = {
             AuthButtonComponent(
                 value = "Save", onClick = {
+
+                    if (selectedImageUri == null) {
+                        Toast.makeText(context, "Please choose an image.", Toast.LENGTH_SHORT)
+                            .show()
+                        return@AuthButtonComponent
+                    }
+                    if (selectedCompetition == null && customCompetitionName.isBlank()) {
+                        Toast.makeText(
+                            context,
+                            "Please choose at least one competition",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@AuthButtonComponent
+                    }
+
                     val competitionName =
                         selectedCompetition?.competitionName ?: customCompetitionName
                     if (competitionName.isNotBlank()) {

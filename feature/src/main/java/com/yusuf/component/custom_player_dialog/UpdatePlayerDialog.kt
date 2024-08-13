@@ -254,12 +254,8 @@ fun UpdatePlayerDialog(
                 value = "Update",
                 onClick = {
 
-                    if (profilePhotoUri == null) {
-                        Toast.makeText(
-                            context,
-                            "Please select a profile photo.",
-                            Toast.LENGTH_SHORT
-                        )
+                    if (profilePhotoUri == null || firstName.isEmpty() || lastName.isEmpty()) {
+                        Toast.makeText(context, "Please fill all fields.", Toast.LENGTH_SHORT)
                             .show()
                         return@AuthButtonComponent
                     }

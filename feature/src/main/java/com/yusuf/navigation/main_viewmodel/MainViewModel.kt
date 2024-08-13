@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor(
     var isLoading by mutableStateOf(true)
         private set
 
-    var startDestination by mutableStateOf("onboarding_screen")
+    var startDestination by mutableStateOf(NavigationGraph.ONBOARDING_SCREEN.route)
         private set
 
     var isSplashScreenVisible by mutableStateOf(true)

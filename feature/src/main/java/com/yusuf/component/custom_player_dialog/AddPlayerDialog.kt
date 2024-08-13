@@ -301,7 +301,7 @@ fun AddPlayerDialog(
         confirmButton = {
             AuthButtonComponent(
                 value = "Add", onClick = {
-                    if (profilePhotoUri == null || firstName.isBlank() || lastName.isBlank() || position.isBlank()) {
+                    if (profilePhotoUri == null || firstName.isBlank() || lastName.isBlank()) {
                         Toast.makeText(context, "Please fill all fields.", Toast.LENGTH_SHORT)
                             .show()
                         return@AuthButtonComponent

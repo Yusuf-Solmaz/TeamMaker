@@ -326,7 +326,9 @@ fun ChooseCompetitionTypeScreen(
 
                 when (val addState = addDeleteState.result) {
                     is RootResult.Loading -> {
-                        Column(Modifier.fillMaxSize()) {
+                        Column(Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally) {
                             LoadingLottie(R.raw.image_loading)
                         }
                     }
