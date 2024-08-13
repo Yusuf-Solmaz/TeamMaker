@@ -86,11 +86,16 @@ With Team Maker, you can register, log in, and customize your experience by addi
 ## Screenshots
 | On Boarding Page First          | Sign Up                      | Sign In                     | Reset Password          | Choose Competition        | Update Competition        | Add Competition  
 |-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|
-| <img src="/Screenshots/Screenshot_onboarding_page_first.png" width="180"/> | <img src="/Screenshots/Screenshot_create_an_account_page.png" width="260"/> |<img src="/Screenshots/Screenshot_login_page.png" width="260"/> | <img src="/Screenshots/Screenshot_reset_password_screen.png" width="180"/> | <img src="/Screenshots/Screenshot_choose_competition_type.png" width="140"/> | <img src="/Screenshots/Screenshot_update_competition.png" width="140"/> | <img src="/Screenshots/Screenshot_add_competition.png" width="140"/> 
+| <img src="/screenshots/Screenshot_onboarding_page_first.png" width="180"/> | <img src="/screenshots/Screenshot_create_an_account_page.png" width="260"/> |<img src="/screenshots/Screenshot_login_page.png" width="260"/> | <img src="/screenshots/Screenshot_reset_password_screen.png" width="180"/> | <img src="/screenshots/Screenshot_choose_competition_type.png" width="140"/> | <img src="/screenshots/Screenshot_update_competition.png" width="140"/> | <img src="/screenshots/Screenshot_add_competition.png" width="140"/> 
 
 | Options                  | Players                   | Add Player Dialog             | Create Competition        | Competition Detail    | Saved Competition | Delete Saved Competition
 |-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|-----------------------------------|
-|<img src="/Screenshots/Screenshot_options_page.png" width="220"/> | <img src="/Screenshots/Screenshot_players_page.png" width="220"/> | <img src="/Screenshots/Screenshot_add_player_page.png" width="260"/> | <img src="/Screenshots/Screenshot_create_competition_page.png" width="150"/> | <img src="/Screenshots/Screenshot_competition_detail_page.png" width="120"/> | <img src="/Screenshots/Screenshot_saved_competition_page.png" width="130"/>| <img src="/Screenshots/Screenshot_delete_dialog.png" width="120"/>
+|<img src="/screenshots/Screenshot_options_page.png" width="220"/> | <img src="/screenshots/Screenshot_players_page.png" width="220"/> | <img src="/screenshots/Screenshot_add_player_page.png" width="260"/> | <img src="/screenshots/Screenshot_create_competition_page.png" width="150"/> | <img src="/screenshots/Screenshot_competition_detail_page.png" width="120"/> | <img src="/screenshots/Screenshot_saved_competition_page.png" width="130"/>| <img src="/screenshots/Screenshot_delete_dialog.png" width="120"/>
+
+<!-- Demo -->
+## Demo
+
+
 
 <!-- Open-Source Libraries -->
 ## Open-Source Libraries
