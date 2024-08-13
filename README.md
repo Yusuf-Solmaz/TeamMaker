@@ -19,7 +19,6 @@ Team Maker
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
         <li><a href="#configuration-steps">Configuration Steps</a></li>
       </ul>
     </li>
@@ -51,24 +50,26 @@ Team Maker
 With Team Maker, you can register, log in, and customize your experience by adding games and participants. Build balanced teams, track your competitions, and ensure a fair and enjoyable gaming experience. Start organizing your sports events and creating balanced teams with Team Maker!
 
 ## Getting Started
-* If You Want to Run the App on Android Studio:
+  * If You Want to Run the App on Android Studio:
 
 1. Clone this repository to your preferred directory using the following command:
 
 ```
-git clone https://github.com/Yusuf-Solmaz/Papara-Final-Case-Android
+git clone https://github.com/Yusuf-Solmaz/TeamMaker
 ```
 2. Open the cloned project in Android Studio.
 
-3. Create `secrets.properties` file in the project directory.
+    ### Configuration Steps
 
-4. Add the following line with your API key to `secrets.properties`:
+1. Create `secrets.properties` file in the project directory.
+
+2. Add the following line with your API key to `secrets.properties`:
 ```
 API_KEY=YOUR_API_KEY_HERE
 ```
-6. Build and run the app on an emulator or a physical device.
+3. Build and run the app on an emulator or a physical device.
 ----------------OR----------------
-* You can download application apk here[https://drive.google.com/file/d/1HBI3oGsVa8FhTK1ZWQVRXkq3W8uqYREe/view?usp=sharing]
+* You can download application apk [here](https://drive.google.com/file/d/1HBI3oGsVa8FhTK1ZWQVRXkq3W8uqYREe/view?usp=sharing)
 
   
 <!-- Screenshots -->
