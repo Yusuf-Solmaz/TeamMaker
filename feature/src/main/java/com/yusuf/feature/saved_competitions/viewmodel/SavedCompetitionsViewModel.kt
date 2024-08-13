@@ -66,7 +66,7 @@ class SavedCompetitionsViewModel @Inject constructor(
         }
     }
 
-    fun deleteSavedCompetition(competitionId: String) {
+    internal fun deleteSavedCompetition(competitionId: String) {
         _deleteSavedCompetitionUIState.value =
             _deleteSavedCompetitionUIState.value.copy(isLoading = true)
         viewModelScope.launch {

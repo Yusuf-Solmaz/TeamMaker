@@ -29,7 +29,7 @@ class TeamBalancerViewModel @Inject constructor(
     private val _teamImageUIState = MutableStateFlow(TeamImageUIState())
     val teamImageUIState: StateFlow<TeamImageUIState> get() = _teamImageUIState
 
-    fun uploadImage(uri: Uri) {
+    internal fun uploadImage(uri: Uri) {
         _teamBalancerUiState.value = _teamBalancerUiState.value.copy(isLoading = true)
         viewModelScope.launch {
             uploadImageUseCase(uri, "saved_competitions").collect { result ->
@@ -63,7 +63,7 @@ class TeamBalancerViewModel @Inject constructor(
         }
     }
 
-    fun createBalancedTeams(players: List<PlayerData>) {
+    internal fun createBalancedTeams(players: List<PlayerData>) {
         _teamBalancerUiState.value = _teamBalancerUiState.value.copy(isLoading = true)
         viewModelScope.launch {
             delay(2000)

@@ -24,7 +24,7 @@ class LocationViewModel @Inject constructor(
     private val _locationUIState = MutableStateFlow(LocationUIState(isLoading = true))
     val locationUIState: StateFlow<LocationUIState> = _locationUIState
 
-    fun fetchLocation() {
+    internal fun fetchLocation() {
         _locationUIState.value = _locationUIState.value.copy(isLoading = true)
         viewModelScope.launch {
             try {
@@ -51,7 +51,7 @@ class LocationViewModel @Inject constructor(
         }
     }
 
-    fun checkPermissions(): Boolean {
+    internal fun checkPermissions(): Boolean {
         val context = getApplication<Application>().applicationContext
         return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED

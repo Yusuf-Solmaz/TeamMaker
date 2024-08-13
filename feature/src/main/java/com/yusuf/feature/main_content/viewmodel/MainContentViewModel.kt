@@ -21,7 +21,7 @@ class MainContentViewModel @Inject constructor(
     val deleteUserState: StateFlow<DeleteUserState> = _deleteUserState
 
 
-    fun deleteUser(){
+    internal fun deleteUser(){
         viewModelScope.launch {
             _deleteUserState.value = _deleteUserState.value.copy(isLoading = true)
             deleteUserUseCase().collect{ result ->

@@ -20,7 +20,7 @@ class CompetitionDetailViewModel @Inject constructor(
     private val _competitionDetailState = MutableStateFlow(CompetitionDetailUIState())
     val competitionDetailState: StateFlow<CompetitionDetailUIState> = _competitionDetailState
 
-    fun saveCompetition(savedCompetitionsModel: SavedCompetitionsModel){
+    internal fun saveCompetition(savedCompetitionsModel: SavedCompetitionsModel){
         _competitionDetailState.value = _competitionDetailState.value.copy(isLoading = true)
 
         viewModelScope.launch {

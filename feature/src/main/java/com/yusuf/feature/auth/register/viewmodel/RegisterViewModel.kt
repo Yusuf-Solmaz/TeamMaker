@@ -23,7 +23,7 @@ class RegisterViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(RegisterUIState())
     val uiState: StateFlow<RegisterUIState> = _uiState
 
-    fun signUp(email: String, password: String) {
+    internal fun signUp(email: String, password: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             registerUseCase(email, password)

@@ -19,7 +19,7 @@ class ForgotPasswordViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ForgotPasswordState())
     val uiState: StateFlow<ForgotPasswordState> = _uiState
 
-    fun sendPasswordResetEmail(email: String) {
+    internal fun sendPasswordResetEmail(email: String) {
         _uiState.value = _uiState.value.copy(isLoading = true)
         viewModelScope.launch {
             resetPasswordUseCase(email).collect{

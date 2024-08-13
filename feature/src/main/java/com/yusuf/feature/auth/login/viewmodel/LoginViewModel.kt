@@ -35,7 +35,7 @@ class LoginViewModel @Inject constructor(
     private val _loggingState = MutableStateFlow(IsLoggedInState())
     val loggingState: StateFlow<IsLoggedInState> = _loggingState
 
-    fun signInAnonymously(){
+    internal fun signInAnonymously(){
         _uiState.value = _uiState.value.copy(isLoading = true)
         viewModelScope.launch {
             singInAnonymouslyUseCase().collect { result ->
@@ -92,7 +92,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun signIn(email: String, password: String) {
+    internal fun signIn(email: String, password: String) {
         viewModelScope.launch {
 
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -122,7 +122,7 @@ class LoginViewModel @Inject constructor(
 
 
 
-    fun signOut() {
+    internal fun signOut() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             signOutUseCase().collect { result ->
@@ -147,7 +147,7 @@ class LoginViewModel @Inject constructor(
     }
 
 
-    fun isLoggedIn() {
+    internal fun isLoggedIn() {
         _loggingState.value = _loggingState.value.copy(isLoading = true)
         viewModelScope.launch {
             isLoggedInUseCase().collect { isLoggedIn ->

@@ -53,7 +53,7 @@ class CompetitionViewModel @Inject constructor(
         }
     }
 
-    fun deleteCompetition(competitionData: CompetitionData) {
+    internal fun deleteCompetition(competitionData: CompetitionData) {
         _addDeleteState.value = AddDeleteState(isLoading = true, result = Loading)
         viewModelScope.launch {
             deleteCompetitionUseCase(competitionData).collect { result ->
@@ -69,7 +69,7 @@ class CompetitionViewModel @Inject constructor(
         }
     }
 
-    fun getAllCompetitions() {
+    internal fun getAllCompetitions() {
         _getAllState.value = GetAllState(isLoading = true, result = Loading)
         viewModelScope.launch {
             getAllCompetitionsUseCase().collect { result ->
@@ -84,7 +84,7 @@ class CompetitionViewModel @Inject constructor(
         }
     }
 
-    fun uploadImageAndAddCompetition(uri: Uri, competitionName: String) {
+    internal fun uploadImageAndAddCompetition(uri: Uri, competitionName: String) {
         _competitionImageUIState.value = _competitionImageUIState.value.copy(isLoading = true)
         viewModelScope.launch {
             uploadImageUseCase(uri, "competitions").collect { result ->
@@ -123,7 +123,7 @@ class CompetitionViewModel @Inject constructor(
         }
     }
 
-    fun updateCompetition(
+    internal fun updateCompetition(
         competitionId: String,
         competitionData: CompetitionData,
         imageUri: Uri?

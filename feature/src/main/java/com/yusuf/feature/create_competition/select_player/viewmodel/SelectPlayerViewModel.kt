@@ -20,7 +20,7 @@ class SelectPlayerViewModel @Inject constructor(
     private val _playerListUIState = MutableStateFlow(PlayerUiState())
     val playerListUIState: StateFlow<PlayerUiState> = _playerListUIState
 
-    fun getPlayersByCompetitionType(competitionType: String){
+    internal fun getPlayersByCompetitionType(competitionType: String){
         _playerListUIState.value = _playerListUIState.value.copy(isLoading = true)
         viewModelScope.launch {
             getPlayersByCompetitionTypeUseCase(competitionType).collect{
